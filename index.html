@@ -4856,6 +4856,7 @@
                     statusEl.style.color = '#16a34a';
                 }
                 showToast('☁️ <strong>Link do banco de dados salvo e conectado!</strong>');
+                initFirebaseRealtimeStream();
                 await loadDataFromOnline(false);
             } else {
                 if (statusEl) {
@@ -4894,6 +4895,10 @@
 
     function getServerCandidateEndpoints() {
         const list = [];
+        // Prioridade máxima: Firebase Realtime Database (ultrarrápido, ~80ms)
+        if (UNIVERSAL_CLOUD_URL && UNIVERSAL_CLOUD_URL.includes('firebaseio.com')) {
+            list.push(UNIVERSAL_CLOUD_URL);
+        }
         if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
             const originEndpoint = window.location.origin + '/api/frota';
             if (!list.includes(originEndpoint)) list.push(originEndpoint);
@@ -4907,7 +4912,6 @@
         if (lastActiveEndpoint && !list.includes(lastActiveEndpoint)) {
             list.push(lastActiveEndpoint);
         }
-        if (!list.includes(UNIVERSAL_CLOUD_URL)) list.push(UNIVERSAL_CLOUD_URL);
         return list;
     }
 
@@ -4965,186 +4969,171 @@
         if (txt) txt.textContent = text;
     }
 
+    function applyOnlineData(data, isBackground = false) {
+        if (!data || typeof data !== 'object') return;
+        const currentHash = generateDataHash(data);
+        if (currentHash === lastSyncedHash) {
+            setCloudStatusBadge('connected', '🟢 Online (Tempo Real)');
+            isCloudConnected = true;
+            return;
+        }
+
+        const isUserTyping = document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA');
+
+        const localUpdatedAt = localStorage.getItem('batalhao_vtr_updated_at') || '';
+        const serverUpdatedAt = data.updatedAt || '';
+        const localHasData = records && Array.isArray(records) && records.length > 0;
+
+        if (localHasData && localUpdatedAt && serverUpdatedAt) {
+            const localTime = new Date(localUpdatedAt).getTime();
+            const serverTime = new Date(serverUpdatedAt).getTime();
+
+            // Se o dado local for mais novo que o do servidor (ex: importação recente), preserva o local
+            if (localTime > serverTime) {
+                syncAllDataToOnline(true);
+                setCloudStatusBadge('connected', '🟢 Online (Tempo Real)');
+                isCloudConnected = true;
+                return;
+            }
+        }
+
+        lastSyncedHash = currentHash;
+        isRemoteUpdate = true;
+
+        if (Array.isArray(data.records)) {
+            records = migrateVehiclePrefixes(sanitizeCleanRecordsDates(data.records));
+            localStorage.setItem('batalhao_vtr_records', JSON.stringify(records));
+        }
+        if (data.updatedAt) {
+            localStorage.setItem('batalhao_vtr_updated_at', data.updatedAt);
+        }
+        if (Array.isArray(data.customCias)) {
+            customCias = data.customCias;
+            localStorage.setItem('batalhao_vtr_custom_cias', JSON.stringify(customCias));
+        }
+        if (Array.isArray(data.customModels)) {
+            customModels = data.customModels;
+            localStorage.setItem('batalhao_vtr_custom_models', JSON.stringify(customModels));
+        }
+        if (Array.isArray(data.customPelotoes)) {
+            customPelotoes = data.customPelotoes;
+            localStorage.setItem('batalhao_vtr_custom_pelotoes', JSON.stringify(customPelotoes));
+        }
+        if (Array.isArray(data.customStatuses)) {
+            customStatuses = data.customStatuses;
+            localStorage.setItem('batalhao_vtr_custom_statuses', JSON.stringify(customStatuses));
+        }
+        if (Array.isArray(data.customLocais)) {
+            customLocais = data.customLocais;
+            localStorage.setItem('batalhao_vtr_custom_locais', JSON.stringify(customLocais));
+        }
+        if (Array.isArray(data.customQuickReasons)) {
+            customQuickReasons = data.customQuickReasons;
+            localStorage.setItem('batalhao_vtr_custom_quick_reasons', JSON.stringify(customQuickReasons));
+        }
+        if (Array.isArray(data.systemUsers) && data.systemUsers.length > 0) {
+            const localUsers = JSON.parse(localStorage.getItem('batalhao_vtr_system_users') || '[]');
+            const merged = [...data.systemUsers];
+            if (Array.isArray(localUsers)) {
+                localUsers.forEach(lu => {
+                    if (!merged.some(su => su.id === lu.id || su.username.toLowerCase() === lu.username.toLowerCase())) {
+                        merged.push(lu);
+                    }
+                });
+            }
+            systemUsers = merged;
+            localStorage.setItem('batalhao_vtr_system_users', JSON.stringify(systemUsers));
+            populateAdminUserSelect();
+            populateMgmtUserSelect();
+        }
+        if (data.appTitle) {
+            if (data.appTitle.includes('TEST') || data.appTitle.includes('BATALHÃO')) {
+                appTitle = OFFICIAL_APP_TITLE;
+            } else {
+                appTitle = data.appTitle;
+            }
+            localStorage.setItem('batalhao_vtr_app_title', appTitle);
+            updateAppTitleDisplay();
+        }
+        if (data.pizzaCenterImage !== undefined) {
+            if (typeof data.pizzaCenterImage === 'string' && data.pizzaCenterImage.includes('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJ')) {
+                data.pizzaCenterImage = '';
+            }
+            const localImg = localStorage.getItem('batalhao_vtr_pizza_image') || '';
+            if (data.pizzaCenterImage) {
+                localStorage.setItem('batalhao_vtr_pizza_image', data.pizzaCenterImage);
+                pizzaCenterImage = data.pizzaCenterImage;
+                if (doughnutChartInstance) {
+                    try { updateDoughnutCenterImageOverlay(doughnutChartInstance); } catch (e) {}
+                }
+            } else if (localImg) {
+                pizzaCenterImage = localImg;
+                debouncedSyncAllDataToOnline();
+            }
+        }
+        if (data.lastStatusUpdate) {
+            const el = document.getElementById('lastStatusUpdateText');
+            if (el) el.textContent = data.lastStatusUpdate;
+            localStorage.setItem('batalhao_vtr_last_status_update', data.lastStatusUpdate);
+        }
+
+        populateAllCiaSelects();
+        populateAllModelSelects();
+        populateAllPelotaoSelects();
+        populateAllStatusSelects();
+        populateAllLocalSelects();
+        populateMonthSelect();
+        populateVehicleSelects();
+        
+        if (!isUserTyping) {
+            renderDashboard();
+        } else {
+            updateKPIsAndChartsOnly();
+        }
+
+        isRemoteUpdate = false;
+        isCloudConnected = true;
+        setCloudStatusBadge('connected', '🟢 Online (Tempo Real)');
+        if (!isBackground) {
+            showToast('⚡ <strong>Sincronizado em Tempo Real!</strong>');
+        }
+    }
+
     async function loadDataFromOnline(isBackground = false) {
         if (isSyncInProgress) return;
         isSyncInProgress = true;
 
-        if (!isBackground) setCloudStatusBadge('syncing', 'Conectando Online...');
+        if (!isBackground) setCloudStatusBadge('syncing', 'Conectando...');
         try {
-            let res = await executeApiRequest('GET');
+            // 1. Tenta direto do Firebase primeiro (ultrarrápido, ~80ms)
             let data = null;
-            if (res.success && res.data) {
-                data = (res.data && res.data.dados_frota) ? res.data.dados_frota : res.data;
-            }
-
-            // Se a API retornar vazia ou sem registros, busca diretamente no Firebase
-            if ((!data || !Array.isArray(data.records) || data.records.length === 0) && typeof UNIVERSAL_CLOUD_URL === 'string' && UNIVERSAL_CLOUD_URL) {
+            if (typeof UNIVERSAL_CLOUD_URL === 'string' && UNIVERSAL_CLOUD_URL && UNIVERSAL_CLOUD_URL.includes('firebaseio.com')) {
                 try {
                     const fbRes = await fetch(UNIVERSAL_CLOUD_URL);
                     if (fbRes.ok) {
                         const fbData = await fbRes.json();
-                        if (fbData && typeof fbData === 'object' && Array.isArray(fbData.records) && fbData.records.length > 0) {
-                            data = fbData;
+                        if (fbData && typeof fbData === 'object' && (Array.isArray(fbData.records) || fbData.appTitle)) {
+                            data = (fbData && fbData.dados_frota) ? fbData.dados_frota : fbData;
                         }
                     }
                 } catch(e) {}
             }
 
+            // 2. Se o Firebase direto falhar, tenta via API do servidor (Vercel)
             if (!data) {
-                setCloudStatusBadge('connected', '🟢 Online');
+                let res = await executeApiRequest('GET');
+                if (res.success && res.data) {
+                    data = (res.data && res.data.dados_frota) ? res.data.dados_frota : res.data;
+                }
+            }
+
+            if (!data) {
+                setCloudStatusBadge('connected', '🟢 Online (Tempo Real)');
                 isCloudConnected = true;
                 return;
             }
-            
-            if (data && typeof data === 'object' && Object.keys(data).length > 0 && (Array.isArray(data.records) || data.appTitle)) {
-                const currentHash = generateDataHash(data);
-                if (currentHash === lastSyncedHash) {
-                    setCloudStatusBadge('connected', '🟢 Online');
-                    isCloudConnected = true;
-                    return;
-                }
 
-                const isUserTyping = document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA');
-
-                const localUpdatedAt = localStorage.getItem('batalhao_vtr_updated_at') || '';
-                const serverUpdatedAt = data.updatedAt || '';
-                const localHasData = records && Array.isArray(records) && records.length > 0;
-
-                if (localHasData && localUpdatedAt && serverUpdatedAt) {
-                    const localTime = new Date(localUpdatedAt).getTime();
-                    const serverTime = new Date(serverUpdatedAt).getTime();
-
-                    // Se o dado local for mais novo que o do servidor (ex: importação recente ou edição local),
-                    // NUNCA permita que o servidor com dados antigos sobrescreva o que foi feito localmente!
-                    // Em vez disso, envia os dados locais para a nuvem.
-                    if (localTime > serverTime) {
-                        syncAllDataToOnline(true);
-                        setCloudStatusBadge('connected', '🟢 Online');
-                        isCloudConnected = true;
-                        return;
-                    }
-                }
-
-                lastSyncedHash = currentHash;
-                isRemoteUpdate = true;
-
-                if (Array.isArray(data.records)) {
-                    records = migrateVehiclePrefixes(sanitizeCleanRecordsDates(data.records));
-                    localStorage.setItem('batalhao_vtr_records', JSON.stringify(records));
-                }
-                if (data.updatedAt) {
-                    localStorage.setItem('batalhao_vtr_updated_at', data.updatedAt);
-                }
-                if (Array.isArray(data.customCias)) {
-                    customCias = data.customCias;
-                    localStorage.setItem('batalhao_vtr_custom_cias', JSON.stringify(customCias));
-                }
-                if (Array.isArray(data.customModels)) {
-                    customModels = data.customModels;
-                    localStorage.setItem('batalhao_vtr_custom_models', JSON.stringify(customModels));
-                }
-                if (Array.isArray(data.customPelotoes)) {
-                    customPelotoes = data.customPelotoes;
-                    localStorage.setItem('batalhao_vtr_custom_pelotoes', JSON.stringify(customPelotoes));
-                }
-                if (Array.isArray(data.customStatuses)) {
-                    customStatuses = data.customStatuses;
-                    localStorage.setItem('batalhao_vtr_custom_statuses', JSON.stringify(customStatuses));
-                }
-                if (Array.isArray(data.customLocais)) {
-                    customLocais = data.customLocais;
-                    localStorage.setItem('batalhao_vtr_custom_locais', JSON.stringify(customLocais));
-                }
-                if (Array.isArray(data.customQuickReasons)) {
-                    customQuickReasons = data.customQuickReasons;
-                    localStorage.setItem('batalhao_vtr_custom_quick_reasons', JSON.stringify(customQuickReasons));
-                }
-                if (Array.isArray(data.systemUsers) && data.systemUsers.length > 0) {
-                    const localUsers = JSON.parse(localStorage.getItem('batalhao_vtr_system_users') || '[]');
-                    const merged = [...data.systemUsers];
-                    if (Array.isArray(localUsers)) {
-                        localUsers.forEach(lu => {
-                            if (!merged.some(su => su.id === lu.id || su.username.toLowerCase() === lu.username.toLowerCase())) {
-                                merged.push(lu);
-                            }
-                        });
-                    }
-                    systemUsers = merged;
-                    localStorage.setItem('batalhao_vtr_system_users', JSON.stringify(systemUsers));
-                    populateAdminUserSelect();
-                    populateMgmtUserSelect();
-                }
-                if (data.appTitle) {
-                    if (data.appTitle.includes('TEST') || data.appTitle.includes('BATALHÃO')) {
-                        appTitle = OFFICIAL_APP_TITLE;
-                    } else {
-                        appTitle = data.appTitle;
-                    }
-                    localStorage.setItem('batalhao_vtr_app_title', appTitle);
-                    updateAppTitleDisplay();
-                }
-                if (data.pizzaCenterImage !== undefined) {
-                    if (typeof data.pizzaCenterImage === 'string' && data.pizzaCenterImage.includes('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJ')) {
-                        data.pizzaCenterImage = '';
-                    }
-                    const localImg = localStorage.getItem('batalhao_vtr_pizza_image') || '';
-                    if (data.pizzaCenterImage) {
-                        localStorage.setItem('batalhao_vtr_pizza_image', data.pizzaCenterImage);
-                        pizzaCenterImage = data.pizzaCenterImage;
-                        if (doughnutChartInstance) {
-                            try { updateDoughnutCenterImageOverlay(doughnutChartInstance); } catch (e) {}
-                        }
-                    } else if (localImg) {
-                        // Preserva a imagem local se o servidor retornou vazio, e sincroniza para a nuvem
-                        pizzaCenterImage = localImg;
-                        debouncedSyncAllDataToOnline();
-                    } else if (typeof UNIVERSAL_CLOUD_URL === 'string' && UNIVERSAL_CLOUD_URL) {
-                        // Tenta buscar no Firebase caso o celular ainda não tenha a foto
-                        fetch(UNIVERSAL_CLOUD_URL).then(r => r.json()).then(fbData => {
-                            if (fbData && fbData.pizzaCenterImage && isValidImageSrc(fbData.pizzaCenterImage)) {
-                                localStorage.setItem('batalhao_vtr_pizza_image', fbData.pizzaCenterImage);
-                                pizzaCenterImage = fbData.pizzaCenterImage;
-                                if (doughnutChartInstance) {
-                                    updateDoughnutCenterImageOverlay(doughnutChartInstance);
-                                }
-                            }
-                        }).catch(() => {});
-                    }
-                }
-                if (data.lastStatusUpdate) {
-                    const el = document.getElementById('lastStatusUpdateText');
-                    if (el) el.textContent = data.lastStatusUpdate;
-                    localStorage.setItem('batalhao_vtr_last_status_update', data.lastStatusUpdate);
-                }
-
-                populateAllCiaSelects();
-                populateAllModelSelects();
-                populateAllPelotaoSelects();
-                populateAllStatusSelects();
-                populateAllLocalSelects();
-                populateMonthSelect();
-                populateVehicleSelects();
-                
-                if (!isUserTyping) {
-                    renderDashboard();
-                } else {
-                    updateKPIsAndChartsOnly();
-                }
-
-                isRemoteUpdate = false;
-                isCloudConnected = true;
-                setCloudStatusBadge('connected', '🟢 Online');
-                if (!isBackground) {
-                    showToast('☁️ <strong>Dados sincronizados Online com sucesso!</strong>');
-                }
-            } else {
-                if (records && records.length > 0) {
-                    syncAllDataToOnline(true);
-                } else {
-                    setCloudStatusBadge('connected', '🟢 Online');
-                    isCloudConnected = true;
-                }
-            }
+            applyOnlineData(data, isBackground);
         } catch (err) {
             setCloudStatusBadge('connected', '🟢 Online');
             isCloudConnected = true;
@@ -5186,11 +5175,8 @@
         setCloudStatusBadge('syncing', '🔄 Sincronizando...');
 
         try {
-            // 1. Envia para a API do Servidor (Vercel / Render)
-            await executeApiRequest('POST', payload);
-
-            // 2. Salva diretamente no Firebase Realtime Database (Garante tempo real e persistência permanente entre todos os celulares)
-            if (typeof UNIVERSAL_CLOUD_URL === 'string' && UNIVERSAL_CLOUD_URL) {
+            // 1. SALVA IMEDIATAMENTE NO FIREBASE (TEMPO REAL ULTRA-RÁPIDO, ~80ms)
+            if (typeof UNIVERSAL_CLOUD_URL === 'string' && UNIVERSAL_CLOUD_URL && UNIVERSAL_CLOUD_URL.includes('firebaseio.com')) {
                 try {
                     await fetch(UNIVERSAL_CLOUD_URL, {
                         method: 'PUT',
@@ -5198,11 +5184,15 @@
                         body: JSON.stringify(payload)
                     });
                 } catch(e) {
-                    console.warn('Sync Firebase:', e);
+                    console.warn('Sync direto Firebase:', e);
                 }
             }
+
             isCloudConnected = true;
-            setCloudStatusBadge('connected', '🟢 Online');
+            setCloudStatusBadge('connected', '🟢 Online (Tempo Real)');
+
+            // 2. Envia em segundo plano para a API Vercel (backup e persistência sem bloquear a tela)
+            executeApiRequest('POST', payload).catch(() => {});
         } catch (err) {
             setCloudStatusBadge('connected', '🟢 Online');
         }
@@ -5389,23 +5379,86 @@
     }
 
     let lastTouchSyncTime = 0;
+    let firebaseEventSource = null;
+
+    function initFirebaseRealtimeStream() {
+        if (!window.EventSource) return;
+        if (!UNIVERSAL_CLOUD_URL || !UNIVERSAL_CLOUD_URL.includes('firebaseio.com')) return;
+
+        if (firebaseEventSource) {
+            try { firebaseEventSource.close(); } catch(e) {}
+            firebaseEventSource = null;
+        }
+
+        try {
+            firebaseEventSource = new EventSource(UNIVERSAL_CLOUD_URL);
+
+            firebaseEventSource.addEventListener('put', function(e) {
+                try {
+                    const parsed = JSON.parse(e.data);
+                    if (!parsed) return;
+
+                    let incomingData = null;
+                    if (parsed.path === '/' || !parsed.path) {
+                        incomingData = parsed.data;
+                    } else if (parsed.path.startsWith('/records') || parsed.path === '/appTitle') {
+                        loadDataFromOnline(true);
+                        return;
+                    } else {
+                        incomingData = parsed.data;
+                    }
+
+                    if (incomingData && typeof incomingData === 'object') {
+                        const finalData = (incomingData.dados_frota) ? incomingData.dados_frota : incomingData;
+                        if (Array.isArray(finalData.records) || finalData.appTitle) {
+                            applyOnlineData(finalData, true);
+                        }
+                    }
+                } catch(err) {
+                    console.warn('Erro ao processar atualização em tempo real:', err);
+                }
+            });
+
+            firebaseEventSource.addEventListener('patch', function() {
+                loadDataFromOnline(true);
+            });
+
+            firebaseEventSource.onerror = function() {
+                // Reconexão automática do navegador
+            };
+        } catch(err) {
+            console.warn('Não foi possível iniciar o stream SSE:', err);
+        }
+    }
+
     function startAutoSync() {
+        // Conexão direta por Stream contínuo em Tempo Real
+        initFirebaseRealtimeStream();
+
+        // Polling leve como backup de segurança (a cada 2.5 segundos)
         if (autoSyncInterval) clearInterval(autoSyncInterval);
         autoSyncInterval = setInterval(() => {
             if (document.hidden) return;
             loadDataFromOnline(true);
-        }, 3000);
+        }, 2500);
 
-        window.addEventListener('focus', () => { loadDataFromOnline(false); });
-        window.addEventListener('online', () => { loadDataFromOnline(false); });
+        window.addEventListener('focus', () => { 
+            initFirebaseRealtimeStream();
+            loadDataFromOnline(false); 
+        });
+        window.addEventListener('online', () => { 
+            initFirebaseRealtimeStream();
+            loadDataFromOnline(false); 
+        });
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
+                initFirebaseRealtimeStream();
                 loadDataFromOnline(false);
             }
         });
         document.addEventListener('touchstart', () => {
             const now = Date.now();
-            if (now - lastTouchSyncTime > 4000) {
+            if (now - lastTouchSyncTime > 3000) {
                 lastTouchSyncTime = now;
                 loadDataFromOnline(true);
             }
