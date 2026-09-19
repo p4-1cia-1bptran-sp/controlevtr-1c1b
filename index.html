@@ -4373,7 +4373,7 @@
 
             <div style="display: flex; flex-direction: column; gap: 4px;">
                 <label for="adminUserSelect" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">👤 Selecione o Usuário / Operador:</label>
-                <select id="adminUserSelect" style="font-size: 0.95rem; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; width: 100%; box-sizing: border-box; background-color: var(--card-bg); color: var(--text-main); font-weight: 600;" onchange="onAdminUserSelectChange()"></select>
+                <select id="adminUserSelect" style="font-size: 0.95rem; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; width: 100%; box-sizing: border-box; background-color: var(--card-bg); color: var(--text-main); font-weight: 600;" onchange="onAdminUserSelectChange(true)"></select>
             </div>
 
             <div id="adminPasswordInputGroup" style="display: flex; flex-direction: column; gap: 6px;">
@@ -4959,7 +4959,17 @@
     }
 
     function generateDataHash(obj) {
-        return JSON.stringify(obj);
+        if (!obj || typeof obj !== 'object') return '';
+        try {
+            const recs = Array.isArray(obj.records) ? obj.records : [];
+            const recFingerprint = recs.map(r => `${r.vehicle||''}:${r.status||''}:${r.destino||''}:${r.obs||''}:${r.date||''}:${r.cia||''}:${r.model||''}:${r.pelotao||''}`).join(';');
+            const title = obj.appTitle || '';
+            const usersCount = Array.isArray(obj.systemUsers) ? obj.systemUsers.length : 0;
+            const time = obj.updatedAt || '';
+            return `${time}_${recs.length}_${title}_${usersCount}_${recFingerprint}`;
+        } catch(e) {
+            return JSON.stringify(obj);
+        }
     }
 
     function setCloudStatusBadge(status, text) {
@@ -4972,30 +4982,20 @@
     function applyOnlineData(data, isBackground = false) {
         if (!data || typeof data !== 'object') return;
         const currentHash = generateDataHash(data);
-        if (currentHash === lastSyncedHash) {
+        if (currentHash && currentHash === lastSyncedHash) {
             setCloudStatusBadge('connected', '🟢 Online (Tempo Real)');
             isCloudConnected = true;
             return;
         }
 
-        const isUserTyping = document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA');
+        const isUserTyping = document.activeElement && (
+            document.activeElement.tagName === 'INPUT' || 
+            document.activeElement.tagName === 'TEXTAREA' ||
+            document.activeElement.tagName === 'SELECT'
+        );
 
-        const localUpdatedAt = localStorage.getItem('batalhao_vtr_updated_at') || '';
-        const serverUpdatedAt = data.updatedAt || '';
-        const localHasData = records && Array.isArray(records) && records.length > 0;
-
-        if (localHasData && localUpdatedAt && serverUpdatedAt) {
-            const localTime = new Date(localUpdatedAt).getTime();
-            const serverTime = new Date(serverUpdatedAt).getTime();
-
-            // Se o dado local for mais novo que o do servidor (ex: importação recente), preserva o local
-            if (localTime > serverTime) {
-                syncAllDataToOnline(true);
-                setCloudStatusBadge('connected', '🟢 Online (Tempo Real)');
-                isCloudConnected = true;
-                return;
-            }
-        }
+        const adminModal = document.getElementById('adminPasswordModal');
+        const isAdminModalOpen = adminModal && (adminModal.style.display === 'flex' || adminModal.style.display === 'block');
 
         lastSyncedHash = currentHash;
         isRemoteUpdate = true;
@@ -5043,8 +5043,10 @@
             }
             systemUsers = merged;
             localStorage.setItem('batalhao_vtr_system_users', JSON.stringify(systemUsers));
-            populateAdminUserSelect();
-            populateMgmtUserSelect();
+            if (!isAdminModalOpen) {
+                populateAdminUserSelect();
+                populateMgmtUserSelect();
+            }
         }
         if (data.appTitle) {
             if (data.appTitle.includes('TEST') || data.appTitle.includes('BATALHÃO')) {
@@ -5077,26 +5079,23 @@
             localStorage.setItem('batalhao_vtr_last_status_update', data.lastStatusUpdate);
         }
 
-        populateAllCiaSelects();
-        populateAllModelSelects();
-        populateAllPelotaoSelects();
-        populateAllStatusSelects();
-        populateAllLocalSelects();
-        populateMonthSelect();
-        populateVehicleSelects();
-        
-        if (!isUserTyping) {
-            renderDashboard();
-        } else {
+        // Se o usuário estiver digitando ou com modal de senha aberto, não recria a tabela para não apagar a digitação
+        if (isUserTyping || isAdminModalOpen) {
             updateKPIsAndChartsOnly();
+        } else {
+            populateAllCiaSelects();
+            populateAllModelSelects();
+            populateAllPelotaoSelects();
+            populateAllStatusSelects();
+            populateAllLocalSelects();
+            populateMonthSelect();
+            populateVehicleSelects();
+            renderDashboard();
         }
 
         isRemoteUpdate = false;
         isCloudConnected = true;
         setCloudStatusBadge('connected', '🟢 Online (Tempo Real)');
-        if (!isBackground) {
-            showToast('⚡ <strong>Sincronizado em Tempo Real!</strong>');
-        }
     }
 
     async function loadDataFromOnline(isBackground = false) {
@@ -7372,9 +7371,11 @@
                     ? `status-${value.toLowerCase()}` : 'status-custom';
                 selectEl.className = `inline-select ${statusClass}`;
             }
+            // Para mudança de status (ex: OPERANDO para BAIXADA), envia IMEDIATAMENTE sem debounce
+            syncAllDataToOnline(true);
+        } else {
+            debouncedSyncAllDataToOnline();
         }
-
-        debouncedSyncAllDataToOnline();
         showToast(`💾 <strong>${vehicleId}</strong>: Campo <em>${fieldName}</em> salvo online!`);
     }
 
@@ -7494,12 +7495,15 @@
         }
     }
 
-    // 🚀 A PÁGINA INICIA POR PADRÃO NO MODO VISITANTE!
-    let currentAuthUser = JSON.parse(sessionStorage.getItem('batalhao_vtr_auth_user') || 'null');
+    // 🚀 RESTAURA USUÁRIO SALVO (LOCALSTORAGE / SESSIONSTORAGE)
+    let currentAuthUser = JSON.parse(localStorage.getItem('batalhao_vtr_auth_user') || sessionStorage.getItem('batalhao_vtr_auth_user') || 'null');
     if (!currentAuthUser) {
         const vis = systemUsers.find(u => u.username === 'VISITANTE') || defaultSystemUsers[1];
         currentAuthUser = vis;
         sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(vis));
+    } else if (currentAuthUser.username !== 'VISITANTE') {
+        sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+        sessionStorage.setItem('batalhao_vtr_admin_auth', 'true');
     }
     let isAdminAuthenticated = !!currentAuthUser;
     let adminPasswordResolveCallback = null;
@@ -7722,6 +7726,7 @@
     function populateAdminUserSelect(preferredUsername = '') {
         const select = document.getElementById('adminUserSelect');
         if (!select) return;
+        const previousVal = select.value;
         select.innerHTML = '';
         systemUsers.forEach(u => {
             const opt = document.createElement('option');
@@ -7736,17 +7741,19 @@
             select.appendChild(opt);
         });
 
-        if (preferredUsername && systemUsers.some(u => u.username === preferredUsername)) {
+        if (previousVal && systemUsers.some(u => u.username === previousVal)) {
+            select.value = previousVal;
+        } else if (preferredUsername && systemUsers.some(u => u.username === preferredUsername)) {
             select.value = preferredUsername;
         } else if (currentAuthUser && currentAuthUser.username !== 'VISITANTE' && systemUsers.some(u => u.username === currentAuthUser.username)) {
             select.value = currentAuthUser.username;
         } else {
             select.value = 'ADMINISTRADOR GERAL';
         }
-        onAdminUserSelectChange();
+        onAdminUserSelectChange(false);
     }
 
-    function onAdminUserSelectChange() {
+    function onAdminUserSelectChange(isManualUserChange = false) {
         const select = document.getElementById('adminUserSelect');
         const selected = select ? select.value : '';
         const passGroup = document.getElementById('adminPasswordInputGroup');
@@ -7761,7 +7768,8 @@
             if (passInput) passInput.value = '';
         } else {
             if (passGroup) passGroup.style.display = 'flex';
-            if (passInput) {
+            // SÓ apaga a senha digitada se o usuário mudou o nome no select manualmente!
+            if (isManualUserChange && passInput) {
                 passInput.value = '';
                 passInput.focus();
             }
@@ -7907,6 +7915,8 @@
 
             currentAuthUser = user;
             isAdminAuthenticated = true;
+            localStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(user));
+            localStorage.setItem('batalhao_vtr_admin_auth', 'true');
             sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(user));
             sessionStorage.setItem('batalhao_vtr_admin_auth', 'true');
             updateAdminBadgeUI();
@@ -10509,7 +10519,7 @@
                                 <span class="vtr-mobile-prefix-text" onclick="openVehicleQuickDetailsModal('${r.vehicle}', event)">🚓 ${r.vehicle}</span>
                                 <span class="vtr-mobile-plate-badge" onclick="openVehicleQuickDetailsModal('${r.vehicle}', event)" title="Clique para ver Dados Cadastrais">🚗 ${r.placa || 'Dados'}</span>
                             </div>
-                            <span class="badge ${badgeClass}">${r.status || 'OPERANDO'}</span>
+                            <button type="button" class="badge ${badgeClass}" style="cursor:pointer; border:none; padding:5px 10px; font-weight:800; font-size:0.82rem; border-radius:6px;" onclick="openColumnSelectMenu('${r.vehicle}', 'status', this, event)" title="Toque para alterar Status">${r.status || 'OPERANDO'} ▼</button>
                         </div>
                         <div class="vtr-mobile-grid">
                             <div class="vtr-mobile-item">
