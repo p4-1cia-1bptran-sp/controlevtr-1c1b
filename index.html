@@ -4812,6 +4812,7 @@
     let autoSyncInterval = null;
     let isSyncInProgress = false;
     let lastSyncedHash = '';
+    let localPendingEdits = {};
     let lastActiveEndpoint = localStorage.getItem('batalhao_vtr_active_endpoint') || '';
 
     // Nuvem Universal Compartilhada (Garante conexão Online em qualquer computador ou celular)
@@ -5001,7 +5002,15 @@
         isRemoteUpdate = true;
 
         if (Array.isArray(data.records)) {
-            records = migrateVehiclePrefixes(sanitizeCleanRecordsDates(data.records));
+            const now = Date.now();
+            const merged = data.records.map(r => {
+                const pending = localPendingEdits[r.vehicle];
+                if (pending && (now - pending.time < 8000)) {
+                    return { ...r, [pending.field]: pending.value };
+                }
+                return r;
+            });
+            records = migrateVehiclePrefixes(sanitizeCleanRecordsDates(merged));
             localStorage.setItem('batalhao_vtr_records', JSON.stringify(records));
         }
         if (data.updatedAt) {
@@ -5108,7 +5117,8 @@
             let data = null;
             if (typeof UNIVERSAL_CLOUD_URL === 'string' && UNIVERSAL_CLOUD_URL && UNIVERSAL_CLOUD_URL.includes('firebaseio.com')) {
                 try {
-                    const fbRes = await fetch(UNIVERSAL_CLOUD_URL);
+                    const fbFetchUrl = UNIVERSAL_CLOUD_URL + (UNIVERSAL_CLOUD_URL.includes('?') ? '&' : '?') + '_t=' + Date.now();
+                const fbRes = await fetch(fbFetchUrl, { cache: 'no-store' });
                     if (fbRes.ok) {
                         const fbData = await fbRes.json();
                         if (fbData && typeof fbData === 'object' && (Array.isArray(fbData.records) || fbData.appTitle)) {
@@ -7006,8 +7016,8 @@
         const v = records.find(r => r.vehicle === vehicleId);
         if (!v) return;
 
-        const curVal = String(v[fieldName] || '').trim().toLowerCase();
-        const newVal = String(selectedValue || '').trim().toLowerCase();
+        const curVal = String(v[fieldName] || '').trim().toUpperCase();
+        const newVal = String(selectedValue || '').trim().toUpperCase();
 
         // Se clicou no que já está selecionado: não muda nada, apenas fecha
         if (curVal === newVal) {
@@ -7021,13 +7031,6 @@
             if (!ok) {
                 return;
             }
-            v[fieldName] = selectedValue;
-            saveRecords();
-            updateStatusTimestamp();
-            renderDashboard();
-            syncAllDataToOnline();
-            showToast(`💾 <strong>${vehicleId}</strong>: Campo <em>${fieldName}</em> salvo com sucesso!`);
-            return;
         }
 
         // Se for operador comum logado tentando mudar Companhia:
@@ -7037,7 +7040,16 @@
             return;
         }
 
-        updateInlineField(vehicleId, fieldName, selectedValue);
+        // 🚀 1. ATUALIZAÇÃO OTIMISTA IMEDIATA NA TELA (0ms)
+        v[fieldName] = selectedValue;
+        localPendingEdits[vehicleId] = { time: Date.now(), field: fieldName, value: selectedValue };
+        saveRecords();
+        updateStatusTimestamp();
+        renderDashboard(); // Atualiza a tabela e os botões na hora!
+
+        // 🚀 2. ENVIA PARA A NUVEM LOGO EM SEGUIDA
+        syncAllDataToOnline(true);
+        showToast(`💾 <strong>${vehicleId}</strong>: ${fieldName.toUpperCase()} alterado para <strong>${selectedValue}</strong>!`);
     }
 
     function openInlineReasonMenu(vehicleId, btnEl, event) {
@@ -7354,26 +7366,22 @@
             }
         }
 
-        v[fieldName] = value.trim ? value.trim() : value;
+        const cleanVal = value.trim ? value.trim() : value;
+        v[fieldName] = cleanVal;
+        localPendingEdits[vehicleId] = { time: Date.now(), field: fieldName, value: cleanVal };
         if (fieldName === 'date') {
-            if (!v.data_forms) v.data_forms = value.split('-').reverse().join('/');
+            if (!v.data_forms) v.data_forms = cleanVal.split('-').reverse().join('/');
             populateMonthSelect();
         }
 
         saveRecords();
-        updateKPIsAndChartsOnly();
 
         if (fieldName === 'status') {
             updateStatusTimestamp();
-            const selectEl = document.getElementById(`inline-status-${vehicleId}`);
-            if (selectEl) {
-                const statusClass = ['operando', 'baixada', 'descarga', 'adm'].includes(value.toLowerCase()) 
-                    ? `status-${value.toLowerCase()}` : 'status-custom';
-                selectEl.className = `inline-select ${statusClass}`;
-            }
-            // Para mudança de status (ex: OPERANDO para BAIXADA), envia IMEDIATAMENTE sem debounce
-            syncAllDataToOnline(true);
+            renderDashboard(); // Muda na hora na tela
+            syncAllDataToOnline(true); // Salva na nuvem logo em seguida
         } else {
+            updateKPIsAndChartsOnly();
             debouncedSyncAllDataToOnline();
         }
         showToast(`💾 <strong>${vehicleId}</strong>: Campo <em>${fieldName}</em> salvo online!`);
