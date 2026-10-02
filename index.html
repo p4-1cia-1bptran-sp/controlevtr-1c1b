@@ -9,6 +9,16 @@
     <!-- SheetJS (XLSX) CDN para Leitura e Exportação nativa de Planilhas Excel/CSV -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script>
+    function escapeHTML(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
         (function() {
             const savedTheme = localStorage.getItem('batalhao_vtr_theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -4029,6 +4039,195 @@
         </div>
     </div>
 
+    <!-- Setor de Manutenções da Frota -->
+    <div class="card" id="maintenanceSection" style="margin-top: 24px;">
+        <div class="card-header">
+            <div class="card-title">🔧 Manutenções da Frota</div>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="btn btn-excel btn-3d btn-sm" onclick="exportMaintenanceExcel()" title="Exportar apenas a planilha com a tabela de manutenções (.xlsx)">
+                    📊 Exportar Planilha de Manutenções
+                </button>
+                <button type="button" class="btn-collapse" onclick="toggleSection('maintenanceSectionBodyContent', this)" title="Ocultar / Expandir Manutenções">▲</button>
+            </div>
+        </div>
+        <div id="maintenanceSectionBodyContent" class="collapsible-content">
+            <!-- Indicadores Rápidos / Botões de Filtro de Manutenção (Estilo Cartões da Frota) -->
+            <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px;">
+                <!-- 1. Total de Manutenções -->
+                <div class="kpi-card kpi-total" id="maintKpiCard_ALL" onclick="setMaintQuickFilter('ALL')" style="cursor: pointer;" title="Clique para filtrar: Todas as Manutenções">
+                    <div class="kpi-title">Total de Manutenções</div>
+                    <div class="kpi-value" style="color: var(--primary);" id="maintStatTotal">0</div>
+                    <div class="kpi-sub">Ver Todas as Ordens</div>
+                </div>
+                <!-- 2. Preventivas -->
+                <div class="kpi-card" id="maintKpiCard_Preventiva" onclick="setMaintQuickFilter('Preventiva')" style="cursor: pointer; border-left: 4px solid #0284c7;" title="Clique para filtrar: Preventivas">
+                    <div class="kpi-title" style="color: #0284c7;">Preventivas</div>
+                    <div class="kpi-value" style="color: #0284c7;" id="maintStatPreventiva">0</div>
+                    <div class="kpi-sub" style="color: #0369a1;">🛠️ Periódica / Programada</div>
+                </div>
+                <!-- 3. Corretivas -->
+                <div class="kpi-card" id="maintKpiCard_Corretiva" onclick="setMaintQuickFilter('Corretiva')" style="cursor: pointer; border-left: 4px solid #dc2626;" title="Clique para filtrar: Corretivas">
+                    <div class="kpi-title" style="color: #dc2626;">Corretivas</div>
+                    <div class="kpi-value" style="color: #dc2626;" id="maintStatCorretiva">0</div>
+                    <div class="kpi-sub" style="color: #ef4444;">⚠️ Falhas e Defeitos</div>
+                </div>
+                <!-- 4. Preditivas -->
+                <div class="kpi-card" id="maintKpiCard_Preditiva" onclick="setMaintQuickFilter('Preditiva')" style="cursor: pointer; border-left: 4px solid #7c3aed;" title="Clique para filtrar: Preditivas">
+                    <div class="kpi-title" style="color: #7c3aed;">Preditivas</div>
+                    <div class="kpi-value" style="color: #7c3aed;" id="maintStatPreditiva">0</div>
+                    <div class="kpi-sub" style="color: #8b5cf6;">📊 Desgaste / Medições</div>
+                </div>
+                <!-- 5. Detectivas / Outras -->
+                <div class="kpi-card" id="maintKpiCard_OUTRAS" onclick="setMaintQuickFilter('OUTRAS')" style="cursor: pointer; border-left: 4px solid #d97706;" title="Clique para filtrar: Detectivas / Prescritivas">
+                    <div class="kpi-title" style="color: #d97706;">Detectivas / Outras</div>
+                    <div class="kpi-value" style="color: #d97706;" id="maintStatOutras">0</div>
+                    <div class="kpi-sub" style="color: #f59e0b;">🔍 Segurança / Recomendações</div>
+                </div>
+                <!-- 6. Investimento / Custo (Por último conforme solicitado) -->
+                <div class="kpi-card" id="maintKpiCard_Custo" onclick="setMaintQuickFilter('ALL')" style="cursor: pointer; border-left: 4px solid #16a34a; background: #f0fdf4;" title="Custo total acumulado das manutenções">
+                    <div class="kpi-title" style="color: #15803d;">Investimento / Custo</div>
+                    <div class="kpi-value" style="color: #16a34a;" id="maintStatCost">R$ 0,00</div>
+                    <div class="kpi-sub" style="color: #22c55e;">💰 Valor Total Acumulado</div>
+                </div>
+            </div>
+
+            <!-- Filtros de Manutenção -->
+            <div class="filters-container" style="margin-bottom: 16px; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;">
+                <!-- Filtro por Mês/Ano Dinâmico (Entra novo ano automaticamente) -->
+                <div class="filter-group">
+                    <span class="filter-label">📅 Mês/Ano:</span>
+                    <div class="custom-month-dropdown" id="monthDropdownContainerMaint">
+                        <button type="button" id="monthDropdownBtnMaint" class="month-dropdown-btn" onclick="toggleMonthDropdown(event, 'maint')" title="Filtrar Manutenções por Mês ou Ano">
+                            <span id="monthDropdownBtnLabelMaint">Todos os Meses</span>
+                            <span class="month-dropdown-arrow">▼</span>
+                        </button>
+                        <div id="monthDropdownMenuMaint" class="month-dropdown-menu" style="display: none;"></div>
+                        <input type="hidden" id="filterMaintMonth" value="ALL" onchange="renderMaintenanceTable()">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterMaintVehicle" class="filter-label">🚓 Viatura:</label>
+                    <select id="filterMaintVehicle" class="filter-select" onchange="renderMaintenanceTable()">
+                        <option value="ALL">Todas as Viaturas</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterMaintType" class="filter-label">⚙️ Tipo:</label>
+                    <select id="filterMaintType" class="filter-select" onchange="renderMaintenanceTable()">
+                        <option value="ALL">Todos os Tipos</option>
+                        <option value="Preventiva">🛠️ Preventiva</option>
+                        <option value="Corretiva">⚠️ Corretiva</option>
+                        <option value="Preditiva">📊 Preditiva</option>
+                        <option value="Detectiva">🔍 Detectiva</option>
+                        <option value="Prescritiva">🤖 Prescritiva</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterMaintStatus" class="filter-label">📌 Status:</label>
+                    <select id="filterMaintStatus" class="filter-select" onchange="renderMaintenanceTable()">
+                        <option value="ALL">Todos os Status</option>
+                        <option value="Concluída">Concluída</option>
+                        <option value="Em Andamento">Em Andamento</option>
+                        <option value="Agendada">Agendada</option>
+                    </select>
+                </div>
+                <div class="filter-group" style="flex: 1; min-width: 200px;">
+                    <label for="filterMaintSearch" class="filter-label">🔍 Buscar Serviço / Peça / Oficina:</label>
+                    <input type="text" id="filterMaintSearch" class="filter-select" placeholder="Digite para filtrar..." oninput="renderMaintenanceTable()">
+                </div>
+            </div>
+
+            <!-- Painel para Inserir Manutenção Diretamente na Tabela -->
+            <div class="quick-add-panel" style="margin-bottom: 20px;">
+                <div class="quick-add-header">
+                    <span>➕ Inserir Manutenção Diretamente na Tabela</span>
+                    <button type="button" class="btn-collapse btn-collapse-sm" onclick="toggleSection('quickAddMaintFormContent', this)" title="Ocultar / Expandir Formulário">▲</button>
+                </div>
+                <div id="quickAddMaintFormContent" class="collapsible-content">
+                    <form id="quickAddMaintForm" onsubmit="handleQuickAddMaintenance(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; padding: 12px 0;">
+                        <div class="quick-add-field">
+                            <label for="maintVehicle">Viatura *</label>
+                            <select id="maintVehicle" required></select>
+                        </div>
+                        <div class="quick-add-field">
+                            <label for="maintType">Tipo de Manutenção *</label>
+                            <select id="maintType" required onchange="onMaintTypeChange()">
+                                <option value="Preventiva">🛠️ Preventiva</option>
+                                <option value="Corretiva">⚠️ Corretiva</option>
+                                <option value="Preditiva">📊 Preditiva</option>
+                                <option value="Detectiva">🔍 Detectiva</option>
+                                <option value="Prescritiva">🤖 Prescritiva</option>
+                            </select>
+                        </div>
+                        <div class="quick-add-field">
+                            <label for="maintDate">Data *</label>
+                            <input type="date" id="maintDate" required>
+                        </div>
+                        <div class="quick-add-field">
+                            <label for="maintKm">Quilometragem (KM)</label>
+                            <input type="number" id="maintKm" placeholder="Ex: 85200" min="0">
+                        </div>
+                        <div class="quick-add-field" style="grid-column: span 2;">
+                            <label for="maintDesc">Descrição / Peças / Serviço Realizado *</label>
+                            <input type="text" id="maintDesc" placeholder="Ex: Troca de óleo 5W30, filtro e pastilhas de freio dianteiras" required>
+                        </div>
+                        <div class="quick-add-field">
+                            <label for="maintProvider">Oficina / Mecânica / CSM</label>
+                            <input type="text" id="maintProvider" placeholder="Ex: Garagem Central / CSM">
+                        </div>
+                        <div class="quick-add-field">
+                            <label for="maintCost">Custo (R$)</label>
+                            <input type="number" id="maintCost" placeholder="0,00" step="0.01" min="0">
+                        </div>
+                        <div class="quick-add-field">
+                            <label for="maintStatus">Situação *</label>
+                            <select id="maintStatus" required>
+                                <option value="Concluída">Concluída</option>
+                                <option value="Em Andamento">Em Andamento</option>
+                                <option value="Agendada">Agendada</option>
+                            </select>
+                        </div>
+                        <div class="quick-add-field" style="grid-column: span 2; display: flex; align-items: flex-end;">
+                            <button type="submit" class="btn btn-primary btn-3d" style="width: 100%; height: 38px; justify-content: center; font-weight: 700;">
+                                ➕ Registrar Manutenção na Tabela
+                            </button>
+                        </div>
+                    </form>
+                    <!-- Guia explicativo das Manutenções (baseado na tabela de referência) -->
+                    <div id="maintTypeHelpText" style="margin-top: 6px; font-size: 0.82rem; color: #334155; background: #f1f5f9; padding: 10px 14px; border-radius: 6px; border-left: 4px solid var(--primary); line-height: 1.4;">
+                        ℹ️ <strong>Preventiva:</strong> Em períodos ou quilometragens programadas, antes da falha (Ex: Troca de óleo, filtros, correias, revisão e lubrificação).
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Manutenções da Frota (Visível, legível e completa) -->
+            <div class="table-responsive" id="maintenanceTableContainer" style="margin-top: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg);">
+                <table id="maintenanceTable" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f8fafc;">
+                            <th style="width: 130px; min-width: 120px; padding: 12px 14px; font-weight: 800; font-size: 0.84rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border);">Viatura</th>
+                            <th style="width: 150px; min-width: 130px; padding: 12px 14px; font-weight: 800; font-size: 0.84rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border);">Tipo</th>
+                            <th style="width: 120px; min-width: 110px; padding: 12px 14px; font-weight: 800; font-size: 0.84rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border);">Data</th>
+                            <th style="width: 110px; min-width: 100px; padding: 12px 14px; font-weight: 800; font-size: 0.84rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border);">KM</th>
+                            <th style="min-width: 280px; padding: 12px 14px; font-weight: 800; font-size: 0.84rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border);">Descrição / Serviço Realizado</th>
+                            <th style="width: 180px; min-width: 150px; padding: 12px 14px; font-weight: 800; font-size: 0.84rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border);">Oficina / Prestador</th>
+                            <th style="width: 140px; min-width: 120px; padding: 12px 14px; font-weight: 800; font-size: 0.84rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border);">Custo (R$)</th>
+                            <th style="width: 130px; min-width: 120px; padding: 12px 14px; font-weight: 800; font-size: 0.84rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border);">Situação</th>
+                            <th style="width: 160px; min-width: 150px; text-align: center; padding: 12px 14px; font-weight: 800; font-size: 0.84rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border);">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="maintenanceTableBody">
+                        <!-- Gerado dinamicamente via renderMaintenanceTable() -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="maintenanceTableEmpty" style="display: none; padding: 30px; text-align: center; color: #64748b; font-weight: 600;">
+                Nenhuma manutenção registrada com os filtros selecionados.
+            </div>
+        </div>
+    </div>
+
     <!-- Barra de Comandos e Ações Principais -->
     <div class="card" style="padding: 20px;">
         <div class="card-header" style="margin-bottom: 12px;">
@@ -4070,7 +4269,7 @@
 </div>
 
 <!-- Modal de Edição Completa -->
-<div id="editModal" class="modal-overlay" onclick="onModalOverlayClick(event)">
+<div id="editModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card">
         <div class="modal-header">
             <div class="modal-title">
@@ -4204,7 +4403,7 @@
 </div>
 
 <!-- Modal Unificado de Importação -->
-<div id="mergeModal" class="modal-overlay" onclick="onMergeOverlayClick(event)">
+<div id="mergeModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card">
         <div class="modal-header"><div class="modal-title"><span>📥 Importar e Alimentar Banco de Dados</span></div><button class="modal-close" onclick="closeMergeModal()" title="Fechar">✖</button></div>
         <div style="display:flex; flex-direction:column; gap:14px;">
@@ -4269,7 +4468,7 @@
 </div>
 
 <!-- Modal de Confirmação de Unidade -->
-<div id="confirmUnitModal" class="modal-overlay" style="z-index: 10001;" onclick="onConfirmUnitOverlayClick(event)">
+<div id="confirmUnitModal" class="modal-overlay" style="z-index: 10001;" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 560px;">
         <div class="modal-header"><div class="modal-title"><span>🏛️ Confirmação de Unidade</span></div><button class="modal-close" onclick="closeConfirmUnitModal()" title="Cancelar">✖</button></div>
         <div style="display: flex; flex-direction: column; gap: 16px; padding: 8px 0;">
@@ -4295,7 +4494,7 @@
 </div>
 
 <!-- Modal de Gerenciamento -->
-<div id="configModal" class="modal-overlay" onclick="onConfigOverlayClick(event)">
+<div id="configModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card">
         <div class="modal-header"><div class="modal-title"><span>⚙️ Gerenciar Cias, Pelotões, Status, Locais e Modelos</span></div><button class="modal-close" onclick="closeConfigModal()" title="Fechar">✖</button></div>
         <div style="display:flex; flex-direction:column; gap:20px; max-height: 70vh; overflow-y: auto; padding-right: 4px;">
@@ -4310,7 +4509,7 @@
 </div>
 
 <!-- Modal de Configuração do Servidor -->
-<div id="serverConfigModal" class="modal-overlay" onclick="onServerConfigOverlayClick(event)">
+<div id="serverConfigModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 600px;">
         <div class="modal-header">
             <div class="modal-title"><span>☁️ Banco de Dados do Servidor (Online)</span></div>
@@ -4403,7 +4602,7 @@
 </div>
 
 <!-- Modal: Dados Cadastrais da Viatura (Carrinho Vermelho) -->
-<div id="vehicleQuickDetailsModal" class="modal-overlay" onclick="onQuickDetailsOverlayClick(event)">
+<div id="vehicleQuickDetailsModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card quick-details-card" style="max-width: 460px;" onclick="event.stopPropagation()">
         <div class="modal-header" style="border-bottom: 2px solid var(--border); padding-bottom: 12px;">
             <div class="modal-title" style="display: flex; align-items: center; gap: 8px;">
@@ -4476,7 +4675,7 @@
 <!-- ========================================================================= -->
 <!-- 💀 MODAL "NÃO É BILÃO O SUFICIENTE" -->
 <!-- ========================================================================= -->
-<div id="bilaoModal" class="modal-overlay" onclick="closeBilaoModal()" style="z-index: 10006;">
+<div id="bilaoModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();" style="z-index: 10006;">
     <div class="modal-card" style="max-width: 460px; text-align: center; padding: 32px 24px; background: #0f172a; border: 1px solid #334155; color: #f8fafc; border-radius: 14px;" onclick="event.stopPropagation()">
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 18px;">
             <svg width="78" height="78" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -4545,7 +4744,7 @@
 </div>
 
 <!-- Modal: Editar Conta do Usuário Conectado -->
-<div id="editAccountModal" class="modal-overlay" onclick="if(event.target.id==='editAccountModal') closeEditAccountModal()">
+<div id="editAccountModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 480px;" onclick="event.stopPropagation()">
         <div class="modal-header">
             <div class="modal-title"><span>👤 Editar Conta: <strong id="accModalUserName" style="color: var(--primary);">--</strong></span></div>
@@ -4603,7 +4802,7 @@
 </div>
 
 <!-- Modal para Alternar Usuário ou Encerrar Sessão -->
-<div id="userSessionSwitchModal" class="modal-overlay" onclick="if(event.target.id==='userSessionSwitchModal') closeUserSessionSwitchModal()">
+<div id="userSessionSwitchModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 420px;" onclick="event.stopPropagation()">
         <div class="modal-header">
             <div class="modal-title"><span>👤 Sessão de Operador</span></div>
@@ -4629,7 +4828,7 @@
 </div>
 
 <!-- Modal de Gerenciamento de Usuários e Permissões -->
-<div id="usersManagementModal" class="modal-overlay" onclick="onUsersManagementOverlayClick(event)">
+<div id="usersManagementModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 680px;" onclick="event.stopPropagation()">
         <div class="modal-header">
             <div class="modal-title"><span>👥 Gerenciamento de Usuários e Permissões</span></div>
@@ -4690,7 +4889,81 @@
 </div>
 
 <!-- Modal de Gerenciamento do Banco de Dados -->
-<div id="databaseActionsModal" class="modal-overlay" onclick="onDatabaseActionsOverlayClick(event)">
+
+<!-- Modal de Edição de Manutenção -->
+<div id="editMaintenanceModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();" style="z-index: 10005;">
+    <div class="modal-card" style="max-width: 600px;" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div class="modal-title">
+                <span>🔧 Editar Manutenção:</span>
+                <span id="modalEditMaintVehiclePrefix" style="color: var(--primary); text-decoration: underline;">--</span>
+            </div>
+            <button type="button" class="modal-close" onclick="closeEditMaintenanceModal()" title="Fechar">✖</button>
+        </div>
+        <form id="editMaintenanceForm" onsubmit="saveEditMaintenance(event)" style="padding: 12px 0;">
+            <input type="hidden" id="editMaintId">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                <div class="form-group">
+                    <label for="editMaintVehicle">Viatura *</label>
+                    <select id="editMaintVehicle" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="editMaintType">Tipo de Manutenção *</label>
+                    <select id="editMaintType" required>
+                        <option value="Preventiva">🛠️ Preventiva</option>
+                        <option value="Corretiva">⚠️ Corretiva</option>
+                        <option value="Preditiva">📊 Preditiva</option>
+                        <option value="Detectiva">🔍 Detectiva</option>
+                        <option value="Prescritiva">🤖 Prescritiva</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editMaintDate">Data *</label>
+                    <input type="date" id="editMaintDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="editMaintKm">Quilometragem (KM)</label>
+                    <input type="number" id="editMaintKm" min="0">
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label for="editMaintDesc">Descrição do Serviço / Peças Trocadas *</label>
+                    <input type="text" id="editMaintDesc" required>
+                </div>
+                <div class="form-group">
+                    <label for="editMaintProvider">Oficina / Prestador</label>
+                    <input type="text" id="editMaintProvider">
+                </div>
+                <div class="form-group">
+                    <label for="editMaintCost">Custo (R$)</label>
+                    <input type="number" id="editMaintCost" step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="editMaintStatus">Situação *</label>
+                    <select id="editMaintStatus" required>
+                        <option value="Concluída">Concluída</option>
+                        <option value="Em Andamento">Em Andamento</option>
+                        <option value="Agendada">Agendada</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editMaintNotes">Observações</label>
+                    <input type="text" id="editMaintNotes">
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <button type="button" class="btn btn-danger btn-3d" onclick="deleteMaintenanceFromModal()" title="Excluir permanentemente este registro de manutenção">
+                    🗑️ Excluir Registro
+                </button>
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" class="btn btn-outline btn-3d" onclick="closeEditMaintenanceModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary btn-3d">💾 Salvar Alterações</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="databaseActionsModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 480px;" onclick="event.stopPropagation()">
         <div class="modal-header">
             <div class="modal-title"><span>💾 Banco de Dados</span></div>
@@ -4740,7 +5013,7 @@
 </div>
 
 <!-- Modal de Opções de Edição da Tabela -->
-<div id="tableEditOptionsModal" class="modal-overlay" onclick="onTableEditOptionsOverlayClick(event)">
+<div id="tableEditOptionsModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 480px;" onclick="event.stopPropagation()">
         <div class="modal-header">
             <div class="modal-title"><span>✏️ Opções da Tabela de Viaturas</span></div>
@@ -4764,7 +5037,7 @@
 </div>
 
 <!-- Modal de Ações da Linha da Viatura -->
-<div id="rowActionModal" class="modal-overlay" onclick="onRowActionOverlayClick(event)">
+<div id="rowActionModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 450px;" onclick="event.stopPropagation()">
         <div class="modal-header">
             <div class="modal-title"><span>✏️ Opções da Viatura:</span> <span id="rowActionVehiclePrefix" style="color: var(--primary); font-weight: 800; text-decoration: underline;">--</span></div>
@@ -4785,7 +5058,7 @@
 </div>
 
 <!-- Modal Universal: Administrador diz -->
-<div id="adminDialogModal" class="modal-overlay" onclick="onAdminDialogOverlayClick(event)">
+<div id="adminDialogModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 440px;" onclick="event.stopPropagation()">
         <div class="modal-header">
             <div class="modal-title"><span>👮 Administrador diz:</span></div>
@@ -4964,10 +5237,12 @@
         try {
             const recs = Array.isArray(obj.records) ? obj.records : [];
             const recFingerprint = recs.map(r => `${r.vehicle||''}:${r.status||''}:${r.destino||''}:${r.obs||''}:${r.date||''}:${r.cia||''}:${r.model||''}:${r.pelotao||''}`).join(';');
+            const maints = Array.isArray(obj.maintenances) ? obj.maintenances : [];
+            const maintFingerprint = maints.map(m => `${m.id||''}:${m.vehicle||''}:${m.type||''}:${m.date||''}:${m.status||''}:${m.cost||''}:${m.km||''}`).join(';');
             const title = obj.appTitle || '';
             const usersCount = Array.isArray(obj.systemUsers) ? obj.systemUsers.length : 0;
             const time = obj.updatedAt || '';
-            return `${time}_${recs.length}_${title}_${usersCount}_${recFingerprint}`;
+            return `${time}_${recs.length}_${maints.length}_${title}_${usersCount}_${recFingerprint}_${maintFingerprint}`;
         } catch(e) {
             return JSON.stringify(obj);
         }
@@ -5012,6 +5287,11 @@
             });
             records = migrateVehiclePrefixes(sanitizeCleanRecordsDates(merged));
             localStorage.setItem('batalhao_vtr_records', JSON.stringify(records));
+        }
+        if (Array.isArray(data.maintenances)) {
+            maintenances = data.maintenances;
+            localStorage.setItem('batalhao_vtr_maintenances', JSON.stringify(maintenances));
+            renderMaintenanceTable();
         }
         if (data.updatedAt) {
             localStorage.setItem('batalhao_vtr_updated_at', data.updatedAt);
@@ -5100,6 +5380,11 @@
             populateMonthSelect();
             populateVehicleSelects();
             renderDashboard();
+    renderMaintenanceTable();
+    const maintDateInput = document.getElementById('maintDate');
+    if (maintDateInput && !maintDateInput.value) {
+        maintDateInput.value = new Date().toISOString().slice(0, 10);
+    }
         }
 
         isRemoteUpdate = false;
@@ -5167,6 +5452,7 @@
 
         const payload = {
             records: records || [],
+            maintenances: maintenances || [],
             customCias: customCias || [],
             customModels: customModels || [],
             customPelotoes: customPelotoes || [],
@@ -5498,7 +5784,8 @@
     }
 
     function onServerConfigOverlayClick(e) {
-        if (e.target.id === 'serverConfigModal') closeServerConfigModal();
+        // Protegido contra fechamento acidental fora da janela
+        if (e && e.stopPropagation) e.stopPropagation();
     }
 
     function saveServerConfigUrl() {
@@ -5829,9 +6116,8 @@
     }
 
     function onEditTitleOverlayClick(e) {
-        if (e.target.id === 'editTitleAndImageModal') {
-            closeEditTitleAndImageModal();
-        }
+        // Protegido contra fechamento acidental fora da janela
+        if (e && e.stopPropagation) e.stopPropagation();
     }
 
     function handlePizzaCenterImageSelect(e) {
@@ -6664,7 +6950,8 @@
     }
 
     function onConfigOverlayClick(e) {
-        if (e.target.id === 'configModal') closeConfigModal();
+        // Protegido contra fechamento acidental fora da janela
+        if (e && e.stopPropagation) e.stopPropagation();
     }
 
     function renderManageLists() {
@@ -6807,6 +7094,73 @@
             return r;
         });
     }
+
+    let defaultSampleMaintenances = [
+        {
+            id: 'maint_sample_1',
+            vehicle: 'T-01210',
+            type: 'Preventiva',
+            date: '2026-10-01',
+            km: 85200,
+            description: 'Troca de óleo 5W30, filtros de óleo, ar e combustível e revisão geral',
+            provider: 'Garagem Central / CSM',
+            cost: 480.00,
+            status: 'Concluída',
+            notes: 'Próxima revisão em 10.000 km'
+        },
+        {
+            id: 'maint_sample_2',
+            vehicle: 'T-01201',
+            type: 'Corretiva',
+            date: '2026-09-28',
+            km: 112400,
+            description: 'Substituição das pastilhas de freio dianteiras e sangria do sistema',
+            provider: 'Mecânica Especializada',
+            cost: 350.00,
+            status: 'Concluída',
+            notes: 'Peças originais instaladas'
+        },
+        {
+            id: 'maint_sample_3',
+            vehicle: 'T-01205',
+            type: 'Preditiva',
+            date: '2026-10-05',
+            km: 94000,
+            description: 'Análise de vibração no eixo dianteiro e teste de pressão do óleo',
+            provider: 'CSM Telemática / Frota',
+            cost: 200.00,
+            status: 'Agendada',
+            notes: 'Agendada para segunda-feira'
+        },
+        {
+            id: 'maint_sample_4',
+            vehicle: 'T-01215',
+            type: 'Detectiva',
+            date: '2026-09-25',
+            km: 78000,
+            description: 'Teste e calibração de sensores de freio ABS, relés e dispositivos de emergência',
+            provider: 'Oficina da 1ª Cia',
+            cost: 150.00,
+            status: 'Concluída',
+            notes: 'Todos os sensores operando normalmente'
+        },
+        {
+            id: 'maint_sample_5',
+            vehicle: 'T-01208',
+            type: 'Prescritiva',
+            date: '2026-10-02',
+            km: 105000,
+            description: 'Recomendação técnica do sistema para troca preventiva da correia dentada e tensores',
+            provider: 'Garagem Central',
+            cost: 620.00,
+            status: 'Em Andamento',
+            notes: 'Aguardando chegada da peça'
+        }
+    ];
+
+    let rawMaintenances = JSON.parse(localStorage.getItem('batalhao_vtr_maintenances') || 'null');
+    let maintenances = Array.isArray(rawMaintenances) ? rawMaintenances : defaultSampleMaintenances;
+    localStorage.setItem('batalhao_vtr_maintenances', JSON.stringify(maintenances));
 
     let rawLocal = JSON.parse(localStorage.getItem('batalhao_vtr_records') || 'null');
     let hadOldPrefixes = Array.isArray(rawLocal) && rawLocal.some(r => r.vehicle === '13-167' || (r.vehicle && r.vehicle.startsWith('T-') && !r.vehicle.startsWith('T-0')));
@@ -7184,6 +7538,9 @@
     }
 
     document.addEventListener('click', (e) => {
+        if (!e.target.closest('.custom-month-dropdown')) {
+            closeMonthDropdown();
+        }
         if (activeColumnDropdownMenu && !activeColumnDropdownMenu.contains(e.target) && !e.target.closest('.inline-select-btn')) {
             closeColumnSelectMenu();
         }
@@ -7329,9 +7686,8 @@
     }
 
     function onAdminDialogOverlayClick(e) {
-        if (e.target.id === 'adminDialogModal') {
-            closeAdminDialog(false);
-        }
+        // Protegido contra fechamento acidental fora da janela
+        if (e && e.stopPropagation) e.stopPropagation();
     }
 
     window.alert = function(msg) {
@@ -8298,9 +8654,8 @@
     }
 
     function onUsersManagementOverlayClick(e) {
-        if (e.target.id === 'usersManagementModal') {
-            closeUsersManagementModal();
-        }
+        // Protegido contra fechamento acidental fora da janela
+        if (e && e.stopPropagation) e.stopPropagation();
     }
 
     function populateMgmtUserSelect(selectedId = '') {
@@ -8554,7 +8909,8 @@
     }
 
     function onDatabaseActionsOverlayClick(e) {
-        if (e.target.id === 'databaseActionsModal') closeDatabaseActionsModal();
+        // Protegido contra fechamento acidental fora da janela
+        if (e && e.stopPropagation) e.stopPropagation();
     }
 
     let selectedRowActionVehicle = '';
@@ -8577,7 +8933,8 @@
     }
 
     function onRowActionOverlayClick(e) {
-        if (e.target.id === 'rowActionModal') closeRowActionModal();
+        // Protegido contra fechamento acidental fora da janela
+        if (e && e.stopPropagation) e.stopPropagation();
     }
 
     async function openTableAdminOptions() {
@@ -8593,12 +8950,20 @@
     }
 
     function onTableEditOptionsOverlayClick(e) {
-        if (e.target.id === 'tableEditOptionsModal') closeTableEditOptionsModal();
+        // Protegido contra fechamento acidental fora da janela
+        if (e && e.stopPropagation) e.stopPropagation();
     }
-    function toggleMonthDropdown(e, isTable = false) {
+    function toggleMonthDropdown(e, mode = false) {
         if (e) e.stopPropagation();
-        const menuId = isTable ? 'monthDropdownMenuTable' : 'monthDropdownMenu';
-        const btnId = isTable ? 'monthDropdownBtnTable' : 'monthDropdownBtn';
+        let menuId = 'monthDropdownMenu';
+        let btnId = 'monthDropdownBtn';
+        if (mode === 'maint') {
+            menuId = 'monthDropdownMenuMaint';
+            btnId = 'monthDropdownBtnMaint';
+        } else if (mode === true || mode === 'table') {
+            menuId = 'monthDropdownMenuTable';
+            btnId = 'monthDropdownBtnTable';
+        }
         const menu = document.getElementById(menuId);
         const btn = document.getElementById(btnId);
         if (!menu) return;
@@ -8612,19 +8977,22 @@
     }
 
     function closeMonthDropdown() {
-        ['monthDropdownMenu', 'monthDropdownMenuTable'].forEach(id => {
+        ['monthDropdownMenu', 'monthDropdownMenuTable', 'monthDropdownMenuMaint'].forEach(id => {
             const menu = document.getElementById(id);
             if (menu) menu.style.display = 'none';
         });
-        ['monthDropdownBtn', 'monthDropdownBtnTable'].forEach(id => {
+        ['monthDropdownBtn', 'monthDropdownBtnTable', 'monthDropdownBtnMaint'].forEach(id => {
             const btn = document.getElementById(id);
             if (btn) btn.classList.remove('open');
         });
     }
 
-    function toggleYearSubmenu(e, year, isTable = false) {
+    function toggleYearSubmenu(e, year, mode = false) {
         if (e) e.stopPropagation();
-        const suffix = isTable ? '_table' : '';
+        let suffix = '';
+        if (mode === 'maint') suffix = '_maint';
+        else if (mode === true || mode === 'table') suffix = '_table';
+
         const submenu = document.getElementById(`submenu_${year}${suffix}`);
         const arrow = document.getElementById(`arrow_${year}${suffix}`);
         if (!submenu) return;
@@ -8651,6 +9019,33 @@
         updateMonthButtonLabel(val, labelText);
         closeMonthDropdown();
         renderDashboard();
+    }
+
+    function selectMaintMonthFilter(val, labelText) {
+        const filterMaintMonth = document.getElementById('filterMaintMonth');
+        if (filterMaintMonth) filterMaintMonth.value = val;
+
+        const labelBtn = document.getElementById('monthDropdownBtnLabelMaint');
+        if (labelBtn) {
+            if (labelText) {
+                labelBtn.textContent = labelText;
+            } else if (val === 'ALL') {
+                labelBtn.textContent = 'Todos os Meses';
+            } else if (/^\d{4}$/.test(val)) {
+                labelBtn.textContent = `Ano ${val} (Completo)`;
+            } else if (/^\d{4}-\d{2}$/.test(val)) {
+                const parts = val.split('-');
+                const year = parts[0];
+                const m = parseInt(parts[1], 10);
+                const monthName = (m >= 1 && m <= 12) ? monthNamesPT[m - 1] : `Mês ${parts[1]}`;
+                labelBtn.textContent = `${monthName} / ${year}`;
+            } else {
+                labelBtn.textContent = val;
+            }
+        }
+
+        closeMonthDropdown();
+        renderMaintenanceTable();
     }
 
     function updateMonthButtonLabel(val, customLabel = null) {
@@ -8684,18 +9079,21 @@
     document.addEventListener('click', function(e) {
         const container1 = document.getElementById('monthDropdownContainer');
         const container2 = document.getElementById('monthDropdownContainerTable');
+        const container3 = document.getElementById('monthDropdownContainerMaint');
         const in1 = container1 && container1.contains(e.target);
         const in2 = container2 && container2.contains(e.target);
-        if (!in1 && !in2) {
+        const in3 = container3 && container3.contains(e.target);
+        if (!in1 && !in2 && !in3) {
             closeMonthDropdown();
         }
     });
 
-    function buildMonthMenuHtml(isTable, currentVal) {
+    function buildMonthMenuHtml(target, currentVal) {
         const now = new Date();
         const currentYear = now.getFullYear();
         const yearsSet = new Set([currentYear]);
 
+        // Anos presentes nas viaturas
         if (typeof records !== 'undefined' && Array.isArray(records)) {
             records.forEach(r => {
                 if (r.date) {
@@ -8715,12 +9113,34 @@
             });
         }
 
+        // Anos presentes nas manutenções (quando entrar um ano novo, entra automaticamente!)
+        if (typeof maintenances !== 'undefined' && Array.isArray(maintenances)) {
+            maintenances.forEach(m => {
+                if (m.date) {
+                    const matchY = String(m.date).match(/^(\d{4})/);
+                    if (matchY) {
+                        const y = parseInt(matchY[1], 10);
+                        if (!isNaN(y) && y >= 2000 && y <= 2100) yearsSet.add(y);
+                    }
+                }
+            });
+        }
+
         const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
-        const suffix = isTable ? '_table' : '';
-        const isTableArg = isTable ? ', true' : '';
+        let suffix = '';
+        let targetArg = "'dashboard'";
+        if (target === 'maint') {
+            suffix = '_maint';
+            targetArg = "'maint'";
+        } else if (target === 'table' || target === true) {
+            suffix = '_table';
+            targetArg = "'table'";
+        }
+
+        const clickFn = (target === 'maint') ? 'selectMaintMonthFilter' : 'selectMonthFilter';
 
         let html = `
-            <div class="month-menu-item ${currentVal === 'ALL' ? 'active' : ''}" onclick="selectMonthFilter('ALL', 'Todos os Meses')">
+            <div class="month-menu-item ${currentVal === 'ALL' ? 'active' : ''}" onclick="${clickFn}('ALL', 'Todos os Meses')">
                 <span>🌐 Todos os Meses (Geral)</span>
                 ${currentVal === 'ALL' ? '<span>✓</span>' : ''}
             </div>
@@ -8735,10 +9155,10 @@
             html += `
                 <div class="month-year-group" id="yearGroup_${year}${suffix}">
                     <div class="month-year-header ${isYearSelected ? 'active' : ''}">
-                        <span class="month-year-title" onclick="selectMonthFilter('${year}', 'Ano ${year} (Completo)')" title="Filtrar por todo o ano ${year}">
+                        <span class="month-year-title" onclick="${clickFn}('${year}', 'Ano ${year} (Completo)')" title="Filtrar por todo o ano ${year}">
                             📅 <strong>Ano ${year}</strong> (Completo)
                         </span>
-                        <span id="arrow_${year}${suffix}" class="month-year-expand-btn ${shouldBeOpen ? 'open' : ''}" onclick="toggleYearSubmenu(event, '${year}'${isTableArg})" title="${shouldBeOpen ? 'Recolher meses de ' + year : 'Expandir meses de ' + year}">
+                        <span id="arrow_${year}${suffix}" class="month-year-expand-btn ${shouldBeOpen ? 'open' : ''}" onclick="toggleYearSubmenu(event, '${year}', ${targetArg})" title="${shouldBeOpen ? 'Recolher meses de ' + year : 'Expandir meses de ' + year}">
                             ${shouldBeOpen ? '▲' : '▼'}
                         </span>
                     </div>
@@ -8752,7 +9172,7 @@
                 const isMonthSelected = currentVal === ym;
 
                 html += `
-                    <div class="month-submenu-item ${isMonthSelected ? 'active' : ''}" onclick="selectMonthFilter('${ym}', '${monthLabel}')">
+                    <div class="month-submenu-item ${isMonthSelected ? 'active' : ''}" onclick="${clickFn}('${ym}', '${monthLabel}')">
                         <span>🗓️ ${monthLabel}</span>
                         ${isMonthSelected ? '<span style="color:#2563eb; font-weight:bold;">✓</span>' : ''}
                     </div>
@@ -8774,12 +9194,19 @@
 
         const dropdownMenu = document.getElementById('monthDropdownMenu');
         if (dropdownMenu) {
-            dropdownMenu.innerHTML = buildMonthMenuHtml(false, currentVal);
+            dropdownMenu.innerHTML = buildMonthMenuHtml('dashboard', currentVal);
         }
 
         const dropdownMenuTable = document.getElementById('monthDropdownMenuTable');
         if (dropdownMenuTable) {
-            dropdownMenuTable.innerHTML = buildMonthMenuHtml(true, currentVal);
+            dropdownMenuTable.innerHTML = buildMonthMenuHtml('table', currentVal);
+        }
+
+        const dropdownMenuMaint = document.getElementById('monthDropdownMenuMaint');
+        if (dropdownMenuMaint) {
+            const filterMaintMonth = document.getElementById('filterMaintMonth');
+            const maintVal = filterMaintMonth ? filterMaintMonth.value || 'ALL' : 'ALL';
+            dropdownMenuMaint.innerHTML = buildMonthMenuHtml('maint', maintVal);
         }
 
         updateMonthButtonLabel(currentVal);
@@ -8838,6 +9265,56 @@
             }
         }
 
+        // Popula os seletores do Setor de Manutenções da Frota
+        const filterMaintVehicle = document.getElementById('filterMaintVehicle');
+        if (filterMaintVehicle) {
+            const curVal = filterMaintVehicle.value;
+            filterMaintVehicle.innerHTML = '<option value="ALL">Todas as Viaturas</option>';
+            sortedVehicles.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v;
+                opt.textContent = '🚓 ' + v;
+                filterMaintVehicle.appendChild(opt);
+            });
+            if (curVal && (curVal === 'ALL' || sortedVehicles.includes(curVal))) {
+                filterMaintVehicle.value = curVal;
+            }
+        }
+
+        const maintVehicle = document.getElementById('maintVehicle');
+        if (maintVehicle) {
+            const curVal = maintVehicle.value;
+            maintVehicle.innerHTML = '';
+            sortedVehicles.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v;
+                opt.textContent = '🚓 ' + v;
+                maintVehicle.appendChild(opt);
+            });
+            if (curVal && sortedVehicles.includes(curVal)) {
+                maintVehicle.value = curVal;
+            } else if (sortedVehicles.length > 0) {
+                maintVehicle.value = sortedVehicles[0];
+            }
+        }
+
+        const editMaintVehicle = document.getElementById('editMaintVehicle');
+        if (editMaintVehicle) {
+            const curVal = editMaintVehicle.value;
+            editMaintVehicle.innerHTML = '';
+            sortedVehicles.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v;
+                opt.textContent = '🚓 ' + v;
+                editMaintVehicle.appendChild(opt);
+            });
+            if (curVal && sortedVehicles.includes(curVal)) {
+                editMaintVehicle.value = curVal;
+            } else if (sortedVehicles.length > 0) {
+                editMaintVehicle.value = sortedVehicles[0];
+            }
+        }
+
         populateAllCiaSelects();
         populateAllModelSelects();
         populateAllPelotaoSelects();
@@ -8852,6 +9329,438 @@
         if (f1) f1.value = filterValue;
         if (f2) f2.value = filterValue;
         renderDashboard();
+    }
+
+    
+    // =========================================================================
+    // 🔧 GESTÃO DE MANUTENÇÕES DA FROTA (PREVENTIVA, CORRETIVA, PREDITIVA...)
+    // =========================================================================
+
+    function onMaintTypeChange() {
+        const sel = document.getElementById('maintType');
+        const help = document.getElementById('maintTypeHelpText');
+        if (!sel || !help) return;
+        const val = sel.value;
+        const guides = {
+            'Preventiva': 'ℹ️ <strong>Preventiva:</strong> Em períodos ou quilometragens programadas, antes da falha (Ex: Troca de óleo, filtros, correias, revisão e lubrificação).',
+            'Corretiva': 'ℹ️ <strong>Corretiva:</strong> Depois que aparece uma falha ou defeito (Ex: Consertar um motor quebrado ou substituir uma peça danificada).',
+            'Preditiva': 'ℹ️ <strong>Preditiva:</strong> Quando medições indicam desgaste ou risco de falha (Ex: Verificar temperatura, vibração, ruído, pressão ou análise do óleo).',
+            'Detectiva': 'ℹ️ <strong>Detectiva:</strong> Para encontrar falhas ocultas em sistemas de proteção e segurança (Ex: Testar alarmes, sensores, relés, freios e dispositivos de emergência).',
+            'Prescritiva': 'ℹ️ <strong>Prescritiva:</strong> Quando dados e sistemas recomendam automaticamente a melhor ação (Ex: Um sistema indicar qual peça trocar e o momento ideal da intervenção).'
+        };
+        help.innerHTML = guides[val] || guides['Preventiva'];
+    }
+
+    let activeMaintQuickFilter = 'ALL';
+
+    function setMaintQuickFilter(filterType) {
+        activeMaintQuickFilter = filterType;
+        const typeSelect = document.getElementById('filterMaintType');
+        if (typeSelect) {
+            if (filterType === 'ALL' || filterType === 'OUTRAS') {
+                typeSelect.value = 'ALL';
+            } else {
+                typeSelect.value = filterType;
+            }
+        }
+        updateMaintKpiCardStyles();
+        renderMaintenanceTable();
+    }
+
+    function updateMaintKpiCardStyles() {
+        const cards = [
+            { id: 'maintKpiCard_ALL', key: 'ALL' },
+            { id: 'maintKpiCard_Preventiva', key: 'Preventiva' },
+            { id: 'maintKpiCard_Corretiva', key: 'Corretiva' },
+            { id: 'maintKpiCard_Preditiva', key: 'Preditiva' },
+            { id: 'maintKpiCard_OUTRAS', key: 'OUTRAS' }
+        ];
+        cards.forEach(c => {
+            const el = document.getElementById(c.id);
+            if (el) {
+                if (activeMaintQuickFilter === c.key) {
+                    el.style.transform = 'translateY(-2px)';
+                    el.style.boxShadow = '0 6px 14px rgba(0, 0, 0, 0.12), 0 0 0 2px var(--primary)';
+                } else {
+                    el.style.transform = 'none';
+                    el.style.boxShadow = 'var(--card-shadow)';
+                }
+            }
+        });
+    }
+
+    
+    function escapeHTML(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+    window.escapeHTML = escapeHTML;
+
+    function renderMaintenanceTable() {
+        const tableBody = document.getElementById('maintenanceTableBody');
+        const emptyNotice = document.getElementById('maintenanceTableEmpty');
+        const filterVehicleEl = document.getElementById('filterMaintVehicle');
+        const filterTypeEl = document.getElementById('filterMaintType');
+        const filterStatusEl = document.getElementById('filterMaintStatus');
+        const filterMonthEl = document.getElementById('filterMaintMonth');
+        const filterSearchEl = document.getElementById('filterMaintSearch');
+
+        const filterVehicle = filterVehicleEl ? filterVehicleEl.value : 'ALL';
+        const filterType = filterTypeEl ? filterTypeEl.value : 'ALL';
+        const filterStatus = filterStatusEl ? filterStatusEl.value : 'ALL';
+        const filterMonth = filterMonthEl ? filterMonthEl.value : 'ALL';
+        const filterSearch = filterSearchEl ? filterSearchEl.value.trim().toLowerCase() : '';
+
+        if (!tableBody) return;
+
+        if (!Array.isArray(maintenances)) {
+            maintenances = [];
+        }
+
+        // Aplicação de filtros
+        const filtered = maintenances.filter(m => {
+            if (!m) return false;
+            if (filterVehicle !== 'ALL' && String(m.vehicle || '').trim() !== filterVehicle) return false;
+
+            // Filtro por Tipo de Manutenção (via botão KPI ou select)
+            if (activeMaintQuickFilter === 'OUTRAS') {
+                if (m.type !== 'Detectiva' && m.type !== 'Prescritiva') return false;
+            } else if (activeMaintQuickFilter !== 'ALL') {
+                if (m.type !== activeMaintQuickFilter) return false;
+            } else if (filterType !== 'ALL') {
+                if (m.type !== filterType) return false;
+            }
+
+            if (filterStatus !== 'ALL' && String(m.status || '').trim() !== filterStatus) return false;
+
+            // Filtro dinâmico por Mês/Ano
+            if (filterMonth && filterMonth !== 'ALL') {
+                const mDate = String(m.date || '').trim();
+                if (!mDate.startsWith(filterMonth)) return false;
+            }
+
+            if (filterSearch) {
+                const combined = `${m.vehicle||''} ${m.type||''} ${m.description||''} ${m.provider||''} ${m.notes||''}`.toLowerCase();
+                if (!combined.includes(filterSearch)) return false;
+            }
+            return true;
+        });
+
+        // Ordenação por data (mais recente primeiro)
+        filtered.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+
+        // Atualização dos Indicadores Rápidos (KPIs interativos)
+        const totalCount = filtered.length;
+        let totalCost = 0;
+        let countPreventiva = 0;
+        let countCorretiva = 0;
+        let countPreditiva = 0;
+        let countOutras = 0;
+
+        filtered.forEach(m => {
+            const costNum = parseFloat(m.cost) || 0;
+            totalCost += costNum;
+            if (m.type === 'Preventiva') countPreventiva++;
+            else if (m.type === 'Corretiva') countCorretiva++;
+            else if (m.type === 'Preditiva') countPreditiva++;
+            else countOutras++; // Detectiva e Prescritiva
+        });
+
+        const statTotal = document.getElementById('maintStatTotal');
+        const statCost = document.getElementById('maintStatCost');
+        const statPrev = document.getElementById('maintStatPreventiva');
+        const statCorr = document.getElementById('maintStatCorretiva');
+        const statPred = document.getElementById('maintStatPreditiva');
+        const statOutras = document.getElementById('maintStatOutras');
+
+        if (statTotal) statTotal.textContent = totalCount;
+        if (statCost) statCost.textContent = totalCost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        if (statPrev) statPrev.textContent = countPreventiva;
+        if (statCorr) statCorr.textContent = countCorretiva;
+        if (statPred) statPred.textContent = countPreditiva;
+        if (statOutras) statOutras.textContent = countOutras;
+
+        if (filtered.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 30px; font-size: 0.95rem;">📭 Nenhuma manutenção encontrada com os filtros selecionados.<br><span style="font-size: 0.82rem;">Utilize o formulário acima para registrar uma nova manutenção ou altere os filtros.</span></td></tr>`;
+            if (emptyNotice) emptyNotice.style.display = 'none';
+            updateMaintKpiCardStyles();
+            return;
+        }
+
+        if (emptyNotice) emptyNotice.style.display = 'none';
+
+        const typeBadges = {
+            'Preventiva': { bg: '#e0f2fe', color: '#0369a1', border: '#7dd3fc', icon: '🛠️' },
+            'Corretiva': { bg: '#fee2e2', color: '#b91c1c', border: '#fca5a5', icon: '⚠️' },
+            'Preditiva': { bg: '#f3e8ff', color: '#7e22ce', border: '#d8b4fe', icon: '📊' },
+            'Detectiva': { bg: '#fef3c7', color: '#b45309', border: '#fcd34d', icon: '🔍' },
+            'Prescritiva': { bg: '#dcfce7', color: '#15803d', border: '#86efac', icon: '🤖' }
+        };
+
+        const statusBadges = {
+            'Concluída': { bg: '#dcfce7', color: '#166534', icon: '✅' },
+            'Em Andamento': { bg: '#fef9c3', color: '#854d0e', icon: '⏳' },
+            'Agendada': { bg: '#f1f5f9', color: '#475569', icon: '📅' }
+        };
+
+        const esc = escapeHTML;
+        let html = '';
+
+        filtered.forEach(m => {
+            try {
+                const tb = typeBadges[m.type] || { bg: '#f1f5f9', color: '#334155', border: '#cbd5e1', icon: '🔧' };
+                const sb = statusBadges[m.status] || { bg: '#f1f5f9', color: '#475569', icon: '📌' };
+                const rawDate = String(m.date || '').trim();
+                const dateFormatted = rawDate ? (rawDate.includes('-') ? rawDate.split('-').reverse().join('/') : rawDate) : '-';
+                const kmFormatted = (m.km !== undefined && m.km !== '' && !isNaN(m.km)) ? Number(m.km).toLocaleString('pt-BR') + ' km' : '-';
+                const costFormatted = (m.cost !== undefined && m.cost !== '' && !isNaN(m.cost))
+                    ? Number(m.cost).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                    : '-';
+
+                html += `
+                    <tr style="border-bottom: 1px solid var(--border); transition: background-color 0.15s ease;">
+                        <td style="padding: 12px 14px; font-weight: 800; color: var(--primary); font-size: 0.95rem; white-space: nowrap;">
+                            🚓 ${esc(m.vehicle || '-')}
+                        </td>
+                        <td style="padding: 12px 14px; white-space: nowrap;">
+                            <span class="badge" style="background:${tb.bg}; color:${tb.color}; border:1px solid ${tb.border}; font-weight:800; font-size:0.82rem; padding: 5px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
+                                ${tb.icon} ${esc(m.type || '-')}
+                            </span>
+                        </td>
+                        <td style="padding: 12px 14px; white-space: nowrap; font-weight: 600; font-size: 0.88rem;">
+                            📅 ${esc(dateFormatted)}
+                        </td>
+                        <td style="padding: 12px 14px; white-space: nowrap; font-weight: 700; color: #334155; font-size: 0.88rem;">
+                            ${esc(kmFormatted)}
+                        </td>
+                        <td style="padding: 12px 14px; text-align: left; max-width: 380px; word-break: break-word;">
+                            <div style="font-weight: 700; color: var(--text-main); font-size: 0.92rem; line-height: 1.4;">
+                                ${esc(m.description || '-')}
+                            </div>
+                            ${m.notes ? `<div style="font-size: 0.78rem; color: #64748b; margin-top: 3px;">Obs: ${esc(m.notes)}</div>` : ''}
+                        </td>
+                        <td style="padding: 12px 14px; text-align: left; white-space: nowrap; font-weight: 600; color: #475569; font-size: 0.88rem;">
+                            🏢 ${esc(m.provider || '-')}
+                        </td>
+                        <td style="padding: 12px 14px; white-space: nowrap; font-weight: 800; color: #16a34a; font-size: 0.95rem;">
+                            ${esc(costFormatted)}
+                        </td>
+                        <td style="padding: 12px 14px; white-space: nowrap;">
+                            <span class="badge" style="background:${sb.bg}; color:${sb.color}; font-weight:800; font-size:0.82rem; padding: 5px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
+                                ${sb.icon} ${esc(m.status || '-')}
+                            </span>
+                        </td>
+                        <td style="padding: 12px 14px; text-align: center; white-space: nowrap;">
+                            <button type="button" class="btn btn-outline btn-3d btn-sm" style="padding: 6px 12px; font-size: 0.82rem; font-weight: 700;" onclick="openEditMaintenanceModal('${m.id}')" title="Editar esta Manutenção">
+                                ✏️ Editar
+                            </button>
+                            <button type="button" class="btn btn-danger btn-3d btn-sm" style="padding: 6px 12px; font-size: 0.82rem; font-weight: 700; margin-left: 6px;" onclick="deleteMaintenance('${m.id}')" title="Excluir esta Manutenção">
+                                🗑️ Excluir
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            } catch (rowErr) {
+                console.error('Erro ao renderizar linha de manutenção:', rowErr, m);
+            }
+        });
+
+        tableBody.innerHTML = html;
+        updateMaintKpiCardStyles();
+    }
+
+    async function deleteMaintenanceFromModal() {
+        const idEl = document.getElementById('editMaintId');
+        if (!idEl || !idEl.value) return;
+        const id = idEl.value;
+        closeEditMaintenanceModal();
+        await deleteMaintenance(id);
+    }
+
+    async function handleQuickAddMaintenance(e) {
+        if (e) e.preventDefault();
+        if (currentAuthUser && currentAuthUser.username === 'VISITANTE') {
+            const ok = await requestAdminPassword("adicionar manutenção na frota");
+            if (!ok) return;
+        }
+
+        const vehicleEl = document.getElementById('maintVehicle');
+        const typeEl = document.getElementById('maintType');
+        const dateEl = document.getElementById('maintDate');
+        const kmEl = document.getElementById('maintKm');
+        const descEl = document.getElementById('maintDesc');
+        const providerEl = document.getElementById('maintProvider');
+        const costEl = document.getElementById('maintCost');
+        const statusEl = document.getElementById('maintStatus');
+
+        if (!vehicleEl || !vehicleEl.value) {
+            showToast('⚠️ Selecione uma viatura para a manutenção.');
+            return;
+        }
+        if (!descEl || !descEl.value.trim()) {
+            showToast('⚠️ Informe a descrição do serviço ou peça trocada.');
+            return;
+        }
+
+        const newMaint = {
+            id: 'maint_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+            vehicle: vehicleEl.value.trim(),
+            type: typeEl ? typeEl.value : 'Preventiva',
+            date: dateEl && dateEl.value ? dateEl.value : new Date().toISOString().slice(0, 10),
+            km: kmEl && kmEl.value !== '' ? Number(kmEl.value) : '',
+            description: descEl.value.trim(),
+            provider: providerEl ? providerEl.value.trim() : '',
+            cost: costEl && costEl.value !== '' ? Number(costEl.value) : '',
+            status: statusEl ? statusEl.value : 'Concluída',
+            notes: ''
+        };
+
+        if (!Array.isArray(maintenances)) maintenances = [];
+        maintenances.unshift(newMaint);
+        localStorage.setItem('batalhao_vtr_maintenances', JSON.stringify(maintenances));
+
+        renderMaintenanceTable();
+        syncAllDataToOnline(true);
+        showToast(`🔧 Manutenção registrada com sucesso na viatura <strong>${newMaint.vehicle}</strong>!`);
+
+        // Limpa campos do formulário
+        if (descEl) descEl.value = '';
+        if (kmEl) kmEl.value = '';
+        if (costEl) costEl.value = '';
+        if (providerEl) providerEl.value = '';
+    }
+
+    async function openEditMaintenanceModal(id) {
+        if (currentAuthUser && currentAuthUser.username === 'VISITANTE') {
+            const ok = await requestAdminPassword("editar manutenção");
+            if (!ok) return;
+        }
+
+        const m = (maintenances || []).find(item => item.id === id);
+        if (!m) {
+            showToast('⚠️ Manutenção não encontrada.');
+            return;
+        }
+
+        const modal = document.getElementById('editMaintenanceModal');
+        const prefixEl = document.getElementById('modalEditMaintVehiclePrefix');
+        const idEl = document.getElementById('editMaintId');
+        const vEl = document.getElementById('editMaintVehicle');
+        const typeEl = document.getElementById('editMaintType');
+        const dateEl = document.getElementById('editMaintDate');
+        const kmEl = document.getElementById('editMaintKm');
+        const descEl = document.getElementById('editMaintDesc');
+        const provEl = document.getElementById('editMaintProvider');
+        const costEl = document.getElementById('editMaintCost');
+        const statusEl = document.getElementById('editMaintStatus');
+        const notesEl = document.getElementById('editMaintNotes');
+
+        if (prefixEl) prefixEl.textContent = m.vehicle;
+        if (idEl) idEl.value = m.id;
+        if (vEl) {
+            populateVehicleSelects();
+            vEl.value = m.vehicle;
+        }
+        if (typeEl) typeEl.value = m.type || 'Preventiva';
+        if (dateEl) dateEl.value = m.date || '';
+        if (kmEl) kmEl.value = m.km !== undefined ? m.km : '';
+        if (descEl) descEl.value = m.description || '';
+        if (provEl) provEl.value = m.provider || '';
+        if (costEl) costEl.value = m.cost !== undefined ? m.cost : '';
+        if (statusEl) statusEl.value = m.status || 'Concluída';
+        if (notesEl) notesEl.value = m.notes || '';
+
+        if (modal) modal.style.display = 'flex';
+    }
+
+    function closeEditMaintenanceModal() {
+        const modal = document.getElementById('editMaintenanceModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    async function saveEditMaintenance(e) {
+        if (e) e.preventDefault();
+        const idEl = document.getElementById('editMaintId');
+        if (!idEl || !idEl.value) return;
+
+        const id = idEl.value;
+        const m = (maintenances || []).find(item => item.id === id);
+        if (!m) return;
+
+        m.vehicle = document.getElementById('editMaintVehicle').value.trim();
+        m.type = document.getElementById('editMaintType').value;
+        m.date = document.getElementById('editMaintDate').value;
+        m.km = document.getElementById('editMaintKm').value !== '' ? Number(document.getElementById('editMaintKm').value) : '';
+        m.description = document.getElementById('editMaintDesc').value.trim();
+        m.provider = document.getElementById('editMaintProvider').value.trim();
+        m.cost = document.getElementById('editMaintCost').value !== '' ? Number(document.getElementById('editMaintCost').value) : '';
+        m.status = document.getElementById('editMaintStatus').value;
+        m.notes = document.getElementById('editMaintNotes').value.trim();
+
+        localStorage.setItem('batalhao_vtr_maintenances', JSON.stringify(maintenances));
+        closeEditMaintenanceModal();
+        renderMaintenanceTable();
+        syncAllDataToOnline(true);
+        showToast(`💾 Manutenção da viatura <strong>${m.vehicle}</strong> atualizada com sucesso!`);
+    }
+
+    async function deleteMaintenance(id) {
+        if (currentAuthUser && currentAuthUser.username === 'VISITANTE') {
+            const ok = await requestAdminPassword("excluir registro de manutenção");
+            if (!ok) return;
+        }
+
+        const m = (maintenances || []).find(item => item.id === id);
+        if (!m) return;
+
+        if (await adminConfirm(`Deseja excluir o registro de manutenção de "${m.description}" na viatura ${m.vehicle}?`)) {
+            maintenances = maintenances.filter(item => item.id !== id);
+            localStorage.setItem('batalhao_vtr_maintenances', JSON.stringify(maintenances));
+            renderMaintenanceTable();
+            syncAllDataToOnline(true);
+            showToast(`🗑️ Manutenção excluída com sucesso.`);
+        }
+    }
+
+    function exportMaintenanceExcel() {
+        if (!maintenances || maintenances.length === 0) {
+            showToast('⚠️ Nenhuma manutenção cadastrada para exportar.');
+            return;
+        }
+
+        if (typeof XLSX !== 'undefined') {
+            const maintRows = maintenances.map(m => {
+                const formattedMaintDate = m.date ? (m.date.includes('-') ? m.date.split('-').reverse().join('/') : m.date) : '-';
+                return {
+                    "Viatura / Prefixo": m.vehicle || '-',
+                    "Tipo de Manutenção": m.type || '-',
+                    "Data da Manutenção": formattedMaintDate,
+                    "Quilometragem (KM)": m.km !== undefined && m.km !== '' ? Number(m.km) : '-',
+                    "Descrição do Serviço / Peças Trocadas": m.description || '-',
+                    "Oficina / Prestador de Serviço": m.provider || '-',
+                    "Custo (R$)": m.cost !== undefined && m.cost !== '' ? Number(m.cost) : '-',
+                    "Situação / Status": m.status || 'Concluída',
+                    "Observações Adicionais": m.notes || '-'
+                };
+            });
+            const worksheet = XLSX.utils.json_to_sheet(maintRows);
+            worksheet['!cols'] = [
+                { wch: 18 }, { wch: 18 }, { wch: 18 }, { wch: 18 },
+                { wch: 45 }, { wch: 25 }, { wch: 16 }, { wch: 16 }, { wch: 30 }
+            ];
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Manutenções da Frota");
+            const filename = `Manutencoes_Frota_${new Date().toISOString().slice(0, 10)}.xlsx`;
+            XLSX.writeFile(workbook, filename);
+            showToast('📊 <strong>Planilha só de Manutenções exportada com sucesso!</strong>');
+        } else {
+            showToast('⚠️ Biblioteca de Excel não carregada.');
+        }
     }
 
     function exportExcel() {
@@ -8889,6 +9798,30 @@
             const worksheet = XLSX.utils.json_to_sheet(rows);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Frota Batalhão");
+
+            // Inclui a aba de Manutenções da Frota quando solicitado
+            if (maintenances && maintenances.length > 0) {
+                const maintRows = maintenances.map(m => {
+                    const formattedMaintDate = m.date ? (m.date.includes('-') ? m.date.split('-').reverse().join('/') : m.date) : '-';
+                    return {
+                        "Viatura / Prefixo": m.vehicle || '-',
+                        "Tipo de Manutenção": m.type || '-',
+                        "Data da Manutenção": formattedMaintDate,
+                        "Quilometragem (KM)": m.km !== undefined && m.km !== '' ? Number(m.km) : '-',
+                        "Descrição do Serviço / Peças Trocadas": m.description || '-',
+                        "Oficina / Prestador de Serviço": m.provider || '-',
+                        "Custo (R$)": m.cost !== undefined && m.cost !== '' ? Number(m.cost) : '-',
+                        "Situação / Status": m.status || 'Concluída',
+                        "Observações Adicionais": m.notes || '-'
+                    };
+                });
+                const maintWorksheet = XLSX.utils.json_to_sheet(maintRows);
+                maintWorksheet['!cols'] = [
+                    { wch: 18 }, { wch: 18 }, { wch: 18 }, { wch: 18 },
+                    { wch: 45 }, { wch: 25 }, { wch: 16 }, { wch: 16 }, { wch: 30 }
+                ];
+                XLSX.utils.book_append_sheet(workbook, maintWorksheet, "Manutenções da Frota");
+            }
 
             worksheet['!cols'] = [
                 { wch: 16 }, { wch: 20 }, { wch: 20 }, { wch: 18 },
@@ -8967,6 +9900,13 @@
                 r.id = cleanNewName;
             }
         });
+        if (Array.isArray(maintenances)) {
+            maintenances.forEach(m => {
+                if (m.vehicle === selected) m.vehicle = cleanNewName;
+            });
+            localStorage.setItem('batalhao_vtr_maintenances', JSON.stringify(maintenances));
+            renderMaintenanceTable();
+        }
         saveRecords();
 
         populateVehicleSelects();
@@ -9193,9 +10133,8 @@
     }
 
     function onQuickDetailsOverlayClick(e) {
-        if (e.target.id === 'vehicleQuickDetailsModal') {
-            closeVehicleQuickDetailsWithTvOff();
-        }
+        // Protegido contra fechamento acidental fora da janela
+        if (e && e.stopPropagation) e.stopPropagation();
     }
 
     function handlePrefixClick(vehicleId, e) {
@@ -9276,7 +10215,8 @@
     }
 
     function onModalOverlayClick(e) {
-        if (e.target.id === 'editModal') closeEditModal();
+        // Protegido contra fechamento acidental fora da janela
+        if (e && e.stopPropagation) e.stopPropagation();
     }
 
     function onModalStatusChange() {
@@ -9432,6 +10372,7 @@
             customLocais: customLocais,
             customQuickReasons: customQuickReasons,
             systemUsers: systemUsers,
+            maintenances: maintenances || [],
             customOriginalDataset: JSON.parse(localStorage.getItem('batalhao_vtr_custom_original_dataset') || 'null'),
             records: records.map(r => ({
                 id: r.id || r.vehicle,
@@ -9839,7 +10780,8 @@
     }
 
     function onMergeOverlayClick(e) {
-        if (e.target.id === 'mergeModal') closeMergeModal();
+        // Protegido contra fechamento acidental fora da janela
+        if (e && e.stopPropagation) e.stopPropagation();
     }
 
     async function executeCurrentImportTab() {
@@ -9990,7 +10932,8 @@
     }
 
     function onConfirmUnitOverlayClick(e) {
-        if (e.target.id === 'confirmUnitModal') closeConfirmUnitModal();
+        // Protegido contra fechamento acidental fora da janela
+        if (e && e.stopPropagation) e.stopPropagation();
     }
 
     function onConfirmUnitSelectorChange() {
@@ -10242,6 +11185,22 @@
                 appTitle = imported.appTitle;
                 localStorage.setItem('batalhao_vtr_app_title', appTitle);
                 updateAppTitleDisplay();
+            }
+            if (Array.isArray(imported.maintenances)) {
+                if (isReplaceMode) {
+                    maintenances = imported.maintenances;
+                } else {
+                    const existingIds = new Set((maintenances || []).map(m => m.id));
+                    imported.maintenances.forEach(im => {
+                        if (!existingIds.has(im.id)) {
+                            maintenances.push(im);
+                            existingIds.add(im.id);
+                        }
+                    });
+                }
+                localStorage.setItem('batalhao_vtr_maintenances', JSON.stringify(maintenances));
+                renderMaintenanceTable();
+                populateMonthSelect();
             }
         }
 
@@ -10569,6 +11528,7 @@
 
         updateColumnVisibilityUI();
         updateCharts(baseRecords, opCount, baixCount, othersCount);
+        renderMaintenanceTable();
     }
 
     
@@ -11174,6 +12134,7 @@
     populateMonthSelect();
     populateVehicleSelects();
     renderDashboard();
+    renderMaintenanceTable();
     updateColumnVisibilityUI();
     updateTableViewModeUI();
 
@@ -11192,7 +12153,7 @@
 </script>
 
 <!-- Modal: Editar Título do Painel e Imagem Central da Pizza -->
-<div id="editTitleAndImageModal" class="modal-overlay" onclick="onEditTitleOverlayClick(event)" style="z-index: 10002;">
+<div id="editTitleAndImageModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();" style="z-index: 10002;">
     <div class="modal-card" style="max-width: 480px;" onclick="event.stopPropagation()">
         <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 10px;">
             <div class="modal-title" style="font-size: 1.1rem; font-weight: 800; color: var(--primary);">

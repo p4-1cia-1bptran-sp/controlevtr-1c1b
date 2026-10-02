@@ -435,5 +435,67 @@
       "date": "",
       "data_forms": ""
     }
+  ],
+  "maintenances": [
+    {
+      "id": "maint_sample_1",
+      "vehicle": "T-01210",
+      "type": "Preventiva",
+      "date": "2026-10-01",
+      "km": 85200,
+      "description": "Troca de óleo 5W30, filtros de óleo, ar e combustível e revisão geral",
+      "provider": "Garagem Central / CSM",
+      "cost": 480.0,
+      "status": "Concluída",
+      "notes": "Próxima revisão em 10.000 km"
+    },
+    {
+      "id": "maint_sample_2",
+      "vehicle": "T-01201",
+      "type": "Corretiva",
+      "date": "2026-09-28",
+      "km": 112400,
+      "description": "Substituição das pastilhas de freio dianteiras e sangria do sistema",
+      "provider": "Mecânica Especializada",
+      "cost": 350.0,
+      "status": "Concluída",
+      "notes": "Peças originais instaladas"
+    },
+    {
+      "id": "maint_sample_3",
+      "vehicle": "T-01205",
+      "type": "Preditiva",
+      "date": "2026-10-05",
+      "km": 94000,
+      "description": "Análise de vibração no eixo dianteiro e teste de pressão do óleo",
+      "provider": "CSM Telemática / Frota",
+      "cost": 200.0,
+      "status": "Agendada",
+      "notes": "Agendada para segunda-feira"
+    },
+    {
+      "id": "maint_sample_4",
+      "vehicle": "T-01215",
+      "type": "Detectiva",
+      "date": "2026-09-25",
+      "km": 78000,
+      "description": "Teste e calibração de sensores de freio ABS, relés e dispositivos de emergência",
+      "provider": "Oficina da 1ª Cia",
+      "cost": 150.0,
+      "status": "Concluída",
+      "notes": "Todos os sensores operando normalmente"
+    },
+    {
+      "id": "maint_sample_5",
+      "vehicle": "T-01208",
+      "type": "Prescritiva",
+      "date": "2026-10-02",
+      "km": 105000,
+      "description": "Recomendação técnica do sistema para troca preventiva da correia dentada e tensores",
+      "provider": "Garagem Central",
+      "cost": 620.0,
+      "status": "Em Andamento",
+      "notes": "Aguardando chegada da peça"
+    }
   ]
 }

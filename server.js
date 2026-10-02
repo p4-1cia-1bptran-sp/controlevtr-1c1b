@@ -137,6 +137,7 @@ const server = http.createServer((req, res) => {
                         customQuickReasons: Array.isArray(payload.customQuickReasons) ? payload.customQuickReasons : (currentDb.customQuickReasons || []),
                         systemUsers: Array.isArray(payload.systemUsers) ? payload.systemUsers : (currentDb.systemUsers || []),
                         records: Array.isArray(payload.records) ? payload.records : (currentDb.records || []),
+                    maintenances: Array.isArray(payload.maintenances) ? payload.maintenances : (currentDb.maintenances || []),
                         updatedAt: payload.updatedAt || new Date().toISOString()
                     };
 
