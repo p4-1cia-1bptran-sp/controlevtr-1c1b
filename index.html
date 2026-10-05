@@ -3528,6 +3528,10 @@
                     <span id="headerUserIcon" style="font-size: 1rem;">👤</span>
                     <span style="font-weight: 700; font-size: 0.84rem;">Editar Conta</span>
                 </button>
+                <button type="button" id="headerGoogleSyncBtn" class="theme-toggle-btn" style="display: none; border-color: #ea4335; color: #c5221f; background: #fef2f2; font-weight: 700; gap: 6px;" onclick="handleHeaderGoogleSyncClick()" title="Sincronizar este Usuário com sua Conta Google / Gmail">
+                    <svg width="15" height="15" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.8s.2-2.1.4-2.8L1.9 6.3C.7 8.7 0 10.8 0 12s.7 3.3 1.9 5.7l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/></svg>
+                    <span id="headerGoogleSyncBtnText">Sincronizar com Google</span>
+                </button>
                 <button type="button" id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()" title="Alternar entre Modo Noturno e Modo Claro">
                     <span id="themeToggleIcon" class="theme-toggle-icon">🌙</span>
                     <span id="themeToggleText">Modo Noturno</span>
@@ -3609,6 +3613,43 @@
                         <div id="doughnutCenterImageOverlay" class="doughnut-eagle-overlay" title="Imagem Central da Pizza"></div>
                         
                         <div id="chartjs-doughnut-tooltip" class="chartjs-custom-tooltip"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="tabContentDrive" class="tab-content">
+                <div class="modal-section-box" style="display: flex; flex-direction: column; gap: 10px; background: #fff5f5; border: 1px solid #fecaca;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
+                        <span style="font-size: 0.88rem; font-weight: 700; color: #991b1b; display: flex; align-items: center; gap: 6px;">
+                            ☁️ Planilhas e Backups no seu Google Drive:
+                        </span>
+                        <button type="button" class="btn btn-outline btn-3d btn-sm" id="btnRefreshDriveFiles" style="border-color: #ea4335; color: #c5221f;" onclick="loadGoogleDriveFilesList()">
+                            🔄 Atualizar Lista
+                        </button>
+                    </div>
+                    
+                    <div id="driveAuthNotice" style="display: none; padding: 14px; border-radius: 6px; background: #ffffff; border: 1px dashed #f87171; text-align: center;">
+                        <p style="font-size: 0.84rem; color: #7f1d1d; margin-bottom: 8px;">Conecte sua conta do Google para visualizar e importar as planilhas ou backups salvos no seu Drive.</p>
+                        <button type="button" class="btn btn-primary btn-3d btn-sm" onclick="handleGoogleDriveAuthClick(() => loadGoogleDriveFilesList())">
+                            🔑 Conectar Conta Google
+                        </button>
+                    </div>
+
+                    <!-- Lista de arquivos do Google Drive -->
+                    <div id="driveFilesListContainer" style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding: 2px 0;">
+                        <!-- Preenchido via loadGoogleDriveFilesList() -->
+                    </div>
+
+                    <!-- Opção de carregar diretamente pelo Link/ID do Google Drive -->
+                    <div style="border-top: 1px dashed #fca5a5; padding-top: 8px; margin-top: 2px;">
+                        <label for="driveDirectFileIdInput" style="display: block; font-size: 0.78rem; font-weight: 700; color: #991b1b; margin-bottom: 4px;">
+                            🔗 Ou cole o Link / ID do arquivo do Google Drive:
+                        </label>
+                        <div style="display: flex; gap: 6px;">
+                            <input type="text" id="driveDirectFileIdInput" placeholder="Cole o link https://drive.google.com/file/d/... ou ID do arquivo" style="flex: 1; font-size: 0.8rem; padding: 8px 10px; border: 1px solid #f87171; border-radius: 6px;">
+                            <button type="button" class="btn btn-primary btn-3d btn-sm" onclick="importFromDriveDirectInput()">
+                                📥 Baixar e Importar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -4414,6 +4455,7 @@
         <div style="display:flex; flex-direction:column; gap:14px;">
             <div class="import-tabs">
                 <button type="button" class="import-tab-btn active" id="tabBtnOnline" onclick="switchImportTab('online')">🌐 Link Online (Google Sheets)</button>
+                <button type="button" class="import-tab-btn" id="tabBtnDrive" onclick="switchImportTab('drive')">☁️ Do Google Drive</button>
                 <button type="button" class="import-tab-btn" id="tabBtnFile" onclick="switchImportTab('file')">📁 Planilha Pronta (.xlsx, .csv, .json)</button>
                 <button type="button" class="import-tab-btn" id="tabBtnText" onclick="switchImportTab('text')">📋 Colar Células / JSON</button>
             </div>
@@ -4810,6 +4852,31 @@
                     </div>
                 </div>
             </div>
+        <!-- Seção 3: Sincronização com Conta Google / Gmail -->
+            <div style="border-top: 1px solid var(--border); padding-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-main);">🔗 Sincronizar com Conta Google / Gmail</span>
+                    <span id="accLinkedBadge" style="font-size: 0.75rem; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 2px 8px; border-radius: 4px; display: none;">Vinculado</span>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.35;">
+                    Vincule o seu Gmail ao seu usuário atual. Ao fazer isso, sempre que você clicar em "Entrar com Google" você entrará diretamente na sua conta com todas as viaturas, manutenções e histórico sincronizados, sem perder nada.
+                </p>
+                <div style="display: flex; align-items: center; justify-content: space-between; background: var(--bg); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); flex-wrap: wrap; gap: 8px;">
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <span style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Gmail Vinculado:</span>
+                        <span id="accLinkedGoogleEmailText" style="font-size: 0.88rem; font-weight: 700; color: var(--primary);">Nenhum Gmail vinculado</span>
+                    </div>
+                    <div style="display: flex; gap: 6px;">
+                        <button type="button" id="btnLinkGoogleAccount" class="btn btn-outline btn-3d btn-sm" style="border-color: #ea4335; color: #c5221f; font-weight: 700;" onclick="linkCurrentUserWithGoogle()">
+                            🔗 Vincular Gmail
+                        </button>
+                        <button type="button" id="btnUnlinkGoogleAccount" class="btn btn-danger btn-3d btn-sm" style="display: none;" onclick="unlinkCurrentUserGoogle()">
+                            ✖ Desvincular
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px;">
             <button type="button" class="btn btn-outline btn-3d" onclick="closeEditAccountModal()">Cancelar</button>
             <button type="button" class="btn btn-success btn-3d" onclick="saveAccountChanges()">💾 Salvar</button>
@@ -4830,6 +4897,10 @@
                 Usuário atualmente conectado: <strong id="switchModalCurrentUser" style="color: var(--primary);">--</strong>
             </p>
             <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #ea4335; color: #c5221f; background: #fff5f5; font-weight: 700; gap: 8px;" onclick="closeUserSessionSwitchModal(); linkCurrentUserWithGoogle();" title="Vincular sua conta Google para salvar tudo em tempo real">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.8s.2-2.1.4-2.8L1.9 6.3C.7 8.7 0 10.8 0 12s.7 3.3 1.9 5.7l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/></svg>
+                    <span>🔗 Sincronizar este Usuário com a Conta Google (Gmail)</span>
+                </button>
                 <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #3b82f6; color: #1d4ed8; background: #eff6ff;" onclick="switchUserAction()">
                     🔄 Alternar Usuário (Trocar de Operador)
                 </button>
@@ -4867,7 +4938,7 @@
             </div>
 
             <!-- Dados Básicos do Usuário -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
                 <div>
                     <label for="mgmtUserNameInput" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">Nome / Identificador *</label>
                     <input type="text" id="mgmtUserNameInput" placeholder="Ex: Cb Souza, Plantão 1" style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main);">
@@ -4875,6 +4946,10 @@
                 <div>
                     <label for="mgmtUserPassInput" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">Senha de Acesso *</label>
                     <input type="text" id="mgmtUserPassInput" placeholder="Senha do operador..." style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main);">
+                </div>
+                <div>
+                    <label for="mgmtUserGoogleEmailInput" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">📧 Gmail Vinculado (Opcional):</label>
+                    <input type="email" id="mgmtUserGoogleEmailInput" placeholder="Ex: operador@gmail.com" style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main);">
                 </div>
             </div>
 
@@ -5819,6 +5894,7 @@
         if (statusTxt) statusTxt.textContent = '🟢 Servidor Conectado (Online)';
         if (endpEl) endpEl.innerHTML = `<strong>Endpoint Ativo:</strong> <code>${lastActiveEndpoint || '/api/frota'}</code>`;
         if (testBox) testBox.style.display = 'none';
+        updateAccountGoogleLinkUI();
         if (modal) modal.style.display = 'flex';
     }
 
@@ -8542,8 +8618,28 @@
         const headerAvatar = document.getElementById('headerUserAvatarImg');
         const headerIcon = document.getElementById('headerUserIcon');
 
+        const syncBtn = document.getElementById('headerGoogleSyncBtn');
+        const syncBtnText = document.getElementById('headerGoogleSyncBtnText');
+
         if (currentAuthUser && currentAuthUser.username !== 'VISITANTE') {
             if (headerLoginBtn) headerLoginBtn.style.display = 'none';
+
+            if (syncBtn && syncBtnText) {
+                syncBtn.style.display = 'inline-flex';
+                if (currentAuthUser.googleEmail) {
+                    syncBtnText.textContent = '🟢 Google: ' + currentAuthUser.googleEmail.split('@')[0];
+                    syncBtn.style.borderColor = '#34a853';
+                    syncBtn.style.color = '#137333';
+                    syncBtn.style.background = '#f0fdf4';
+                    syncBtn.title = 'Usuário sincronizado com a conta Google: ' + currentAuthUser.googleEmail + '. Clique para gerenciar.';
+                } else {
+                    syncBtnText.textContent = '🔗 Sincronizar com Google';
+                    syncBtn.style.borderColor = '#ea4335';
+                    syncBtn.style.color = '#c5221f';
+                    syncBtn.style.background = '#fef2f2';
+                    syncBtn.title = 'Clique para vincular este usuário à sua conta Google e nunca perder seus dados.';
+                }
+            }
             if (badge) {
                 badge.style.display = 'inline-flex';
                 if (badgeUser) {
@@ -8578,6 +8674,7 @@
         } else {
             if (badge) badge.style.display = 'none';
             if (accountBtn) accountBtn.style.display = 'none';
+            if (syncBtn) syncBtn.style.display = 'none';
             if (headerLoginBtn) headerLoginBtn.style.display = 'inline-flex';
         }
     }
@@ -9038,6 +9135,73 @@
     // =========================================================================
     // 👤 EDIÇÃO DE CONTA (FOTO PRÓPRIA E ALTERAÇÃO DE SENHA)
     // =========================================================================
+    
+    function updateAccountGoogleLinkUI() {
+        const user = currentAuthUser;
+        const txt = document.getElementById('accLinkedGoogleEmailText');
+        const badge = document.getElementById('accLinkedBadge');
+        const btnLink = document.getElementById('btnLinkGoogleAccount');
+        const btnUnlink = document.getElementById('btnUnlinkGoogleAccount');
+        if (!txt) return;
+
+        const email = user ? (user.googleEmail || user.email || '') : '';
+
+        if (email) {
+            txt.textContent = '🟢 ' + email;
+            txt.style.color = '#16a34a';
+            if (badge) badge.style.display = 'inline-block';
+            if (btnLink) btnLink.style.display = 'none';
+            if (btnUnlink) btnUnlink.style.display = 'inline-flex';
+        } else {
+            txt.textContent = '⚪ Nenhum Gmail vinculado';
+            txt.style.color = 'var(--text-muted)';
+            if (badge) badge.style.display = 'none';
+            if (btnLink) {
+                btnLink.style.display = 'inline-flex';
+                btnLink.textContent = (googleAccessToken && googleUserEmail) ? ('🔗 Vincular ' + googleUserEmail.split('@')[0]) : '🔗 Conectar e Vincular Gmail';
+            }
+            if (btnUnlink) btnUnlink.style.display = 'none';
+        }
+    }
+
+    function linkCurrentUserWithGoogle() {
+        if (!googleClientId) {
+            alert('Atenção: Configure primeiro o seu "ID do Cliente Google (OAuth Client ID)" no menu Banco de Dados para permitir o vínculo com o Gmail.');
+            return;
+        }
+
+        handleGoogleDriveAuthClick(async () => {
+            if (!googleUserEmail) return;
+            const cleanEmail = googleUserEmail.toLowerCase().trim();
+            const user = systemUsers.find(u => u.id === currentAuthUser.id || u.username.toLowerCase() === currentAuthUser.username.toLowerCase());
+            if (user) {
+                user.googleEmail = cleanEmail;
+                currentAuthUser.googleEmail = cleanEmail;
+                saveSystemUsers();
+                updateAccountGoogleLinkUI();
+                sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+                localStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+                await syncAllDataToOnline(true);
+                showToast('🔗 Usuário <strong>' + user.username + '</strong> sincronizado com o Gmail <strong>' + cleanEmail + '</strong>!');
+            }
+        });
+    }
+
+    function unlinkCurrentUserGoogle() {
+        const user = systemUsers.find(u => u.id === currentAuthUser.id || u.username.toLowerCase() === currentAuthUser.username.toLowerCase());
+        if (user) {
+            delete user.googleEmail;
+            delete currentAuthUser.googleEmail;
+            saveSystemUsers();
+            updateAccountGoogleLinkUI();
+            sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+            localStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+            syncAllDataToOnline(true);
+            showToast('Conta Google desvinculada de <strong>' + user.username + '</strong>.');
+        }
+    }
+
+
     function openEditAccountModal() {
         if (!currentAuthUser || currentAuthUser.username === 'VISITANTE') {
             showToast('O usuário VISITANTE não possui painel de conta.');
@@ -9259,6 +9423,8 @@
 
         document.getElementById('mgmtUserNameInput').value = user.username;
         document.getElementById('mgmtUserPassInput').value = user.password || '';
+        const gEmailInput = document.getElementById('mgmtUserGoogleEmailInput');
+        if (gEmailInput) gEmailInput.value = user.googleEmail || user.email || '';
 
         const isMaster = !!user.isMaster;
         const isVisitante = (user.username === 'VISITANTE');
@@ -9387,10 +9553,12 @@
                 alert(`Já existe um usuário cadastrado com o nome "${name}"! Escolha outro nome.`);
                 return;
             }
+            const gEmailVal = document.getElementById('mgmtUserGoogleEmailInput') ? document.getElementById('mgmtUserGoogleEmailInput').value.trim().toLowerCase() : '';
             const newUser = {
                 id: 'usr_' + Date.now(),
                 username: name,
                 password: pass,
+                googleEmail: gEmailVal,
                 isMaster: false,
                 mustChangePassword: true, // Obriga a criar a própria senha no primeiro login!
                 photo: '',
@@ -9408,6 +9576,8 @@
             if (user.username !== 'VISITANTE') {
                 user.password = pass;
             }
+            const gEmailExisting = document.getElementById('mgmtUserGoogleEmailInput');
+            if (gEmailExisting) user.googleEmail = gEmailExisting.value.trim().toLowerCase();
             if (!user.isMaster && user.username !== 'VISITANTE') {
                 user.permissions = Object.assign({}, editingUserPermissions);
             }
@@ -11371,6 +11541,12 @@
         if (tabName === 'online') {
             document.getElementById('tabBtnOnline').classList.add('active');
             document.getElementById('tabContentOnline').classList.add('active');
+        } else if (tabName === 'drive') {
+            const btnDrive = document.getElementById('tabBtnDrive');
+            const contentDrive = document.getElementById('tabContentDrive');
+            if (btnDrive) btnDrive.classList.add('active');
+            if (contentDrive) contentDrive.classList.add('active');
+            loadGoogleDriveFilesList();
         } else if (tabName === 'file') {
             document.getElementById('tabBtnFile').classList.add('active');
             document.getElementById('tabContentFile').classList.add('active');
@@ -11404,6 +11580,13 @@
     async function executeCurrentImportTab() {
         if (currentImportTab === 'online') {
             await executeImportFromOnlineUrl();
+        } else if (currentImportTab === 'drive') {
+            const input = document.getElementById('driveDirectFileIdInput');
+            if (input && input.value.trim()) {
+                importFromDriveDirectInput();
+            } else {
+                alert('Selecione um arquivo na lista do Google Drive ou cole o Link/ID no campo correspondente.');
+            }
         } else if (currentImportTab === 'file') {
             const fileInput = document.getElementById('mergeFileInput');
             if (!fileInput.files || fileInput.files.length === 0) {
@@ -12742,6 +12925,141 @@
     let googleUserEmail = localStorage.getItem('batalhao_vtr_google_email') || '';
     let googleClientId = localStorage.getItem('batalhao_vtr_google_client_id') || '';
 
+    
+    function handleHeaderGoogleSyncClick() {
+        if (currentAuthUser && currentAuthUser.googleEmail) {
+            openEditAccountModal();
+        } else {
+            linkCurrentUserWithGoogle();
+        }
+    }
+
+    async function loadGoogleDriveFilesList() {
+        const listContainer = document.getElementById('driveFilesListContainer');
+        const notice = document.getElementById('driveAuthNotice');
+        if (!listContainer) return;
+
+        if (!googleAccessToken) {
+            if (notice) notice.style.display = 'block';
+            listContainer.innerHTML = '';
+            return;
+        }
+
+        if (notice) notice.style.display = 'none';
+        listContainer.innerHTML = '<div style="text-align:center; padding:14px; color:#64748b; font-size:0.84rem;">⏳ Buscando planilhas e backups no seu Google Drive...</div>';
+
+        try {
+            const q = "trashed = false and (name contains '.json' or name contains '.xlsx' or name contains '.xls' or name contains '.csv' or mimeType = 'application/vnd.google-apps.spreadsheet' or mimeType = 'application/json')";
+            const url = 'https://www.googleapis.com/drive/v3/files?pageSize=30&orderBy=modifiedTime desc&fields=files(id,name,mimeType,size,modifiedTime)&q=' + encodeURIComponent(q);
+
+            const res = await fetch(url, {
+                headers: { 'Authorization': 'Bearer ' + googleAccessToken }
+            });
+
+            if (!res.ok) {
+                if (res.status === 401) {
+                    googleAccessToken = null;
+                    if (notice) notice.style.display = 'block';
+                    listContainer.innerHTML = '';
+                    return;
+                }
+                throw new Error('HTTP ' + res.status);
+            }
+
+            const data = await res.json();
+            const files = data.files || [];
+
+            if (files.length === 0) {
+                listContainer.innerHTML = '<div style="text-align:center; padding:14px; color:#64748b; font-size:0.84rem;">Nenhum arquivo recente do Excel ou JSON encontrado no Drive.<br><span style="font-size:0.75rem;">Você também pode colar o link do arquivo abaixo.</span></div>';
+                return;
+            }
+
+            let listHtml = '';
+            files.forEach(f => {
+                const isJson = f.name.toLowerCase().endsWith('.json') || f.mimeType === 'application/json';
+                const icon = isJson ? '📄' : '📊';
+                const modified = f.modifiedTime ? new Date(f.modifiedTime).toLocaleDateString('pt-BR') : '-';
+                const safeName = f.name.replace(/'/g, "\'");
+
+                listHtml += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:7px 10px; border-radius:6px; border:1px solid #fecaca; gap:8px;">
+                        <div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">
+                            <span style="font-size:1.1rem;">${icon}</span>
+                            <div style="display:flex; flex-direction:column; min-width:0;">
+                                <span style="font-size:0.84rem; font-weight:700; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${f.name}">${f.name}</span>
+                                <span style="font-size:0.70rem; color:#64748b;">Modificado em: ${modified}</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-merge btn-3d btn-sm" style="padding:4px 10px; font-size:0.76rem;" onclick="downloadAndImportDriveFile('${f.id}', '${safeName}', '${f.mimeType}')">
+                            📥 Importar
+                        </button>
+                    </div>
+                `;
+            });
+
+            listContainer.innerHTML = listHtml;
+        } catch (err) {
+            listContainer.innerHTML = '<div style="color:#ef4444; padding:10px; font-size:0.82rem; text-align:center;">Erro ao listar arquivos do Drive: ' + err.message + '<br><button type="button" class="btn btn-outline btn-sm" style="margin-top:6px;" onclick="loadGoogleDriveFilesList()">Tentar novamente</button></div>';
+        }
+    }
+
+    async function downloadAndImportDriveFile(fileId, fileName, mimeType) {
+        if (!googleAccessToken) {
+            handleGoogleDriveAuthClick(() => downloadAndImportDriveFile(fileId, fileName, mimeType));
+            return;
+        }
+
+        showToast('☁️ <strong>Baixando ' + fileName + ' do seu Google Drive...</strong>');
+
+        try {
+            let fetchUrl = '';
+            if (mimeType === 'application/vnd.google-apps.spreadsheet') {
+                fetchUrl = 'https://www.googleapis.com/drive/v3/files/' + fileId + '/export?mimeType=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            } else {
+                fetchUrl = 'https://www.googleapis.com/drive/v3/files/' + fileId + '?alt=media';
+            }
+
+            const res = await fetch(fetchUrl, {
+                headers: { 'Authorization': 'Bearer ' + googleAccessToken }
+            });
+
+            if (!res.ok) {
+                throw new Error('HTTP ' + res.status);
+            }
+
+            const isJson = fileName.toLowerCase().endsWith('.json') || mimeType === 'application/json';
+
+            if (isJson) {
+                const jsonText = await res.text();
+                const parsed = JSON.parse(jsonText);
+                processMergeData(parsed, fileName);
+            } else {
+                const arrayBuffer = await res.arrayBuffer();
+                const data = new Uint8Array(arrayBuffer);
+                const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                processWorkbookData(workbook, fileName);
+            }
+        } catch (err) {
+            alert('Erro ao carregar arquivo do Google Drive: ' + err.message);
+        }
+    }
+
+    function importFromDriveDirectInput() {
+        const input = document.getElementById('driveDirectFileIdInput');
+        if (!input || !input.value.trim()) {
+            alert('Por favor, informe o Link de compartilhamento ou ID do arquivo no Google Drive.');
+            return;
+        }
+        const val = input.value.trim();
+        let fileId = val;
+        const match = val.match(/\/d\/([a-zA-Z0-9_-]+)/) || val.match(/id=([a-zA-Z0-9_-]+)/);
+        if (match) {
+            fileId = match[1];
+        }
+        downloadAndImportDriveFile(fileId, 'Arquivo_Google_Drive', '');
+    }
+
+
     function initGoogleDriveAuth() {
         const input = document.getElementById('googleClientIdInput');
         if (input && googleClientId) {
@@ -12882,31 +13200,52 @@
         if (!email) return;
         const cleanEmail = email.toLowerCase().trim();
         const masterAdminEmail = (localStorage.getItem('batalhao_vtr_master_email') || 'p4.1cia.1bptran.sp@gmail.com').toLowerCase().trim();
-        const isMasterGoogle = (cleanEmail === masterAdminEmail);
 
-        let matchedUser = systemUsers.find(u => (u.email && u.email.toLowerCase() === cleanEmail) || u.username.toLowerCase() === cleanEmail.split('@')[0].toLowerCase());
+        // 1. Procura se algum usuário já está vinculado a este Gmail
+        let matchedUser = systemUsers.find(u => 
+            (u.googleEmail && u.googleEmail.toLowerCase() === cleanEmail) ||
+            (u.email && u.email.toLowerCase() === cleanEmail)
+        );
 
-        if (isMasterGoogle) {
-            currentAuthUser = systemUsers.find(u => u.isMaster || u.username === 'ADMINISTRADOR GERAL') || defaultSystemUsers[0];
-            currentAuthUser.email = cleanEmail;
-            isAdminAuthenticated = true;
-            sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
-            updateAdminBadgeUI();
-            showToast('🔓 Bem-vindo(a), <strong>ADMINISTRADOR GERAL</strong> (' + cleanEmail + ')!');
-        } else if (matchedUser) {
+        // 2. Se for o e-mail do Administrador Geral ou mestre configurado:
+        if (!matchedUser && cleanEmail === masterAdminEmail) {
+            matchedUser = systemUsers.find(u => u.isMaster || u.username === 'ADMINISTRADOR GERAL') || defaultSystemUsers[0];
+            matchedUser.googleEmail = cleanEmail;
+        }
+
+        // 3. Se o usuário atual logado for um operador/admin e usou o Google para sincronizar a conta atual:
+        if (!matchedUser && currentAuthUser && currentAuthUser.username !== 'VISITANTE') {
+            const activeUser = systemUsers.find(u => u.id === currentAuthUser.id || u.username.toLowerCase() === currentAuthUser.username.toLowerCase());
+            if (activeUser) {
+                activeUser.googleEmail = cleanEmail;
+                matchedUser = activeUser;
+            }
+        }
+
+        if (matchedUser) {
+            matchedUser.googleEmail = cleanEmail;
             currentAuthUser = matchedUser;
             isAdminAuthenticated = true;
             sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+            localStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+            saveSystemUsers();
             updateAdminBadgeUI();
-            showToast('👤 Conectado como Operador: <strong>' + matchedUser.username + '</strong>');
+            if (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL') {
+                showToast('🔓 Bem-vindo(a), <strong>ADMINISTRADOR GERAL</strong>! (Sincronizado com ' + cleanEmail + ')');
+            } else {
+                showToast('👤 Conectado como <strong>' + currentAuthUser.username + '</strong> (Sincronizado com ' + cleanEmail + ')');
+            }
         } else {
-            // OPERADOR COMUM AUTENTICADO PELO GOOGLE (ZERO PRIVILÉGIOS DE ADMINISTRADOR)
+            // Cria um operador com o Gmail logado (não admin)
             const displayName = cleanEmail.split('@')[0].toUpperCase();
-            currentAuthUser = {
-                id: 'google_' + cleanEmail,
+            const newUser = {
+                id: 'usr_g_' + Date.now(),
                 username: displayName,
-                email: cleanEmail,
+                googleEmail: cleanEmail,
+                password: '',
                 isMaster: false,
+                mustChangePassword: false,
+                photo: '',
                 permissions: {
                     status_destino: true,
                     quick_add: false,
@@ -12921,12 +13260,17 @@
                     maintenance: false
                 }
             };
+            systemUsers.push(newUser);
+            saveSystemUsers();
+            currentAuthUser = newUser;
             isAdminAuthenticated = true;
             sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+            localStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
             updateAdminBadgeUI();
-            showToast('👤 Conectado via Google: <strong>' + displayName + '</strong> (Acesso de Operador)');
+            showToast('👤 Conta sincronizada para <strong>' + displayName + '</strong> (' + cleanEmail + ')!');
         }
 
+        syncAllDataToOnline(true);
         renderDashboard();
     }
 
