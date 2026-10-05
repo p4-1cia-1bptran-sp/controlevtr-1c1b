@@ -3523,6 +3523,9 @@
                     <span style="font-size: 0.95rem;">🔓</span>
                     <span id="adminSessionBadgeUser" style="font-weight: 700;">ADM Ativo</span>
                 </button>
+                <button type="button" id="headerActiveUnitBtn" class="theme-toggle-btn" style="display: none; background: rgba(30, 58, 138, 0.08); border-color: var(--primary); color: var(--primary); font-weight: 700; gap: 6px;" onclick="openUnitSelectionModal()" title="Unidade operacional ativa (Clique para alternar)">
+                    <span>🏢 <strong id="headerActiveUnitText">1ª Cia</strong> ▾</span>
+                </button>
                 <button type="button" id="userAccountBtn" class="theme-toggle-btn" style="display: none; align-items: center; gap: 6px; padding: 6px 12px; border-color: #3b82f6; color: #1d4ed8; background: #eff6ff;" onclick="openEditAccountModal()" title="Editar Conta">
                     <img id="headerUserAvatarImg" src="" alt="Avatar" style="display: none; width: 22px; height: 22px; border-radius: 50%; object-fit: cover; border: 1px solid #3b82f6;">
                     <span id="headerUserIcon" style="font-size: 1rem;">👤</span>
@@ -4622,6 +4625,18 @@
                 <select id="adminUserSelect" style="font-size: 0.95rem; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; width: 100%; box-sizing: border-box; background-color: var(--card-bg); color: var(--text-main); font-weight: 600;" onchange="onAdminUserSelectChange(true)"></select>
             </div>
 
+            <div id="adminUnitSelectGroup" style="display: flex; flex-direction: column; gap: 4px;">
+                <label for="adminUnitSelect" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">🏢 Unidade / Companhia de Atuação:</label>
+                <select id="adminUnitSelect" style="font-size: 0.95rem; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; width: 100%; box-sizing: border-box; background-color: var(--card-bg); color: var(--text-main); font-weight: 600;">
+                    <option value="1ª Cia">1ª Cia</option>
+                    <option value="2ª Cia">2ª Cia</option>
+                    <option value="3ª Cia">3ª Cia</option>
+                    <option value="4ª Cia">4ª Cia</option>
+                    <option value="PTT">PTT (Pelotão de Trânsito)</option>
+                    <option value="Batalhão" id="optAdminBatalhao">🏛️ Batalhão Geral (Todas as Unidades)</option>
+                </select>
+            </div>
+
             <div id="adminPasswordInputGroup" style="display: flex; flex-direction: column; gap: 6px;">
                 <label for="adminPasswordInput" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">🔑 Senha de Acesso:</label>
                 <input type="password" id="adminPasswordInput" placeholder="Digite sua senha..." style="font-size: 1rem; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; width: 100%; box-sizing: border-box; background: var(--card-bg); color: var(--text-main);" onkeydown="if(event.key==='Enter') submitAdminPassword()">
@@ -4916,6 +4931,157 @@
 </div>
 
 <!-- Modal de Gerenciamento de Usuários e Permissões -->
+<!-- Modal de Vinculação de Conta Google para Usuários / Operadores -->
+<div id="googleUserLinkModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();" style="display: none; z-index: 10050;">
+    <div class="modal-card" style="max-width: 480px;" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div class="modal-title"><span>🔐 Vincular Conta Google</span></div>
+            <button type="button" class="modal-close" onclick="closeGoogleUserLinkModal()" title="Fechar">✖</button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px; padding: 10px 0;">
+            <div style="background: rgba(66, 133, 244, 0.08); border: 1px solid rgba(66, 133, 244, 0.3); border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 10px;">
+                <svg width="24" height="24" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.8s.2-2.1.4-2.8L1.9 6.3C.7 8.7 0 10.8 0 12s.7 3.3 1.9 5.7l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/></svg>
+                <div style="overflow: hidden;">
+                    <div style="font-size: 0.76rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Google Autenticado:</div>
+                    <div id="googleLinkModalEmail" style="font-size: 0.95rem; font-weight: 800; color: var(--primary); word-break: break-all;">--</div>
+                </div>
+            </div>
+
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.4; margin: 0;">
+                Este e-mail do Gmail ainda não está associado a um perfil. Escolha como deseja prosseguir:
+            </p>
+
+            <!-- Opção 1: Vincular a perfil existente -->
+            <div style="border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--bg); display: flex; flex-direction: column; gap: 8px;">
+                <div style="font-size: 0.85rem; font-weight: 800; color: var(--text-main);">
+                    Opção 1: Vincular a um Operador Cadastrado (ex: Cb Laura)
+                </div>
+                <div>
+                    <label for="googleLinkUserSelect" style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Selecionar Operador:</label>
+                    <select id="googleLinkUserSelect" style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); font-weight: 600;"></select>
+                </div>
+                <div>
+                    <label for="googleLinkUserPass" style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Senha do Operador:</label>
+                    <input type="password" id="googleLinkUserPass" placeholder="Senha cadastrada..." style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main);" onkeydown="if(event.key==='Enter') confirmGoogleLinkExistingUser()">
+                </div>
+                <div id="googleLinkError" style="display: none; color: #ef4444; font-size: 0.82rem; font-weight: 700; padding: 6px 10px; background: rgba(239, 68, 68, 0.1); border-radius: 6px;"></div>
+                <button type="button" class="btn btn-primary btn-3d" style="width: 100%; justify-content: center; padding: 10px; font-weight: 700; margin-top: 4px;" onclick="confirmGoogleLinkExistingUser()">
+                    🔗 Vincular este Gmail e Entrar
+                </button>
+            </div>
+
+            <!-- Separador -->
+            <div style="display: flex; align-items: center; gap: 10px; margin: 2px 0;">
+                <hr style="flex: 1; border: 0; border-top: 1px solid var(--border);">
+                <span style="font-size: 0.74rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">OU CRIE UM NOVO PERFIL</span>
+                <hr style="flex: 1; border: 0; border-top: 1px solid var(--border);">
+            </div>
+
+            <!-- Opção 2: Criar novo perfil de operador com este Gmail -->
+            <div style="border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--bg); display: flex; flex-direction: column; gap: 8px;">
+                <div style="font-size: 0.85rem; font-weight: 800; color: var(--text-main);">
+                    Opção 2: Entrar como Novo Operador
+                </div>
+                <div>
+                    <label for="googleLinkNewUserName" style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Nome de Exibição / Guerra:</label>
+                    <input type="text" id="googleLinkNewUserName" placeholder="Ex: Cb Laura, Sd Silva..." style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main);">
+                </div>
+                <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: center; padding: 10px; font-weight: 700;" onclick="confirmGoogleCreateNewOperator()">
+                    ➕ Criar Perfil e Entrar com Google
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Seleção de Unidade / Companhia de Atuação -->
+<div id="unitSelectionModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();" style="display: none; z-index: 10060;">
+    <div class="modal-card" style="max-width: 480px;" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div class="modal-title"><span>🏢 Selecionar Unidade de Atuação</span></div>
+            <button type="button" class="modal-close" onclick="closeUnitSelectionModal()" title="Fechar">✖</button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px; padding: 12px 0;">
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; margin: 0;">
+                Selecione a Unidade / Companhia em que você atuará neste turno. Suas alterações operacionais e relatórios serão direcionados para esta unidade.
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label for="modalActiveUnitSelect" style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+                    Unidade de Atuação:
+                </label>
+                <select id="modalActiveUnitSelect" style="width: 100%; font-size: 1rem; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); font-weight: 700;">
+                    <option value="1ª Cia">1ª Companhia (1ª Cia)</option>
+                    <option value="2ª Cia">2ª Companhia (2ª Cia)</option>
+                    <option value="3ª Cia">3ª Companhia (3ª Cia)</option>
+                    <option value="4ª Cia">4ª Companhia (4ª Cia)</option>
+                    <option value="PTT">Pelotão de Trânsito (PTT / CTT)</option>
+                    <option value="Batalhão" id="optModalUnitBatalhao">🏛️ Batalhão Geral (Todas as Unidades)</option>
+                </select>
+            </div>
+
+            <div id="unitSelectionNotice" style="font-size: 0.82rem; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 8px 12px; border-radius: 6px;">
+                ℹ️ <strong>Regra de Unidade:</strong> Você poderá alterar e atualizar apenas viaturas da sua Companhia selecionada.
+            </div>
+
+            <div class="modal-footer" style="padding-top: 6px;">
+                <button type="button" class="btn btn-primary btn-3d" style="width: 100%; justify-content: center; padding: 10px 14px; font-weight: 700;" onclick="confirmUnitSelection()">
+                    ✅ Confirmar Unidade e Continuar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Exportação para Excel por Unidade -->
+<div id="exportOptionsModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();" style="display: none; z-index: 10070;">
+    <div class="modal-card" style="max-width: 520px;" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div class="modal-title"><span>📊 Exportar Planilha Excel (.xlsx)</span></div>
+            <button type="button" class="modal-close" onclick="closeExportOptionsModal()" title="Fechar">✖</button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px; padding: 12px 0;">
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.4; margin: 0;">
+                Selecione o escopo da unidade para a geração da planilha Excel formatada:
+            </p>
+
+            <!-- Seleção de Unidade para Exportação -->
+            <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+                <label for="exportUnitSelect" style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); text-transform: uppercase;">
+                    🏢 Unidade a Exportar:
+                </label>
+                <select id="exportUnitSelect" style="width: 100%; font-size: 0.95rem; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); font-weight: 700;" onchange="updateExportSummary()">
+                    <!-- Preenchido dinamicamente -->
+                </select>
+                <div id="exportUnitSummary" style="font-size: 0.82rem; font-weight: 600; color: var(--primary);">
+                    Carregando resumo de viaturas...
+                </div>
+            </div>
+
+            <!-- Opções adicionais -->
+            <div style="display: flex; flex-direction: column; gap: 8px; padding: 0 4px;">
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-main); cursor: pointer;">
+                    <input type="checkbox" id="exportIncludeMaintenance" checked style="width: 16px; height: 16px; accent-color: var(--primary);">
+                    <span>Incluir aba com o histórico de <strong>Manutenções da Frota</strong></span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-main); cursor: pointer;">
+                    <input type="checkbox" id="exportSaveToDrive" style="width: 16px; height: 16px; accent-color: var(--primary);">
+                    <span>Salvar também uma cópia no <strong>Google Drive</strong> (se conectado)</span>
+                </label>
+            </div>
+
+            <div class="modal-footer" style="padding-top: 6px; display: flex; gap: 10px;">
+                <button type="button" class="btn btn-outline btn-3d" style="flex: 1; justify-content: center; height: 42px;" onclick="closeExportOptionsModal()">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary btn-3d" style="flex: 2; justify-content: center; height: 42px; font-weight: 700;" onclick="confirmExecuteExportExcel()">
+                    📥 Baixar Planilha Excel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="usersManagementModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 680px;" onclick="event.stopPropagation()">
         <div class="modal-header">
@@ -5444,8 +5610,13 @@
             const merged = [...data.systemUsers];
             if (Array.isArray(localUsers)) {
                 localUsers.forEach(lu => {
-                    if (!merged.some(su => su.id === lu.id || su.username.toLowerCase() === lu.username.toLowerCase())) {
+                    const match = merged.find(su => su.id === lu.id || su.username.toLowerCase() === lu.username.toLowerCase());
+                    if (!match) {
                         merged.push(lu);
+                    } else {
+                        // Preserva vínculo de Gmail local ou remoto caso exista
+                        if (!match.googleEmail && lu.googleEmail) match.googleEmail = lu.googleEmail;
+                        if (!lu.googleEmail && match.googleEmail) lu.googleEmail = match.googleEmail;
                     }
                 });
             }
@@ -5454,6 +5625,16 @@
             if (!isAdminModalOpen) {
                 populateAdminUserSelect();
                 populateMgmtUserSelect();
+            }
+            // Sincroniza em tempo real a sessão ativa se permissões ou e-mail mudaram na nuvem
+            if (currentAuthUser && currentAuthUser.username !== 'VISITANTE') {
+                const updatedMe = systemUsers.find(u => u.id === currentAuthUser.id || u.username.toLowerCase() === currentAuthUser.username.toLowerCase());
+                if (updatedMe) {
+                    currentAuthUser = updatedMe;
+                    sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+                    localStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+                    updateAdminBadgeUI();
+                }
             }
         }
         if (data.appTitle) {
@@ -6367,7 +6548,7 @@
         }
     }
 
-    const defaultCias = ['Batalhão', '1ª Cia', '2ª Cia', '3ª Cia', '4ª Cia', 'CTT'];
+    const defaultCias = ['Batalhão', '1ª Cia', '2ª Cia', '3ª Cia', '4ª Cia', 'PTT'];
     let customCias = JSON.parse(localStorage.getItem('batalhao_vtr_custom_cias') || 'null');
     if (!customCias) {
         customCias = [...defaultCias];
@@ -8008,6 +8189,12 @@
             return;
         }
 
+        // Validação de Escopo de Unidade / Companhia:
+        if (!canUserEditVehicle(v)) {
+            showToast(`⚠️ <strong>Acesso Restrito:</strong> Você está atuando na <strong>${currentUserActiveUnit}</strong> e não possui permissão para alterar viaturas da ${v.cia || 'outra Cia'}.`);
+            return;
+        }
+
         // Se for VISITANTE tentando mudar para algo diferente:
         if (!currentAuthUser || currentAuthUser.username === 'VISITANTE') {
             const permReq = (fieldName === 'cia') ? 'edit_cia' : 'status_destino';
@@ -8133,6 +8320,12 @@
         if (!currentAuthUser || currentAuthUser.username === 'VISITANTE') {
             const ok = await requestAdminPassword(`alterar motivo da viatura ${vehicleId}`, 'status_destino');
             if (!ok) return;
+        }
+
+        const vtrRec = records.find(r => r.vehicle === vehicleId);
+        if (vtrRec && !canUserEditVehicle(vtrRec)) {
+            showToast(`⚠️ <strong>Acesso Restrito:</strong> Você está atuando na <strong>${currentUserActiveUnit}</strong> e não possui permissão para alterar viaturas da ${vtrRec.cia || 'outra Cia'}.`);
+            return;
         }
 
         if (choiceKey === 'CLEAR') {
@@ -8352,6 +8545,11 @@
             }
         }
 
+        if (!canUserEditVehicle(v)) {
+            showToast(`⚠️ <strong>Acesso Restrito:</strong> Você está atuando na <strong>${currentUserActiveUnit}</strong> e não possui permissão para alterar viaturas da ${v.cia || 'outra Cia'}.`);
+            return;
+        }
+
         const cleanVal = value.trim ? value.trim() : value;
         v[fieldName] = cleanVal;
         localPendingEdits[vehicleId] = { time: Date.now(), field: fieldName, value: cleanVal };
@@ -8397,6 +8595,7 @@
             id: "admin-master",
             username: "ADMINISTRADOR GERAL",
             password: "PATRULHEIRO1",
+            googleEmail: "p4.1cia.1bptran.sp@gmail.com",
             isMaster: true,
             mustChangePassword: false,
             photo: "",
@@ -8412,6 +8611,28 @@
                 server_config: true,
                 manage_users: true,
                 edit_title: true
+            }
+        },
+        {
+            id: "usr_laura",
+            username: "Cb Laura",
+            password: "123",
+            googleEmail: "",
+            isMaster: false,
+            mustChangePassword: false,
+            photo: "",
+            permissions: {
+                status_destino: true,
+                maintenance: true,
+                quick_add: false,
+                edit_full_vtr: false,
+                delete_vtr: false,
+                manage_lists: false,
+                database_import: false,
+                database_reset: false,
+                server_config: false,
+                manage_users: false,
+                edit_title: false
             }
         },
         {
@@ -8482,8 +8703,40 @@
             systemUsers.unshift(defaultSystemUsers[0]);
             updatedUsers = true;
         }
+        // Garante e-mail mestre para Administrador Geral
+        const masterAdmin = systemUsers.find(u => u.isMaster || u.username === 'ADMINISTRADOR GERAL');
+        if (masterAdmin && !masterAdmin.googleEmail) {
+            masterAdmin.googleEmail = 'p4.1cia.1bptran.sp@gmail.com';
+            updatedUsers = true;
+        }
+        // Garante Cb Laura nos usuários
+        if (!systemUsers.some(u => u.username.toLowerCase() === 'cb laura' || u.username.toLowerCase() === 'laura')) {
+            systemUsers.push({
+                id: "usr_laura",
+                username: "Cb Laura",
+                password: "123",
+                googleEmail: "",
+                isMaster: false,
+                mustChangePassword: false,
+                photo: "",
+                permissions: {
+                    status_destino: true,
+                    maintenance: true,
+                    quick_add: false,
+                    edit_full_vtr: false,
+                    delete_vtr: false,
+                    manage_lists: false,
+                    database_import: false,
+                    database_reset: false,
+                    server_config: false,
+                    manage_users: false,
+                    edit_title: false
+                }
+            });
+            updatedUsers = true;
+        }
         if (!systemUsers.some(u => u.username === 'VISITANTE')) {
-            systemUsers.push(defaultSystemUsers[1]);
+            systemUsers.push(defaultSystemUsers.find(u => u.username === 'VISITANTE') || { id: 'visitante', username: 'VISITANTE', permissions: {} });
             updatedUsers = true;
         }
         if (updatedUsers) {
@@ -8494,7 +8747,7 @@
     // 🚀 RESTAURA USUÁRIO SALVO (LOCALSTORAGE / SESSIONSTORAGE)
     let currentAuthUser = JSON.parse(localStorage.getItem('batalhao_vtr_auth_user') || sessionStorage.getItem('batalhao_vtr_auth_user') || 'null');
     if (!currentAuthUser) {
-        const vis = systemUsers.find(u => u.username === 'VISITANTE') || defaultSystemUsers[1];
+        const vis = systemUsers.find(u => u.username === 'VISITANTE') || (defaultSystemUsers.find(u => u.username === 'VISITANTE') || { id: 'visitante', username: 'VISITANTE', permissions: {} });
         currentAuthUser = vis;
         sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(vis));
     } else if (currentAuthUser.username !== 'VISITANTE') {
@@ -8609,6 +8862,193 @@
         });
     }
 
+    let currentUserActiveUnit = localStorage.getItem('batalhao_vtr_active_unit') || sessionStorage.getItem('batalhao_vtr_active_unit') || '';
+
+    function setActiveUnit(unitName, suppressToast = false) {
+        if (!unitName) unitName = '1ª Cia';
+        const isMaster = currentAuthUser && (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL');
+        if (unitName === 'Batalhão' && !isMaster) {
+            unitName = '1ª Cia';
+        }
+
+        currentUserActiveUnit = unitName;
+        localStorage.setItem('batalhao_vtr_active_unit', unitName);
+        sessionStorage.setItem('batalhao_vtr_active_unit', unitName);
+
+        const badgeUnitBtn = document.getElementById('headerActiveUnitBtn');
+        const badgeUnitText = document.getElementById('headerActiveUnitText');
+        if (badgeUnitText) {
+            badgeUnitText.textContent = (unitName === 'Batalhão') ? 'Batalhão (Todas)' : unitName;
+        }
+
+        // Sincroniza os filtros do painel com a unidade escolhida
+        const fCia = document.getElementById('filterCia');
+        const fCiaTable = document.getElementById('filterCiaTable');
+        if (unitName === 'Batalhão') {
+            if (fCia) fCia.value = 'ALL';
+            if (fCiaTable) fCiaTable.value = 'ALL';
+        } else {
+            if (fCia) fCia.value = unitName;
+            if (fCiaTable) fCiaTable.value = unitName;
+        }
+
+        renderDashboard();
+        if (!suppressToast) {
+            showToast('🏢 Unidade operacional ativa: <strong>' + (unitName === 'Batalhão' ? 'Batalhão (Todas as Unidades)' : unitName) + '</strong>');
+        }
+    }
+
+    function openUnitSelectionModal() {
+        const isMaster = currentAuthUser && (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL');
+        const modal = document.getElementById('unitSelectionModal');
+        const select = document.getElementById('modalActiveUnitSelect');
+        const optBatalhao = document.getElementById('optModalUnitBatalhao');
+        const notice = document.getElementById('unitSelectionNotice');
+
+        if (optBatalhao) {
+            optBatalhao.disabled = !isMaster;
+            optBatalhao.textContent = isMaster ? '🏛️ Batalhão Geral (Todas as Unidades)' : '🏛️ Batalhão Geral (Apenas Administrador)';
+        }
+
+        if (notice) {
+            if (isMaster) {
+                notice.innerHTML = '👑 <strong>Acesso de Administrador:</strong> No modo <strong>Batalhão</strong> você altera e exporta todas as unidades. Se selecionar uma Cia, seu painel foca nela.';
+            } else {
+                notice.innerHTML = 'ℹ️ <strong>Regra de Unidade:</strong> Você poderá alterar e atualizar apenas viaturas da sua Companhia selecionada.';
+            }
+        }
+
+        if (select) {
+            select.value = currentUserActiveUnit || (isMaster ? 'Batalhão' : '1ª Cia');
+        }
+
+        if (modal) modal.style.display = 'flex';
+    }
+
+    function closeUnitSelectionModal() {
+        const modal = document.getElementById('unitSelectionModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    function confirmUnitSelection() {
+        const select = document.getElementById('modalActiveUnitSelect');
+        if (select) {
+            setActiveUnit(select.value);
+        }
+        closeUnitSelectionModal();
+    }
+
+    function canUserEditVehicle(vehicleRecord) {
+        if (!currentAuthUser || currentAuthUser.username === 'VISITANTE') return false;
+
+        const isMaster = currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL';
+        // Administrador Geral em modo Batalhão tem acesso irrestrito
+        if (isMaster && (!currentUserActiveUnit || currentUserActiveUnit === 'Batalhão' || currentUserActiveUnit === 'ALL')) {
+            return true;
+        }
+
+        // Se uma unidade estiver selecionada (1ª Cia, 2ª Cia, etc.):
+        if (currentUserActiveUnit && currentUserActiveUnit !== 'Batalhão' && currentUserActiveUnit !== 'ALL') {
+            if (!vehicleRecord) return true;
+            const vtrCia = (vehicleRecord.cia || '1ª Cia').toLowerCase().trim();
+            const activeCia = currentUserActiveUnit.toLowerCase().trim();
+            const isPttEquivalent = (activeCia.includes('ptt') || activeCia.includes('ctt')) && 
+                                   (vtrCia.includes('ptt') || vtrCia.includes('ctt'));
+            if (vtrCia === activeCia || isPttEquivalent) {
+                return true;
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+    function openExportOptionsModal() {
+        const isMaster = currentAuthUser && (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL');
+        const modal = document.getElementById('exportOptionsModal');
+        const select = document.getElementById('exportUnitSelect');
+
+        if (select) {
+            select.innerHTML = '';
+            if (isMaster) {
+                const optAll = document.createElement('option');
+                optAll.value = 'Batalhão';
+                optAll.textContent = '🏛️ Todas as Unidades do Batalhão (Geral Completo)';
+                select.appendChild(optAll);
+            }
+
+            const ciasToOffer = ['1ª Cia', '2ª Cia', '3ª Cia', '4ª Cia', 'PTT'];
+            if (typeof customCias !== 'undefined' && Array.isArray(customCias)) {
+                customCias.forEach(c => {
+                    if (c !== 'Batalhão' && !ciasToOffer.includes(c)) ciasToOffer.push(c);
+                });
+            }
+
+            if (isMaster) {
+                ciasToOffer.forEach(cia => {
+                    const opt = document.createElement('option');
+                    opt.value = cia;
+                    opt.textContent = `Apenas ${cia}`;
+                    select.appendChild(opt);
+                });
+                select.value = (currentUserActiveUnit && currentUserActiveUnit !== 'ALL') ? currentUserActiveUnit : 'Batalhão';
+            } else {
+                // Operador comum: apenas a sua unidade
+                const unitToUse = currentUserActiveUnit || '1ª Cia';
+                const opt = document.createElement('option');
+                opt.value = unitToUse;
+                opt.textContent = `Sua Unidade (${unitToUse})`;
+                select.appendChild(opt);
+                select.value = unitToUse;
+            }
+        }
+
+        updateExportSummary();
+        if (modal) modal.style.display = 'flex';
+    }
+
+    function closeExportOptionsModal() {
+        const modal = document.getElementById('exportOptionsModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    function updateExportSummary() {
+        const select = document.getElementById('exportUnitSelect');
+        const summary = document.getElementById('exportUnitSummary');
+        if (!select || !summary) return;
+
+        const selUnit = select.value;
+        let vtrCount = 0;
+        let maintCount = 0;
+
+        if (selUnit === 'Batalhão') {
+            vtrCount = (records || []).length;
+            maintCount = (maintenances || []).length;
+            summary.innerHTML = `📊 Serão exportadas <strong>${vtrCount} viaturas</strong> de todas as unidades e <strong>${maintCount} registros de manutenção</strong>.`;
+        } else {
+            const vtrFiltered = (records || []).filter(r => {
+                const c = (r.cia || '1ª Cia').toLowerCase().trim();
+                const u = selUnit.toLowerCase().trim();
+                return c === u || ((u.includes('ptt') || u.includes('ctt')) && (c.includes('ptt') || c.includes('ctt')));
+            });
+            vtrCount = vtrFiltered.length;
+            const maintFiltered = (maintenances || []).filter(m => vtrFiltered.some(r => r.vehicle === m.vehicle));
+            maintCount = maintFiltered.length;
+            summary.innerHTML = `📊 Serão exportadas <strong>${vtrCount} viaturas da ${selUnit}</strong> e <strong>${maintCount} manutenções vinculadas</strong>.`;
+        }
+    }
+
+    async function confirmExecuteExportExcel() {
+        const select = document.getElementById('exportUnitSelect');
+        const incMaint = document.getElementById('exportIncludeMaintenance') ? document.getElementById('exportIncludeMaintenance').checked : true;
+        const saveToDrive = document.getElementById('exportSaveToDrive') ? document.getElementById('exportSaveToDrive').checked : false;
+
+        const selUnit = select ? select.value : 'Batalhão';
+        closeExportOptionsModal();
+
+        executeExportExcel(selUnit, incMaint, saveToDrive);
+    }
+
     function updateAdminBadgeUI() {
         updateAdminVisibility();
         const badge = document.getElementById('adminSessionBadge');
@@ -8640,10 +9080,19 @@
                     syncBtn.title = 'Clique para vincular este usuário à sua conta Google e nunca perder seus dados.';
                 }
             }
+            const activeUnitBtn = document.getElementById('headerActiveUnitBtn');
+            const activeUnitText = document.getElementById('headerActiveUnitText');
+            if (activeUnitBtn && activeUnitText) {
+                activeUnitBtn.style.display = 'inline-flex';
+                activeUnitText.textContent = (currentUserActiveUnit === 'Batalhão') ? 'Batalhão (Todas)' : (currentUserActiveUnit || '1ª Cia');
+            }
+
             if (badge) {
                 badge.style.display = 'inline-flex';
                 if (badgeUser) {
-                    if (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL') {
+                                const gChosenUnit = document.getElementById('adminUnitSelect') ? document.getElementById('adminUnitSelect').value : (currentAuthUser.isMaster ? 'Batalhão' : '1ª Cia');
+            setActiveUnit(gChosenUnit, true);
+            if (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL') {
                         badgeUser.textContent = 'ADMINISTRADOR GERAL';
                         badge.style.background = 'rgba(245, 158, 11, 0.2)';
                         badge.style.borderColor = '#f59e0b';
@@ -8672,6 +9121,8 @@
                 }
             }
         } else {
+            const activeUnitBtn = document.getElementById('headerActiveUnitBtn');
+            if (activeUnitBtn) activeUnitBtn.style.display = 'none';
             if (badge) badge.style.display = 'none';
             if (accountBtn) accountBtn.style.display = 'none';
             if (syncBtn) syncBtn.style.display = 'none';
@@ -8680,7 +9131,7 @@
     }
 
     function logoutAdmin() {
-        const vis = systemUsers.find(u => u.username === 'VISITANTE') || defaultSystemUsers[1];
+        const vis = systemUsers.find(u => u.username === 'VISITANTE') || (defaultSystemUsers.find(u => u.username === 'VISITANTE') || { id: 'visitante', username: 'VISITANTE', permissions: {} });
         currentAuthUser = vis;
         sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(vis));
         isAdminAuthenticated = true;
@@ -8786,6 +9237,27 @@
         const permErr = document.getElementById('adminPermissionError');
         if (err) err.style.display = 'none';
         if (permErr) permErr.style.display = 'none';
+
+        const user = systemUsers.find(u => u.username === selected);
+        const unitSelect = document.getElementById('adminUnitSelect');
+        const optBatalhao = document.getElementById('optAdminBatalhao');
+        if (user && user.isMaster) {
+            if (optBatalhao) {
+                optBatalhao.disabled = false;
+                optBatalhao.textContent = "🏛️ Batalhão Geral (Todas as Unidades)";
+            }
+            if (unitSelect && (!unitSelect.value || unitSelect.value === '1ª Cia')) {
+                unitSelect.value = 'Batalhão';
+            }
+        } else if (user) {
+            if (optBatalhao) {
+                optBatalhao.disabled = true;
+                optBatalhao.textContent = "🏛️ Batalhão Geral (Apenas Administrador)";
+            }
+            if (unitSelect && unitSelect.value === 'Batalhão') {
+                unitSelect.value = '1ª Cia';
+            }
+        }
 
         if (selected === 'VISITANTE') {
             if (passGroup) passGroup.style.display = 'none';
@@ -8939,6 +9411,8 @@
 
             currentAuthUser = user;
             isAdminAuthenticated = true;
+            const chosenUnit = document.getElementById('adminUnitSelect') ? document.getElementById('adminUnitSelect').value : (user.isMaster ? 'Batalhão' : '1ª Cia');
+            setActiveUnit(chosenUnit, true);
             localStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(user));
             localStorage.setItem('batalhao_vtr_admin_auth', 'true');
             sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(user));
@@ -10502,40 +10976,76 @@
             alert("Nenhum dado encontrado para exportar.");
             return;
         }
+        openExportOptionsModal();
+    }
 
-        if (typeof XLSX !== 'undefined') {
-            const defaultExcelName = generateExportFileName('xlsx');
+    async function executeExportExcel(selectedUnit = 'Batalhão', includeMaintenance = true, saveToDrive = false) {
+        if (!records || records.length === 0) {
+            alert("Nenhum dado encontrado para exportar.");
+            return;
+        }
 
-            const rows = records.map(r => {
-                const formattedDate = r.date ? (r.date.includes('-') ? r.date.split('-').reverse().join('/') : r.date) : '-';
-                const radioDateFormatted = r.radio_data ? (r.radio_data.includes('-') ? r.radio_data.split('-').reverse().join('/') : r.radio_data) : '-';
-                return {
-                    "Prefixo": r.vehicle,
-                    "Companhia / Setor": r.cia || 'Batalhão',
-                    "Modelo da Viatura": r.model || '-',
-                    "Pelotão": r.pelotao || '-',
-                    "Situação Operacional (Status)": r.status || 'OPERANDO',
-                    "QTH da VTR (Destino)": r.destino || '-',
-                    "Motivo da Baixa / Observações": r.obs || '-',
-                    "Data do Registro": formattedDate,
-                    "Placa da Viatura": r.placa || '-',
-                    "Patrimônio da Viatura": r.patrimonio_vtr || '-',
-                    "Modelo do Rádio": r.radio_modelo || '-',
-                    "Patrimônio do Rádio": r.radio_patrimonio || '-',
-                    "Data da Atualização do Rádio": radioDateFormatted,
-                    "Cartão de Abastecimento": r.cartao_abastecimento || '-',
-                    "TAG de Abastecimento": r.tag_abastecimento || '-',
-                    "Referência Forms": r.data_forms || '-'
-                };
+        if (typeof XLSX === 'undefined') {
+            alert("A biblioteca SheetJS (XLSX) está carregando. Tente novamente em instantes.");
+            return;
+        }
+
+        let targetRecords = records;
+        let sheetTitle = 'Frota Geral Batalhão';
+        let unitTag = 'BATALHAO';
+
+        if (selectedUnit && selectedUnit !== 'Batalhão' && selectedUnit !== 'ALL') {
+            const u = selectedUnit.toLowerCase().trim();
+            targetRecords = records.filter(r => {
+                const c = (r.cia || '1ª Cia').toLowerCase().trim();
+                return c === u || ((u.includes('ptt') || u.includes('ctt')) && (c.includes('ptt') || c.includes('ctt')));
             });
+            sheetTitle = 'Frota ' + selectedUnit;
+            unitTag = selectedUnit.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+        }
 
-            const worksheet = XLSX.utils.json_to_sheet(rows);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Frota Batalhão");
+        if (targetRecords.length === 0) {
+            alert(`Nenhuma viatura cadastrada encontrada para a unidade "${selectedUnit}".`);
+            return;
+        }
 
-            // Inclui a aba de Manutenções da Frota quando solicitado
-            if (maintenances && maintenances.length > 0) {
-                const maintRows = maintenances.map(m => {
+        const defaultExcelName = generateExportFileName('xlsx', unitTag);
+
+        const rows = targetRecords.map(r => {
+            const formattedDate = r.date ? (r.date.includes('-') ? r.date.split('-').reverse().join('/') : r.date) : '-';
+            const radioDateFormatted = r.radio_data ? (r.radio_data.includes('-') ? r.radio_data.split('-').reverse().join('/') : r.radio_data) : '-';
+            return {
+                "Prefixo": r.vehicle,
+                "Companhia / Setor": r.cia || 'Batalhão',
+                "Modelo da Viatura": r.model || '-',
+                "Pelotão": r.pelotao || '-',
+                "Situação Operacional (Status)": r.status || 'OPERANDO',
+                "QTH da VTR (Destino)": r.destino || '-',
+                "Motivo da Baixa / Observações": r.obs || '-',
+                "Data do Registro": formattedDate,
+                "Placa da Viatura": r.placa || '-',
+                "Patrimônio da Viatura": r.patrimonio_vtr || '-',
+                "Modelo do Rádio": r.radio_modelo || '-',
+                "Patrimônio do Rádio": r.radio_patrimonio || '-',
+                "Data da Atualização do Rádio": radioDateFormatted,
+                "Cartão de Abastecimento": r.cartao_abastecimento || '-',
+                "TAG de Abastecimento": r.tag_abastecimento || '-',
+                "Referência Forms": r.data_forms || '-'
+            };
+        });
+
+        const worksheet = XLSX.utils.json_to_sheet(rows);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, sheetTitle);
+
+        // Inclui a aba de Manutenções da Frota quando selecionado
+        if (includeMaintenance && maintenances && maintenances.length > 0) {
+            let targetMaints = maintenances;
+            if (selectedUnit && selectedUnit !== 'Batalhão' && selectedUnit !== 'ALL') {
+                targetMaints = maintenances.filter(m => targetRecords.some(r => r.vehicle === m.vehicle));
+            }
+            if (targetMaints.length > 0) {
+                const maintRows = targetMaints.map(m => {
                     const formattedMaintDate = m.date ? (m.date.includes('-') ? m.date.split('-').reverse().join('/') : m.date) : '-';
                     return {
                         "Viatura / Prefixo": m.vehicle || '-',
@@ -10556,27 +11066,22 @@
                 ];
                 XLSX.utils.book_append_sheet(workbook, maintWorksheet, "Manutenções da Frota");
             }
+        }
 
-            worksheet['!cols'] = [
-                { wch: 16 }, { wch: 20 }, { wch: 20 }, { wch: 18 },
-                { wch: 26 }, { wch: 24 }, { wch: 38 }, { wch: 16 },
-                { wch: 16 }, { wch: 22 }, { wch: 20 }, { wch: 22 },
-                { wch: 26 }, { wch: 26 }, { wch: 26 }, { wch: 22 }
-            ];
+        worksheet['!cols'] = [
+            { wch: 16 }, { wch: 20 }, { wch: 20 }, { wch: 18 },
+            { wch: 26 }, { wch: 24 }, { wch: 38 }, { wch: 16 },
+            { wch: 16 }, { wch: 22 }, { wch: 20 }, { wch: 22 },
+            { wch: 26 }, { wch: 26 }, { wch: 26 }, { wch: 22 }
+        ];
 
-            XLSX.writeFile(workbook, defaultExcelName);
-            showToast(`📊 Planilha exportada como <strong>${defaultExcelName}</strong>!`);
+        XLSX.writeFile(workbook, defaultExcelName);
+        showToast(`📊 Planilha da <strong>${selectedUnit === 'Batalhão' ? 'Frota do Batalhão' : selectedUnit}</strong> exportada com sucesso!`);
 
-            // Pergunta ao usuário se deseja salvar no Google Drive (NÃO é automático)
-            setTimeout(async () => {
-                const targetAccount = googleUserEmail ? (' (' + googleUserEmail + ')') : '';
-                const saveToDrive = confirm('Deseja também salvar uma cópia desta planilha Excel no seu Google Drive' + targetAccount + '?');
-                if (saveToDrive) {
-                    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-                    const excelBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                    await uploadFileToUserGoogleDrive(defaultExcelName, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', excelBlob);
-                }
-            }, 500);
+        if (saveToDrive) {
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            const excelBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            await uploadFileToUserGoogleDrive(defaultExcelName, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', excelBlob);
         }
     }
 
@@ -13196,6 +13701,139 @@
         });
     }
 
+    let pendingGoogleLinkEmail = '';
+
+    function openGoogleUserLinkModal(email) {
+        pendingGoogleLinkEmail = email;
+        const emailEl = document.getElementById('googleLinkModalEmail');
+        if (emailEl) emailEl.textContent = email;
+
+        const select = document.getElementById('googleLinkUserSelect');
+        if (select) {
+            select.innerHTML = '';
+            systemUsers.forEach(u => {
+                if (u.username !== 'VISITANTE') {
+                    const opt = document.createElement('option');
+                    opt.value = u.id;
+                    opt.textContent = u.username + (u.googleEmail ? ' (' + u.googleEmail + ')' : ' [Sem Gmail]');
+                    select.appendChild(opt);
+                }
+            });
+            // Se o usuário selecionou alguém no adminUserSelect antes de clicar no Google, pré-seleciona ele
+            const adminSelect = document.getElementById('adminUserSelect');
+            if (adminSelect && adminSelect.value) {
+                const matchVal = Array.from(select.options).find(o => o.text.startsWith(adminSelect.value));
+                if (matchVal) select.value = matchVal.value;
+            }
+        }
+
+        const passInput = document.getElementById('googleLinkUserPass');
+        if (passInput) passInput.value = '';
+
+        const errDiv = document.getElementById('googleLinkError');
+        if (errDiv) errDiv.style.display = 'none';
+
+        const nameInput = document.getElementById('googleLinkNewUserName');
+        if (nameInput) {
+            nameInput.value = (email.split('@')[0] || 'OPERADOR').toUpperCase();
+        }
+
+        const modal = document.getElementById('googleUserLinkModal');
+        if (modal) modal.style.display = 'flex';
+    }
+
+    function closeGoogleUserLinkModal() {
+        const modal = document.getElementById('googleUserLinkModal');
+        if (modal) modal.style.display = 'none';
+        pendingGoogleLinkEmail = '';
+    }
+
+    function confirmGoogleLinkExistingUser() {
+        const select = document.getElementById('googleLinkUserSelect');
+        const passInput = document.getElementById('googleLinkUserPass');
+        const errDiv = document.getElementById('googleLinkError');
+        if (!select || !pendingGoogleLinkEmail) return;
+
+        const userId = select.value;
+        const targetUser = systemUsers.find(u => u.id === userId);
+        if (!targetUser) {
+            if (errDiv) { errDiv.textContent = '❌ Usuário selecionado não encontrado.'; errDiv.style.display = 'block'; }
+            return;
+        }
+
+        const typedPass = (passInput ? passInput.value : '').trim();
+        // Se o usuário tem senha cadastrada, valida
+        if (targetUser.password && typedPass !== targetUser.password) {
+            if (errDiv) { errDiv.textContent = '❌ Senha incorreta para o usuário ' + targetUser.username + '!'; errDiv.style.display = 'block'; }
+            return;
+        }
+
+        // Vincula o Gmail ao usuário selecionado
+        targetUser.googleEmail = pendingGoogleLinkEmail.toLowerCase().trim();
+        currentAuthUser = targetUser;
+        isAdminAuthenticated = true;
+        sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+        localStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+        saveSystemUsers();
+        updateAdminBadgeUI();
+        closeGoogleUserLinkModal();
+        closeAdminPasswordModal(true);
+        showToast('🔗 Conta Google vinculada com sucesso a <strong>' + targetUser.username + '</strong>!');
+        debouncedSyncAllDataToOnline();
+        renderDashboard();
+    }
+
+    function confirmGoogleCreateNewOperator() {
+        const nameInput = document.getElementById('googleLinkNewUserName');
+        const errDiv = document.getElementById('googleLinkError');
+        const name = nameInput ? nameInput.value.trim() : '';
+        if (!name) {
+            if (errDiv) { errDiv.textContent = '❌ Por favor, digite um nome de exibição.'; errDiv.style.display = 'block'; }
+            return;
+        }
+
+        if (systemUsers.some(u => u.username.toLowerCase() === name.toLowerCase())) {
+            if (errDiv) { errDiv.textContent = '❌ Já existe um usuário cadastrado com este nome.'; errDiv.style.display = 'block'; }
+            return;
+        }
+
+        const newUser = {
+            id: 'usr_g_' + Date.now(),
+            username: name,
+            googleEmail: pendingGoogleLinkEmail.toLowerCase().trim(),
+            password: '',
+            isMaster: false,
+            mustChangePassword: false,
+            photo: '',
+            permissions: {
+                status_destino: true,
+                maintenance: true,
+                quick_add: false,
+                edit_full_vtr: false,
+                delete_vtr: false,
+                manage_lists: false,
+                database_import: false,
+                database_reset: false,
+                server_config: false,
+                manage_users: false,
+                edit_title: false
+            }
+        };
+
+        systemUsers.push(newUser);
+        saveSystemUsers();
+        currentAuthUser = newUser;
+        isAdminAuthenticated = true;
+        sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+        localStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
+        updateAdminBadgeUI();
+        closeGoogleUserLinkModal();
+        closeAdminPasswordModal(true);
+        showToast('👤 Novo operador <strong>' + name + '</strong> criado e vinculado ao Gmail!');
+        debouncedSyncAllDataToOnline();
+        renderDashboard();
+    }
+
     function onGoogleUserLoggedIn(email) {
         if (!email) return;
         const cleanEmail = email.toLowerCase().trim();
@@ -13230,48 +13868,18 @@
             localStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
             saveSystemUsers();
             updateAdminBadgeUI();
+            closeAdminPasswordModal(true);
             if (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL') {
                 showToast('🔓 Bem-vindo(a), <strong>ADMINISTRADOR GERAL</strong>! (Sincronizado com ' + cleanEmail + ')');
             } else {
                 showToast('👤 Conectado como <strong>' + currentAuthUser.username + '</strong> (Sincronizado com ' + cleanEmail + ')');
             }
+            debouncedSyncAllDataToOnline();
+            renderDashboard();
         } else {
-            // Cria um operador com o Gmail logado (não admin)
-            const displayName = cleanEmail.split('@')[0].toUpperCase();
-            const newUser = {
-                id: 'usr_g_' + Date.now(),
-                username: displayName,
-                googleEmail: cleanEmail,
-                password: '',
-                isMaster: false,
-                mustChangePassword: false,
-                photo: '',
-                permissions: {
-                    status_destino: true,
-                    quick_add: false,
-                    edit_full_vtr: false,
-                    delete_vtr: false,
-                    manage_lists: false,
-                    database_import: false,
-                    database_reset: false,
-                    server_config: false,
-                    manage_users: false,
-                    edit_title: false,
-                    maintenance: false
-                }
-            };
-            systemUsers.push(newUser);
-            saveSystemUsers();
-            currentAuthUser = newUser;
-            isAdminAuthenticated = true;
-            sessionStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
-            localStorage.setItem('batalhao_vtr_auth_user', JSON.stringify(currentAuthUser));
-            updateAdminBadgeUI();
-            showToast('👤 Conta sincronizada para <strong>' + displayName + '</strong> (' + cleanEmail + ')!');
+            // Abre o modal de vinculação ou criação para permitir vincular a um operador existente (ex: Cb Laura) ou criar novo
+            openGoogleUserLinkModal(cleanEmail);
         }
-
-        syncAllDataToOnline(true);
-        renderDashboard();
     }
 
     async function uploadFileToUserGoogleDrive(fileName, mimeType, fileBlob) {

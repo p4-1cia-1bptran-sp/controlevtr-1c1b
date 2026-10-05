@@ -235,6 +235,7 @@ module.exports = async (req, res) => {
                     customQuickReasons: Array.isArray(payload.customQuickReasons) && payload.customQuickReasons.length > 0 ? payload.customQuickReasons : (currentDb.customQuickReasons || []),
                     systemUsers: Array.isArray(payload.systemUsers) && payload.systemUsers.length > 0 ? payload.systemUsers : (currentDb.systemUsers || []),
                     records: Array.isArray(payload.records) ? payload.records : (currentDb.records || []),
+                    maintenances: Array.isArray(payload.maintenances) ? payload.maintenances : (currentDb.maintenances || []),
                     updatedAt: payload.updatedAt || new Date().toISOString()
                 };
 
