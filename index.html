@@ -5082,6 +5082,38 @@
     </div>
 </div>
 
+<!-- Modal de Pergunta: Importar Banco do Google Drive / Gmail no Login -->
+<div id="promptDriveImportModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();" style="display: none; z-index: 10080;">
+    <div class="modal-card" style="max-width: 440px;" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div class="modal-title"><span>☁️ Importação do Google Drive / Gmail</span></div>
+            <button type="button" class="modal-close" onclick="declineDriveImportOnLogin()" title="Fechar">✖</button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px; padding: 12px 0;">
+            <div style="display: flex; align-items: center; gap: 12px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px;">
+                <span style="font-size: 1.8rem;">📥</span>
+                <div>
+                    <div style="font-size: 0.95rem; font-weight: 800; color: #1e3a8a;">Deseja importar o banco de dados do Google Drive / Gmail?</div>
+                    <div style="font-size: 0.8rem; color: #475569; margin-top: 2px;">Você pode carregar um backup salvo no Drive ou continuar com o banco atual.</div>
+                </div>
+            </div>
+
+            <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.4; margin: 0;">
+                Se escolher <strong>"Não"</strong>, o banco de dados que já está no sistema permanecerá exatamente como está, sem qualquer alteração.
+            </p>
+
+            <div class="modal-footer" style="padding-top: 6px; display: flex; gap: 10px;">
+                <button type="button" class="btn btn-outline btn-3d" style="flex: 1; justify-content: center; height: 42px;" onclick="declineDriveImportOnLogin()">
+                    ❌ Não, Manter Atual
+                </button>
+                <button type="button" class="btn btn-primary btn-3d" style="flex: 1; justify-content: center; height: 42px; font-weight: 700; background: #2563eb;" onclick="acceptDriveImportOnLogin()">
+                    ✅ Sim, Importar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="usersManagementModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 680px;" onclick="event.stopPropagation()">
         <div class="modal-header">
@@ -5104,7 +5136,7 @@
             </div>
 
             <!-- Dados Básicos do Usuário -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px;">
                 <div>
                     <label for="mgmtUserNameInput" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">Nome / Identificador *</label>
                     <input type="text" id="mgmtUserNameInput" placeholder="Ex: Cb Souza, Plantão 1" style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main);">
@@ -5114,13 +5146,34 @@
                     <input type="text" id="mgmtUserPassInput" placeholder="Senha do operador..." style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main);">
                 </div>
                 <div>
-                    <label for="mgmtUserGoogleEmailInput" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">📧 Gmail Vinculado (Opcional):</label>
+                    <label for="mgmtUserGoogleEmailInput" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">📧 Gmail Vinculado:</label>
                     <input type="email" id="mgmtUserGoogleEmailInput" placeholder="Ex: operador@gmail.com" style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main);">
+                </div>
+                <div>
+                    <label for="mgmtUserUnitSelect" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">🏢 Unidade Fixada:</label>
+                    <select id="mgmtUserUnitSelect" style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main); font-weight: 600;">
+                        <option value="1ª Cia">1ª Cia</option>
+                        <option value="2ª Cia">2ª Cia</option>
+                        <option value="3ª Cia">3ª Cia</option>
+                        <option value="4ª Cia">4ª Cia</option>
+                        <option value="PTT">PTT (Pelotão de Trânsito)</option>
+                        <option value="Batalhão" id="optMgmtBatalhao">🏛️ Batalhão (Apenas Admin)</option>
+                    </select>
                 </div>
             </div>
 
             <!-- Setores com Ticks Verdes -->
             <div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; background: rgba(30, 58, 138, 0.04); padding: 8px 10px; border-radius: 8px; border: 1px dashed var(--border); align-items: center;">
+                    <span style="font-size: 0.78rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Atalhos de Perfil:</span>
+                    <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.76rem; border-color: #3b82f6; color: #1d4ed8; font-weight: 700; background: #eff6ff;" onclick="applyAdminOperacionalPreset()" title="Define Unidade como Batalhão e libera alteração de toda a tabela sem acesso a usuários ou servidor">
+                        🛡️ Perfil Admin Operacional (Batalhão / Toda a Tabela)
+                    </button>
+                    <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.76rem; border-color: #64748b; color: #334155; font-weight: 600;" onclick="applyOperadorComumPreset()" title="Define perfil padrão apenas com alteração de status/destino e manutenção na Cia">
+                        👤 Perfil Operador Comum
+                    </button>
+                </div>
+
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <span style="font-size: 0.82rem; font-weight: 800; text-transform: uppercase; color: #15803d;">
                         ✅ Permissões por Setor (Clique para ligar/desligar o tick verde):
@@ -6061,6 +6114,12 @@
     }
 
     function openServerConfigModal() {
+        const isMaster = currentAuthUser && (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL');
+        if (!isMaster) {
+            openBilaoModal();
+            showToast('🔒 <strong>Acesso Negado:</strong> Apenas o Administrador Geral (Mestre) pode alterar as configurações do servidor.');
+            return;
+        }
         const modal = document.getElementById('serverConfigModal');
         const input = document.getElementById('serverApiUrlInput');
         const statusTxt = document.getElementById('serverModalStatusText');
@@ -8577,17 +8636,17 @@
     const MASTER_ADMIN_PASSWORD = "PATRULHEIRO1";
     
     const AVAILABLE_PERMISSIONS = [
-        { key: 'status_destino', label: 'Alterar Status, Pelotão e QTH', desc: 'Permissão para atualizar status, pelotão, QTH/destino e motivo da viatura' },
-        { key: 'maintenance', label: 'Gerenciar Manutenções da Frota', desc: 'Registrar, editar e excluir manutenções da frota' },
-        { key: 'quick_add', label: 'Acrescentar Viaturas', desc: 'Cadastrar novas viaturas no painel rápido' },
-        { key: 'edit_full_vtr', label: 'Edição Completa de Viatura (Apenas Administrador Geral)', desc: 'Editar prefixo, placa, rádio e patrimônio da viatura' },
-        { key: 'delete_vtr', label: 'Excluir Viaturas (Apenas Administrador Geral)', desc: 'Remover viaturas cadastradas da frota' },
-        { key: 'manage_lists', label: 'Gerenciar Parâmetros', desc: 'Adicionar ou excluir Cias, Pelotões, Modelos, Status, Locais e Motivos' },
+        { key: 'status_destino', label: 'Alterar Status, Pelotão e QTH', desc: 'Atualizar status, pelotão, QTH/destino e motivo da viatura em toda a frota' },
+        { key: 'maintenance', label: 'Gerenciar Manutenções da Frota', desc: 'Registrar, editar e acompanhar serviços e manutenções' },
+        { key: 'quick_add', label: 'Acrescentar Viaturas no Painel', desc: 'Cadastrar novas viaturas diretamente no painel rápido' },
+        { key: 'edit_full_vtr', label: 'Edição Completa de Viatura', desc: 'Editar dados cadastrais: prefixo, placa, rádio e patrimônio' },
+        { key: 'delete_vtr', label: 'Excluir Viaturas da Frota', desc: 'Remover viaturas cadastradas' },
+        { key: 'manage_lists', label: 'Gerenciar Parâmetros e Listas', desc: 'Adicionar ou excluir Cias, Pelotões, Modelos, Status, Locais e Motivos' },
         { key: 'database_import', label: 'Importar / Conectar Planilha', desc: 'Importar arquivos Excel/CSV/JSON ou conectar Google Sheets' },
-        { key: 'database_reset', label: 'Comandos Avançados de Banco (Apenas Administrador Geral)', desc: 'Definir base original, restaurar e reset geral' },
-        { key: 'server_config', label: 'Configurações do Servidor', desc: 'Configurar endpoints e testar conexão online' },
-        { key: 'manage_users', label: 'Gerenciar Usuários e Permissões', desc: 'Criar, editar e excluir operadores do sistema' },
-        { key: 'edit_title', label: 'Editar Título do Painel', desc: 'Alterar o nome do sistema no cabeçalho' }
+        { key: 'database_reset', label: 'Comandos Avançados de Banco (Exclusivo Administrador Mestre)', desc: 'Definir base original, restaurar e reset geral de fábrica' },
+        { key: 'server_config', label: 'Configurações do Servidor (Exclusivo Administrador Mestre)', desc: 'Configurar endpoints de sincronização e banco de dados' },
+        { key: 'manage_users', label: 'Gerenciar Usuários e Permissões (Exclusivo Administrador Mestre)', desc: 'Criar, editar e excluir operadores e administradores' },
+        { key: 'edit_title', label: 'Editar Título do Painel (Exclusivo Administrador Mestre)', desc: 'Alterar o nome do sistema no cabeçalho' }
     ];
 
     const defaultSystemUsers = [
@@ -8596,6 +8655,7 @@
             username: "ADMINISTRADOR GERAL",
             password: "PATRULHEIRO1",
             googleEmail: "p4.1cia.1bptran.sp@gmail.com",
+            unit: "Batalhão",
             isMaster: true,
             mustChangePassword: false,
             photo: "",
@@ -8614,31 +8674,10 @@
             }
         },
         {
-            id: "usr_laura",
-            username: "Cb Laura",
-            password: "123",
-            googleEmail: "",
-            isMaster: false,
-            mustChangePassword: false,
-            photo: "",
-            permissions: {
-                status_destino: true,
-                maintenance: true,
-                quick_add: false,
-                edit_full_vtr: false,
-                delete_vtr: false,
-                manage_lists: false,
-                database_import: false,
-                database_reset: false,
-                server_config: false,
-                manage_users: false,
-                edit_title: false
-            }
-        },
-        {
             id: "visitante",
             username: "VISITANTE",
             password: "",
+            unit: "Batalhão",
             isMaster: false,
             mustChangePassword: false,
             photo: "",
@@ -8709,32 +8748,19 @@
             masterAdmin.googleEmail = 'p4.1cia.1bptran.sp@gmail.com';
             updatedUsers = true;
         }
-        // Garante Cb Laura nos usuários
-        if (!systemUsers.some(u => u.username.toLowerCase() === 'cb laura' || u.username.toLowerCase() === 'laura')) {
-            systemUsers.push({
-                id: "usr_laura",
-                username: "Cb Laura",
-                password: "123",
-                googleEmail: "",
-                isMaster: false,
-                mustChangePassword: false,
-                photo: "",
-                permissions: {
-                    status_destino: true,
-                    maintenance: true,
-                    quick_add: false,
-                    edit_full_vtr: false,
-                    delete_vtr: false,
-                    manage_lists: false,
-                    database_import: false,
-                    database_reset: false,
-                    server_config: false,
-                    manage_users: false,
-                    edit_title: false
-                }
-            });
-            updatedUsers = true;
-        }
+        // Garante unidade fixada para todos os usuários
+        systemUsers.forEach(u => {
+            if (u.isMaster || u.username === 'ADMINISTRADOR GERAL') {
+                if (!u.unit) { u.unit = 'Batalhão'; updatedUsers = true; }
+            } else {
+                if (!u.unit) { u.unit = '1ª Cia'; updatedUsers = true; }
+            }
+        });
+
+        // Mantém apenas os usuários oficiais e criados por fora pelo Administrador
+        const beforeLen = systemUsers.length;
+        systemUsers = systemUsers.filter(u => u.id !== 'usr_laura' && u.username.toLowerCase() !== 'cb laura' && u.username.toLowerCase() !== 'laura');
+        if (systemUsers.length !== beforeLen) updatedUsers = true;
         if (!systemUsers.some(u => u.username === 'VISITANTE')) {
             systemUsers.push(defaultSystemUsers.find(u => u.username === 'VISITANTE') || { id: 'visitante', username: 'VISITANTE', permissions: {} });
             updatedUsers = true;
@@ -8787,23 +8813,25 @@
 
     function userHasPermission(user, permKey) {
         if (!user) return false;
-        // Administrador Geral tem acesso total a tudo
+        // Administrador Geral (Mestre) tem acesso total a tudo
         if (user.isMaster || user.username === 'ADMINISTRADOR GERAL') return true;
         // Visitante não tem nenhuma permissão de gravação
         if (user.username === 'VISITANTE') return false;
 
-        // Ações restritas EXCLUSIVAMENTE ao Administrador Geral:
-        if (permKey === 'quick_add' || permKey === 'edit_full_vtr' || permKey === 'delete_vtr' || permKey === 'database_reset' || permKey === 'edit_cia' || permKey === 'manage_users' || permKey === 'server_config' || permKey === 'edit_title' || permKey === 'database_import' || permKey === 'manage_lists') {
+        // Ações estritamente exclusivas do Administrador Mestre:
+        if (permKey === 'manage_users' || permKey === 'server_config' || permKey === 'database_reset' || permKey === 'edit_title') {
             return false;
         }
 
-        // Permissão para operadores comuns: Alterar status, pelotão e QTH/destino
-        if (permKey === 'status_destino') {
-            return !!(user.permissions && user.permissions.status_destino);
+        // Permissões operacionais delegadas pelo Administrador:
+        if (user.permissions && user.permissions[permKey] !== undefined) {
+            return !!user.permissions[permKey];
         }
-        if (permKey === 'maintenance') {
-            return !!(user.permissions && user.permissions.maintenance);
-        }
+
+        // Permissões básicas
+        if (permKey === 'status_destino') return !!(user.permissions && user.permissions.status_destino);
+        if (permKey === 'maintenance') return !!(user.permissions && user.permissions.maintenance);
+        if (permKey === 'edit_cia') return !!(user.permissions && user.permissions.manage_lists) || (user.unit === 'Batalhão');
 
         return false;
     }
@@ -8864,10 +8892,38 @@
 
     let currentUserActiveUnit = localStorage.getItem('batalhao_vtr_active_unit') || sessionStorage.getItem('batalhao_vtr_active_unit') || '';
 
+    function checkPromptDriveImportOnLogin() {
+        if (!currentAuthUser || currentAuthUser.username === 'VISITANTE') return;
+        setTimeout(() => {
+            const modal = document.getElementById('promptDriveImportModal');
+            if (modal) modal.style.display = 'flex';
+        }, 500);
+    }
+
+    function declineDriveImportOnLogin() {
+        const modal = document.getElementById('promptDriveImportModal');
+        if (modal) modal.style.display = 'none';
+        showToast('ℹ️ Mantendo o banco de dados atual do sistema.');
+    }
+
+    function acceptDriveImportOnLogin() {
+        const modal = document.getElementById('promptDriveImportModal');
+        if (modal) modal.style.display = 'none';
+        openMergeModal();
+        switchImportTab('drive');
+        if (typeof loadGoogleDriveFilesList === 'function') {
+            loadGoogleDriveFilesList();
+        }
+    }
+
     function setActiveUnit(unitName, suppressToast = false) {
         if (!unitName) unitName = '1ª Cia';
         const isMaster = currentAuthUser && (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL');
-        if (unitName === 'Batalhão' && !isMaster) {
+
+        // Se NÃO for administrador, a unidade é estritamente travada na unidade cadastrada do operador!
+        if (!isMaster && currentAuthUser && currentAuthUser.username !== 'VISITANTE') {
+            unitName = currentAuthUser.unit || '1ª Cia';
+        } else if (!isMaster && unitName === 'Batalhão') {
             unitName = '1ª Cia';
         }
 
@@ -8878,7 +8934,11 @@
         const badgeUnitBtn = document.getElementById('headerActiveUnitBtn');
         const badgeUnitText = document.getElementById('headerActiveUnitText');
         if (badgeUnitText) {
-            badgeUnitText.textContent = (unitName === 'Batalhão') ? 'Batalhão (Todas)' : unitName;
+            if (isMaster) {
+                badgeUnitText.textContent = (unitName === 'Batalhão') ? 'Batalhão (Todas)' : unitName;
+            } else {
+                badgeUnitText.textContent = unitName + ' 🔒';
+            }
         }
 
         // Sincroniza os filtros do painel com a unidade escolhida
@@ -8900,6 +8960,12 @@
 
     function openUnitSelectionModal() {
         const isMaster = currentAuthUser && (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL');
+        if (!isMaster) {
+            const lockedUnit = (currentAuthUser && currentAuthUser.unit) || currentUserActiveUnit || '1ª Cia';
+            showToast(`🔒 Sua unidade operacional está fixada na <strong>${lockedUnit}</strong> pelo Administrador Geral.`);
+            return;
+        }
+
         const modal = document.getElementById('unitSelectionModal');
         const select = document.getElementById('modalActiveUnitSelect');
         const optBatalhao = document.getElementById('optModalUnitBatalhao');
@@ -8911,15 +8977,11 @@
         }
 
         if (notice) {
-            if (isMaster) {
-                notice.innerHTML = '👑 <strong>Acesso de Administrador:</strong> No modo <strong>Batalhão</strong> você altera e exporta todas as unidades. Se selecionar uma Cia, seu painel foca nela.';
-            } else {
-                notice.innerHTML = 'ℹ️ <strong>Regra de Unidade:</strong> Você poderá alterar e atualizar apenas viaturas da sua Companhia selecionada.';
-            }
+            notice.innerHTML = '👑 <strong>Acesso de Administrador:</strong> No modo <strong>Batalhão</strong> você altera e exporta todas as unidades. Se selecionar uma Cia, seu painel foca nela.';
         }
 
         if (select) {
-            select.value = currentUserActiveUnit || (isMaster ? 'Batalhão' : '1ª Cia');
+            select.value = currentUserActiveUnit || 'Batalhão';
         }
 
         if (modal) modal.style.display = 'flex';
@@ -8942,25 +9004,29 @@
         if (!currentAuthUser || currentAuthUser.username === 'VISITANTE') return false;
 
         const isMaster = currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL';
-        // Administrador Geral em modo Batalhão tem acesso irrestrito
-        if (isMaster && (!currentUserActiveUnit || currentUserActiveUnit === 'Batalhão' || currentUserActiveUnit === 'ALL')) {
+        // 👑 Administrador Geral (Mestre) tem permissão irrestrita
+        if (isMaster) {
             return true;
         }
 
-        // Se uma unidade estiver selecionada (1ª Cia, 2ª Cia, etc.):
-        if (currentUserActiveUnit && currentUserActiveUnit !== 'Batalhão' && currentUserActiveUnit !== 'ALL') {
-            if (!vehicleRecord) return true;
-            const vtrCia = (vehicleRecord.cia || '1ª Cia').toLowerCase().trim();
-            const activeCia = currentUserActiveUnit.toLowerCase().trim();
-            const isPttEquivalent = (activeCia.includes('ptt') || activeCia.includes('ctt')) && 
-                                   (vtrCia.includes('ptt') || vtrCia.includes('ctt'));
-            if (vtrCia === activeCia || isPttEquivalent) {
-                return true;
-            }
-            return false;
+        // 🛡️ Administrador Operacional (unidade Batalhão ou permissão de Batalhão): pode alterar TODA a tabela
+        const userUnit = (currentAuthUser.unit || currentUserActiveUnit || '1ª Cia').toLowerCase().trim();
+        if (userUnit === 'batalhão' || userUnit === 'batalhao' || userUnit === 'all') {
+            return true;
         }
 
-        return true;
+        // 👮 Operador Comum: verificação ESTRITA da unidade fixada!
+        // Não é administrador: SÓ pode alterar viaturas da sua própria Companhia fixada.
+        const vtrCia = ((vehicleRecord && vehicleRecord.cia) || '1ª Cia').toLowerCase().trim();
+
+        const isPttEquivalent = (userUnit.includes('ptt') || userUnit.includes('ctt')) && 
+                               (vtrCia.includes('ptt') || vtrCia.includes('ctt'));
+
+        if (vtrCia === userUnit || isPttEquivalent) {
+            return true;
+        }
+
+        return false;
     }
 
     function openExportOptionsModal() {
@@ -9242,20 +9308,38 @@
         const unitSelect = document.getElementById('adminUnitSelect');
         const optBatalhao = document.getElementById('optAdminBatalhao');
         if (user && user.isMaster) {
+            if (unitSelect) {
+                unitSelect.disabled = false;
+                unitSelect.title = "Administrador pode escolher Batalhão ou uma Cia específica";
+                unitSelect.value = 'Batalhão';
+            }
             if (optBatalhao) {
                 optBatalhao.disabled = false;
                 optBatalhao.textContent = "🏛️ Batalhão Geral (Todas as Unidades)";
             }
-            if (unitSelect && (!unitSelect.value || unitSelect.value === '1ª Cia')) {
-                unitSelect.value = 'Batalhão';
-            }
         } else if (user) {
-            if (optBatalhao) {
-                optBatalhao.disabled = true;
-                optBatalhao.textContent = "🏛️ Batalhão Geral (Apenas Administrador)";
-            }
-            if (unitSelect && unitSelect.value === 'Batalhão') {
-                unitSelect.value = '1ª Cia';
+            const isBatalhaoUser = (user.unit === 'Batalhão' || user.unit === 'batalhao');
+            if (isBatalhaoUser) {
+                if (unitSelect) {
+                    unitSelect.disabled = false;
+                    unitSelect.title = "Administrador Operacional: atua em Batalhão ou na Cia escolhida";
+                    unitSelect.value = 'Batalhão';
+                }
+                if (optBatalhao) {
+                    optBatalhao.disabled = false;
+                    optBatalhao.textContent = "🏛️ Batalhão Geral (Toda a Frota)";
+                }
+            } else {
+                const lockedUnit = user.unit || '1ª Cia';
+                if (unitSelect) {
+                    unitSelect.disabled = true;
+                    unitSelect.title = `Unidade fixada: ${lockedUnit} (apenas o Administrador Geral pode alterar)`;
+                    unitSelect.value = lockedUnit;
+                }
+                if (optBatalhao) {
+                    optBatalhao.disabled = true;
+                    optBatalhao.textContent = "🏛️ Batalhão Geral (Apenas Administradores)";
+                }
             }
         }
 
@@ -9419,6 +9503,7 @@
             sessionStorage.setItem('batalhao_vtr_admin_auth', 'true');
             updateAdminBadgeUI();
             if (modal) modal.style.display = 'none';
+            checkPromptDriveImportOnLogin();
             showToast(`👀 Conectado como <strong>VISITANTE</strong> (Modo de Visualização).`);
             if (adminPasswordResolveCallback) {
                 const cb = adminPasswordResolveCallback;
@@ -9843,7 +9928,12 @@
     let editingUserPermissions = {};
 
     function openUsersManagementModal() {
-
+        const isMaster = currentAuthUser && (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL');
+        if (!isMaster) {
+            openBilaoModal();
+            showToast('🔒 <strong>Acesso Negado:</strong> Apenas o Administrador Geral (Mestre) pode acessar o gerenciamento de usuários e permissões.');
+            return;
+        }
         populateMgmtUserSelect();
         const modal = document.getElementById('usersManagementModal');
         if (modal) modal.style.display = 'flex';
@@ -9899,6 +9989,12 @@
         document.getElementById('mgmtUserPassInput').value = user.password || '';
         const gEmailInput = document.getElementById('mgmtUserGoogleEmailInput');
         if (gEmailInput) gEmailInput.value = user.googleEmail || user.email || '';
+        const unitSelect = document.getElementById('mgmtUserUnitSelect');
+        const optBatalhao = document.getElementById('optMgmtBatalhao');
+        if (unitSelect) {
+            unitSelect.value = user.unit || (user.isMaster ? 'Batalhão' : '1ª Cia');
+            if (optBatalhao) optBatalhao.disabled = !user.isMaster;
+        }
 
         const isMaster = !!user.isMaster;
         const isVisitante = (user.username === 'VISITANTE');
@@ -9940,14 +10036,55 @@
         document.getElementById('mgmtUserNameInput').focus();
     }
 
+    function applyAdminOperacionalPreset() {
+        const unitSelect = document.getElementById('mgmtUserUnitSelect');
+        if (unitSelect) unitSelect.value = 'Batalhão';
+        editingUserPermissions = {
+            status_destino: true,
+            maintenance: true,
+            quick_add: true,
+            edit_full_vtr: true,
+            delete_vtr: true,
+            manage_lists: true,
+            database_import: true,
+            database_reset: false,
+            server_config: false,
+            manage_users: false,
+            edit_title: false
+        };
+        renderPermissionsGrid(editingUserPermissions, false, false);
+        showToast('🛡️ <strong>Perfil Admin Operacional aplicado!</strong> Unidade Batalhão e permissão para alterar toda a tabela, sem acesso a usuários ou servidor.');
+    }
+
+    function applyOperadorComumPreset() {
+        const unitSelect = document.getElementById('mgmtUserUnitSelect');
+        if (unitSelect && unitSelect.value === 'Batalhão') unitSelect.value = '1ª Cia';
+        editingUserPermissions = {
+            status_destino: true,
+            maintenance: true,
+            quick_add: false,
+            edit_full_vtr: false,
+            delete_vtr: false,
+            manage_lists: false,
+            database_import: false,
+            database_reset: false,
+            server_config: false,
+            manage_users: false,
+            edit_title: false
+        };
+        renderPermissionsGrid(editingUserPermissions, false, false);
+        showToast('👤 <strong>Perfil Operador Comum aplicado.</strong>');
+    }
+
     function renderPermissionsGrid(perms, isMaster = false, isVisitante = false) {
         const grid = document.getElementById('permissionsGrid');
         if (!grid) return;
         grid.innerHTML = '';
 
         AVAILABLE_PERMISSIONS.forEach(p => {
-            const isExclusiveAdmin = (p.key === 'edit_full_vtr' || p.key === 'delete_vtr' || p.key === 'database_reset');
-            const isActive = isMaster ? true : (isVisitante ? false : (!isExclusiveAdmin && !!perms[p.key]));
+            // Apenas as 4 funções críticas de sistema são exclusivas do Administrador Mestre
+            const isMasterOnly = (p.key === 'manage_users' || p.key === 'server_config' || p.key === 'database_reset' || p.key === 'edit_title');
+            const isActive = isMaster ? true : (isVisitante ? false : (isMasterOnly ? false : !!perms[p.key]));
 
             const card = document.createElement('div');
             card.className = `perm-card ${isActive ? 'active' : ''}`;
@@ -9955,14 +10092,14 @@
             
             if (isMaster) {
                 card.style.cursor = 'default';
-                card.title = 'Administrador Geral possui todas as permissões liberadas permanentemente.';
+                card.title = 'Administrador Geral (Mestre) possui todas as permissões liberadas.';
             } else if (isVisitante) {
                 card.style.cursor = 'not-allowed';
                 card.title = 'O Visitante não possui permissões de edição.';
-            } else if (isExclusiveAdmin) {
+            } else if (isMasterOnly) {
                 card.style.cursor = 'not-allowed';
                 card.style.opacity = '0.55';
-                card.title = 'Apenas o Administrador Geral pode realizar essa tarefa.';
+                card.title = 'Exclusivo do Administrador Geral (Mestre). Não pode ser delegado a outros usuários.';
             } else {
                 card.onclick = () => togglePermission(p.key);
             }
@@ -9979,8 +10116,9 @@
     }
 
     function togglePermission(permKey) {
-        if (permKey === 'edit_full_vtr' || permKey === 'delete_vtr' || permKey === 'database_reset') {
-            alert('Apenas o Administrador Geral possui autorização para editar ou excluir viaturas e resetar o banco.');
+        const isMasterOnly = (permKey === 'manage_users' || permKey === 'server_config' || permKey === 'database_reset' || permKey === 'edit_title');
+        if (isMasterOnly) {
+            alert('Atenção: As funções de gerenciamento de usuários, configuração de servidor, reset de banco e título são exclusivas do Administrador Geral (Mestre) e não podem ser delegadas.');
             return;
         }
         editingUserPermissions[permKey] = !editingUserPermissions[permKey];
@@ -10028,11 +10166,13 @@
                 return;
             }
             const gEmailVal = document.getElementById('mgmtUserGoogleEmailInput') ? document.getElementById('mgmtUserGoogleEmailInput').value.trim().toLowerCase() : '';
+            const unitVal = document.getElementById('mgmtUserUnitSelect') ? document.getElementById('mgmtUserUnitSelect').value : '1ª Cia';
             const newUser = {
                 id: 'usr_' + Date.now(),
                 username: name,
                 password: pass,
                 googleEmail: gEmailVal,
+                unit: unitVal,
                 isMaster: false,
                 mustChangePassword: true, // Obriga a criar a própria senha no primeiro login!
                 photo: '',
@@ -10052,6 +10192,8 @@
             }
             const gEmailExisting = document.getElementById('mgmtUserGoogleEmailInput');
             if (gEmailExisting) user.googleEmail = gEmailExisting.value.trim().toLowerCase();
+            const unitExisting = document.getElementById('mgmtUserUnitSelect');
+            if (unitExisting) user.unit = unitExisting.value;
             if (!user.isMaster && user.username !== 'VISITANTE') {
                 user.permissions = Object.assign({}, editingUserPermissions);
             }
@@ -13876,6 +14018,7 @@
             }
             debouncedSyncAllDataToOnline();
             renderDashboard();
+            checkPromptDriveImportOnLogin();
         } else {
             // Abre o modal de vinculação ou criação para permitir vincular a um operador existente (ex: Cb Laura) ou criar novo
             openGoogleUserLinkModal(cleanEmail);
@@ -13932,37 +14075,40 @@
     function updateAdminVisibility() {
         const isMaster = currentAuthUser && (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL');
         const isVisitante = !currentAuthUser || currentAuthUser.username === 'VISITANTE';
+        const canQuickAdd = isMaster || (currentAuthUser && currentAuthUser.permissions && currentAuthUser.permissions.quick_add);
+        const canEditFullVtr = isMaster || (currentAuthUser && currentAuthUser.permissions && currentAuthUser.permissions.edit_full_vtr);
+        const canManageLists = isMaster || (currentAuthUser && currentAuthUser.permissions && currentAuthUser.permissions.manage_lists);
 
-        // 1. Botões exclusivos de administrador (.admin-only-btn)
-        document.querySelectorAll('.admin-only-btn').forEach(el => {
+        // 1. Botões exclusivos do Administrador Geral Mestre (Gerenciar Usuários e Servidor)
+        document.querySelectorAll('[onclick*="openUsersManagementModal"], [onclick*="openServerConfigModal"]').forEach(el => {
             el.style.display = isMaster ? 'inline-flex' : 'none';
         });
 
         // 2. Painel de Acrescentar Nova Viatura (#quickAddPanel)
         const quickAdd = document.getElementById('quickAddPanel');
         if (quickAdd) {
-            quickAdd.style.display = isMaster ? 'flex' : 'none';
+            quickAdd.style.display = canQuickAdd ? 'flex' : 'none';
         }
 
         // 3. Painel de Gerenciar e Renomear (#formSection)
         const formSec = document.getElementById('formSection');
         if (formSec) {
-            formSec.style.display = isMaster ? 'block' : 'none';
+            formSec.style.display = canEditFullVtr ? 'block' : 'none';
         }
 
-        // 4. Botões de criação de Cia, Modelo, Pelotão, etc. no #quickEditPanel
+        // 4. Botões de criação de Cia, Modelo, Pelotão no #quickEditPanel
         const qeAdminBtns = document.querySelectorAll('#quickEditPanel .label-btn-add, #quickEditPanel .quick-edit-header .btn-outline');
         qeAdminBtns.forEach(el => {
-            el.style.display = isMaster ? 'inline-flex' : 'none';
+            el.style.display = canManageLists ? 'inline-flex' : 'none';
         });
 
         // 5. Card de Comandos & Ações do Banco de Dados no rodapé
         const footerCard = document.getElementById('footerActionsContent') ? document.getElementById('footerActionsContent').closest('.card') : null;
         if (footerCard) {
-            footerCard.style.display = isMaster ? 'block' : (isVisitante ? 'none' : 'block');
+            footerCard.style.display = isVisitante ? 'none' : 'block';
         }
 
-        // 6. Botões administrativos no modal da tabela (#tableEditOptionsModal)
+        // 6. Botões administrativos restritos no modal da tabela (#tableEditOptionsModal)
         const tblDefinir = document.querySelector('#tableEditOptionsModal [onclick*="saveAsOriginalBaseline"]');
         const tblFabrica = document.querySelector('#tableEditOptionsModal [onclick*="restoreFactoryDefaults"]');
         const tblRestaurar = document.querySelector('#tableEditOptionsModal [onclick*="clearAllData"]');
