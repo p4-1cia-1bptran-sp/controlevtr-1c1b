@@ -2030,7 +2030,7 @@
             background-color: #223859 !important;
         }
 
-        /* Barra de Alternância: Modo Cards (Smartphone) x Modo Tabela */
+        /* Barra de Alternância: Modo cards (smartphone) x Modo Tabela */
         .view-toggle-bar {
             display: flex;
             margin-bottom: 14px;
@@ -2233,7 +2233,7 @@
             font-weight: 600;
         }
 
-        /* Estilos do Sistema de Usuários e Permissões com Ticks Verdes */
+        /* Estilos do Sistema de Usuários e permissões com Ticks Verdes */
         .perm-card {
             display: flex;
             align-items: center;
@@ -3102,7 +3102,7 @@
             background-color: #223859 !important;
         }
 
-        /* Barra de Alternância: Modo Cards (Smartphone) x Modo Tabela */
+        /* Barra de Alternância: Modo cards (smartphone) x Modo Tabela */
         .view-toggle-bar {
             display: flex;
             margin-bottom: 14px;
@@ -3305,7 +3305,7 @@
             font-weight: 600;
         }
 
-        /* Estilos do Sistema de Usuários e Permissões com Ticks Verdes */
+        /* Estilos do Sistema de Usuários e permissões com Ticks Verdes */
         .perm-card {
             display: flex;
             align-items: center;
@@ -3535,9 +3535,9 @@
                     <svg width="15" height="15" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.8s.2-2.1.4-2.8L1.9 6.3C.7 8.7 0 10.8 0 12s.7 3.3 1.9 5.7l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/></svg>
                     <span id="headerGoogleSyncBtnText">Sincronizar com Google</span>
                 </button>
-                <button type="button" id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()" title="Alternar entre Modo Noturno e Modo Claro">
+                <button type="button" id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()" title="Alternar entre Modo noturno e Modo Claro">
                     <span id="themeToggleIcon" class="theme-toggle-icon">🌙</span>
-                    <span id="themeToggleText">Modo Noturno</span>
+                    <span id="themeToggleText">Modo noturno</span>
                 </button>
             </div>
 
@@ -3551,28 +3551,28 @@
     <!-- Setor 1: Indicadores da Frota (KPIs) -->
     <div>
         <div class="section-header-bar">
-            <span class="section-header-title">📊 Indicadores Gerais da Frota</span>
+            <span class="section-header-title">📊 Indicadores gerais</span>
             <button type="button" class="btn-collapse" onclick="toggleSection('kpiGridContent', this)" title="Ocultar / Expandir Indicadores">▲</button>
         </div>
         <div id="kpiGridContent" class="collapsible-content" style="margin-top: 8px;">
             <div class="kpi-grid">
                 <div class="kpi-card kpi-total" onclick="setQuickFilter('ALL')">
-                    <div class="kpi-title" id="kpiTotalTitle">Total da Frota (Batalhão)</div>
+                    <div class="kpi-title" id="kpiTotalTitle">Total da frota (Batalhão)</div>
                     <div class="kpi-value" style="color: var(--primary);" id="kpiTotalVehicles">0</div>
                     <div class="kpi-sub" id="kpiTotalSub">Ver Toda a Frota</div>
                 </div>
                 <div class="kpi-card kpi-operando" onclick="setQuickFilter('OPERANDO')">
-                    <div class="kpi-title" style="color: #059669;">Viaturas Operando</div>
+                    <div class="kpi-title" style="color: #059669;">Viaturas operando</div>
                     <div class="kpi-value" style="color: var(--success);" id="kpiOkVehicles">0</div>
                     <div class="kpi-sub" style="color: #10b981;">✅ Pronto Emprego</div>
                 </div>
                 <div class="kpi-card kpi-baixada" onclick="setQuickFilter('BAIXADA')">
-                    <div class="kpi-title" style="color: #dc2626;">Viaturas Baixadas</div>
+                    <div class="kpi-title" style="color: #dc2626;">Viaturas baixadas</div>
                     <div class="kpi-value" style="color: var(--danger);" id="kpiDangerVehicles">0</div>
                     <div class="kpi-sub" style="color: #ef4444;">🚨 Em Manutenção / Reparo</div>
                 </div>
                 <div class="kpi-card kpi-descarga" onclick="setQuickFilter('DESCARGA')">
-                    <div class="kpi-title" style="color: #7c3aed;">Descarga / ADM / Outros</div>
+                    <div class="kpi-title" style="color: #7c3aed;">Descarga / ADM / outros</div>
                     <div class="kpi-value" style="color: var(--purple);" id="kpiOthersVehicles">0</div>
                     <div class="kpi-sub" style="color: #8b5cf6;">⚙️ Desmobilizadas / Setores</div>
                 </div>
@@ -3580,11 +3580,11 @@
         </div>
     </div>
 
-    <!-- Banner Informativo de Filtro Ativo -->
+    <!-- Banner Informativo de Filtro ativo -->
     <div id="statusBannerBox" class="status-banner" style="display: none;">
         <div class="status-icon">📌</div>
         <div class="status-text">
-            <h4 id="bannerTitle">Filtro Ativo</h4>
+            <h4 id="bannerTitle">Filtro ativo</h4>
             <p id="bannerMessage">Informações filtradas do sistema.</p>
         </div>
     </div>
@@ -3598,61 +3598,23 @@
         <div id="chartsGridContent" class="collapsible-content" style="margin-top: 8px;">
             <div class="charts-grid-3">
                 <div class="chart-card">
-                    <div class="card-title">🔧 Mecânica e Transmissão</div>
+                    <div class="card-title">🔧 Mecânica e transmissão</div>
                     <div class="chart-container">
                         <canvas id="barChartMecanica"></canvas>
                     </div>
                 </div>
                 <div class="chart-card">
-                    <div class="card-title">⚡ Elétrica e Comunicação</div>
+                    <div class="card-title">⚡ Elétrica e comunicação</div>
                     <div class="chart-container">
                         <canvas id="barChartEletrica"></canvas>
                     </div>
                 </div>
                 <div class="chart-card">
-                    <div class="card-title">🍩 Situação da Frota</div>
+                    <div class="card-title">🍩 Situação da frota</div>
                     <div class="chart-container doughnut-chart-container" id="doughnutChartContainer">
                         <canvas id="doughnutChart" style="position: relative; z-index: 1;"></canvas>
                         <div id="doughnutCenterImageOverlay" class="doughnut-eagle-overlay" title="Imagem Central da Pizza"></div>
-                        
                         <div id="chartjs-doughnut-tooltip" class="chartjs-custom-tooltip"></div>
-                    </div>
-                </div>
-            </div>
-            <div id="tabContentDrive" class="tab-content">
-                <div class="modal-section-box" style="display: flex; flex-direction: column; gap: 10px; background: #fff5f5; border: 1px solid #fecaca;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
-                        <span style="font-size: 0.88rem; font-weight: 700; color: #991b1b; display: flex; align-items: center; gap: 6px;">
-                            ☁️ Planilhas e Backups no seu Google Drive:
-                        </span>
-                        <button type="button" class="btn btn-outline btn-3d btn-sm" id="btnRefreshDriveFiles" style="border-color: #ea4335; color: #c5221f;" onclick="loadGoogleDriveFilesList()">
-                            🔄 Atualizar Lista
-                        </button>
-                    </div>
-                    
-                    <div id="driveAuthNotice" style="display: none; padding: 14px; border-radius: 6px; background: #ffffff; border: 1px dashed #f87171; text-align: center;">
-                        <p style="font-size: 0.84rem; color: #7f1d1d; margin-bottom: 8px;">Conecte sua conta do Google para visualizar e importar as planilhas ou backups salvos no seu Drive.</p>
-                        <button type="button" class="btn btn-primary btn-3d btn-sm" onclick="handleGoogleDriveAuthClick(() => loadGoogleDriveFilesList())">
-                            🔑 Conectar Conta Google
-                        </button>
-                    </div>
-
-                    <!-- Lista de arquivos do Google Drive -->
-                    <div id="driveFilesListContainer" style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding: 2px 0;">
-                        <!-- Preenchido via loadGoogleDriveFilesList() -->
-                    </div>
-
-                    <!-- Opção de carregar diretamente pelo Link/ID do Google Drive -->
-                    <div style="border-top: 1px dashed #fca5a5; padding-top: 8px; margin-top: 2px;">
-                        <label for="driveDirectFileIdInput" style="display: block; font-size: 0.78rem; font-weight: 700; color: #991b1b; margin-bottom: 4px;">
-                            🔗 Ou cole o Link / ID do arquivo do Google Drive:
-                        </label>
-                        <div style="display: flex; gap: 6px;">
-                            <input type="text" id="driveDirectFileIdInput" placeholder="Cole o link https://drive.google.com/file/d/... ou ID do arquivo" style="flex: 1; font-size: 0.8rem; padding: 8px 10px; border: 1px solid #f87171; border-radius: 6px;">
-                            <button type="button" class="btn btn-primary btn-3d btn-sm" onclick="importFromDriveDirectInput()">
-                                📥 Baixar e Importar
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -3664,7 +3626,7 @@
         <div class="card-header" style="flex-direction: column; align-items: stretch; gap: 14px;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; gap: 12px;">
                 <div>
-                    <div class="card-title" id="tableCardTitle">📋 Relação Geral de Viaturas do Batalhão</div>
+                    <div class="card-title" id="tableCardTitle">📋 Relação geral de viaturas do Batalhão</div>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
                         💡 Os dados são gravados e sincronizados automaticamente na nuvem <strong>Online</strong> a cada alteração.
                     </p>
@@ -3678,7 +3640,7 @@
                     <span class="filter-label">📅 Mês/Ano:</span>
                     <div class="custom-month-dropdown" id="monthDropdownContainer">
                         <button type="button" id="monthDropdownBtn" class="month-dropdown-btn" onclick="toggleMonthDropdown(event)" title="Filtrar por Mês ou Ano">
-                            <span id="monthDropdownBtnLabel">Todos os Meses</span>
+                            <span id="monthDropdownBtnLabel">Todos os meses</span>
                             <span class="month-dropdown-arrow">▼</span>
                         </button>
                         <div id="monthDropdownMenu" class="month-dropdown-menu" style="display: none;"></div>
@@ -3689,21 +3651,21 @@
                 <div class="filter-group" id="filterCiaContainer">
                     <label for="filterCia" class="filter-label">🏛️ Unidade / Setor:</label>
                     <select id="filterCia" class="filter-select" onchange="syncFilter('top')">
-                        <option value="ALL">Todas as Unidades (Geral)</option>
+                        <option value="ALL">Todas as unidades (geral)</option>
                     </select>
                 </div>
 
                 <div class="filter-group" id="filterPelotaoContainer" style="display: none;">
                     <label for="filterPelotao" class="filter-label">🛡️ Pelotão:</label>
                     <select id="filterPelotao" class="filter-select" onchange="syncFilter('top')">
-                        <option value="ALL">Todos os Pelotões</option>
+                        <option value="ALL">Todos os pelotões</option>
                     </select>
                 </div>
 
                 <div class="filter-group">
                     <label for="filterVehicle" class="filter-label">🚓 Status / Vtr:</label>
                     <select id="filterVehicle" class="filter-select" onchange="syncFilter('top')">
-                        <option value="ALL">Todas as Viaturas</option>
+                        <option value="ALL">Todas as viaturas</option>
                     </select>
                 </div>
 
@@ -3735,10 +3697,10 @@
             <div class="view-toggle-bar">
                 <div class="view-toggle-group">
                     <button type="button" id="btnViewCards" class="btn-view-toggle" onclick="setTableViewMode('cards')">
-                        📱 Modo Cards (Smartphone)
+                        📱 Modo cards (smartphone)
                     </button>
                     <button type="button" id="btnViewTable" class="btn-view-toggle active" onclick="setTableViewMode('table')">
-                        📊 Modo Tabela (Completa)
+                        📊 Modo tabela (completa)
                     </button>
                 </div>
                 <div id="tableScrollHint" class="mobile-scroll-hint" style="display: none;">
@@ -3807,7 +3769,7 @@
                                 </div>
                                 <span class="th-collapsed-indicator">QTH</span>
                             </th>
-                            <th class="col-th-obs" data-col="obs" style="min-width: 250px;" title="Coluna Motivo da Baixa / Observações">
+                            <th class="col-th-obs" data-col="obs" style="min-width: 250px;" title="Coluna Motivo da baixa / observações">
                                 <div class="th-content">
                                     <span class="th-title">Motivo / Observações</span>
                                     <button type="button" class="btn-col-toggle" onclick="toggleColumnVisibility('obs')" title="Esconder coluna Motivo / Observações">
@@ -3845,7 +3807,7 @@
                     <span class="filter-label">📅 Mês/Ano:</span>
                     <div class="custom-month-dropdown" id="monthDropdownContainerTable">
                         <button type="button" id="monthDropdownBtnTable" class="month-dropdown-btn" onclick="toggleMonthDropdown(event, true)" title="Filtrar por Mês ou Ano">
-                            <span id="monthDropdownBtnLabelTable">Todos os Meses</span>
+                            <span id="monthDropdownBtnLabelTable">Todos os meses</span>
                             <span class="month-dropdown-arrow">▼</span>
                         </button>
                         <div id="monthDropdownMenuTable" class="month-dropdown-menu" style="display: none;"></div>
@@ -3856,21 +3818,21 @@
                 <div class="filter-group" id="filterCiaContainerTable">
                     <label for="filterCiaTable" class="filter-label">🏛️ Unidade / Setor:</label>
                     <select id="filterCiaTable" class="filter-select" onchange="syncFilter('table')">
-                        <option value="ALL">Todas as Unidades (Geral)</option>
+                        <option value="ALL">Todas as unidades (geral)</option>
                     </select>
                 </div>
 
                 <div class="filter-group" id="filterPelotaoContainerTable" style="display: none;">
                     <label for="filterPelotaoTable" class="filter-label">🛡️ Pelotão:</label>
                     <select id="filterPelotaoTable" class="filter-select" onchange="syncFilter('table')">
-                        <option value="ALL">Todos os Pelotões</option>
+                        <option value="ALL">Todos os pelotões</option>
                     </select>
                 </div>
 
                 <div class="filter-group">
                     <label for="filterVehicleTable" class="filter-label">🚓 Status / Vtr:</label>
                     <select id="filterVehicleTable" class="filter-select" onchange="syncFilter('table')">
-                        <option value="ALL">Todas as Viaturas</option>
+                        <option value="ALL">Todas as viaturas</option>
                     </select>
                 </div>
 
@@ -3881,17 +3843,17 @@
                 </div>
             </div>
 
-            <!-- Painel Visível para Acrescentar Nova Viatura -->
+            <!-- Painel Visível para Acrescentar nova viatura -->
             <div class="quick-add-panel" id="quickAddPanel">
                 <div class="quick-add-header">
-                    <span>➕ Acrescentar Nova Viatura / Baixa à Tabela</span>
+                    <span>➕ Acrescentar nova viatura / Baixa à Tabela</span>
                     <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                        <button type="button" class="btn btn-merge btn-3d btn-sm" onclick="openMergeModal()">🔄 Importar Planilha / Banco</button>
+                        <button type="button" class="btn btn-merge btn-3d btn-sm" onclick="openMergeModal()">🔄 Importar planilha / banco</button>
                         <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewCiaPrompt()">➕ Nova Cia</button>
-                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewModelPrompt()">➕ Novo Modelo</button>
-                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewPelotaoPrompt()">➕ Novo Pelotão</button>
-                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewStatusPrompt()">➕ Novo Status</button>
-                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewLocalPrompt()">➕ Novo Local</button>
+                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewModelPrompt()">➕ Novo modelo</button>
+                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewPelotaoPrompt()">➕ Novo pelotão</button>
+                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewStatusPrompt()">➕ Novo status</button>
+                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewLocalPrompt()">➕ Novo local</button>
                         <button type="button" class="btn-collapse btn-collapse-sm" onclick="toggleSection('quickAddFormContent', this)" title="Ocultar / Expandir Cadastro">▲</button>
                     </div>
                 </div>
@@ -3918,11 +3880,11 @@
                         <select id="qaStatus" onchange="onQaStatusChange()"></select>
                     </div>
                     <div class="quick-add-field" style="grid-column: span 2;">
-                        <label for="qaObs">Motivo da Baixa / Obs</label>
+                        <label for="qaObs">Motivo da baixa / observações</label>
                         <input type="text" id="qaObs" placeholder="Ex: Arrefecimento, Motor, Rádio, Luminosos...">
                     </div>
                     <div class="quick-add-field">
-                        <label for="qaDestino">QTH da VTR (Destino) <span class="label-btn-add" onclick="addNewLocalPrompt()">+ Criar</span></label>
+                        <label for="qaDestino">QTH da viatura (destino) <span class="label-btn-add" onclick="addNewLocalPrompt()">+ Criar</span></label>
                         <select id="qaDestino"></select>
                     </div>
                     <div class="quick-add-field">
@@ -3945,10 +3907,10 @@
                     <span>✏️ Editar Viatura Existente</span>
                     <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                         <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewCiaPrompt()">➕ Nova Cia</button>
-                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewModelPrompt()">➕ Novo Modelo</button>
-                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewPelotaoPrompt()">➕ Novo Pelotão</button>
-                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewStatusPrompt()">➕ Novo Status</button>
-                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewLocalPrompt()">➕ Novo Local</button>
+                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewModelPrompt()">➕ Novo modelo</button>
+                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewPelotaoPrompt()">➕ Novo pelotão</button>
+                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewStatusPrompt()">➕ Novo status</button>
+                        <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="addNewLocalPrompt()">➕ Novo local</button>
                         <button type="button" class="btn-collapse btn-collapse-sm" onclick="toggleSection('quickEditFormContent', this)" title="Ocultar / Expandir Edição">▲</button>
                     </div>
                 </div>
@@ -3975,18 +3937,18 @@
                         <select id="qeStatus" onchange="onQeStatusChange(); checkVisitorDropdownSelect('status', this, true);"></select>
                     </div>
                     <div class="quick-edit-field" style="grid-column: span 2;">
-                        <label for="qeObs">Motivo da Baixa / Obs</label>
+                        <label for="qeObs">Motivo da baixa / observações</label>
                         <input type="text" id="qeObs" placeholder="Ex: Arrefecimento, Motor, Rádio, Luminosos...">
                     </div>
                     <div class="quick-edit-field">
-                        <label for="qeDestino">QTH da VTR (Destino) <span class="label-btn-add" onclick="addNewLocalPrompt()">+ Criar</span></label>
+                        <label for="qeDestino">QTH da viatura (destino) <span class="label-btn-add" onclick="addNewLocalPrompt()">+ Criar</span></label>
                         <select id="qeDestino" onchange="checkVisitorDropdownSelect('destino', this, true)"></select>
                     </div>
                     <div class="quick-edit-field">
                         <label for="qeDate">Data</label>
                         <input type="date" id="qeDate">
                     </div>
-                    <button type="submit" class="btn btn-primary btn-3d" style="height: 38px; width: 100%; justify-content: center; min-width: 145px; box-sizing: border-box;">💾 Salvar Edição</button>
+                    <button type="submit" class="btn btn-primary btn-3d" style="height: 38px; width: 100%; justify-content: center; min-width: 145px; box-sizing: border-box;">💾 Salvar edição</button>
                 </form>
 
                 <div style="margin-top: 4px;">
@@ -4001,7 +3963,7 @@
     <!-- Formulário Detalhado Inferior -->
     <div class="card" id="formSection">
         <div class="card-header">
-            <div class="card-title">📝 Gerenciar e Renomear Viaturas Existentes</div>
+            <div class="card-title">📝 Gerenciar e renomear viaturas existentes</div>
             <button type="button" class="btn-collapse" onclick="toggleSection('formSectionBodyContent', this)" title="Ocultar / Expandir Gerenciamento">▲</button>
         </div>
         <div id="formSectionBodyContent" class="collapsible-content">
@@ -4014,7 +3976,7 @@
                     <div class="info-item"><span class="info-label">Companhia</span><span class="info-val" id="lastCiaVal">--</span></div>
                     <div class="info-item"><span class="info-label">Modelo</span><span class="info-val" id="lastModeloVal">--</span></div>
                     <div class="info-item"><span class="info-label">Pelotão</span><span class="info-val" id="lastPelotaoVal">--</span></div>
-                    <div class="info-item"><span class="info-label">Status Atual</span><span class="info-val" id="lastStatusVal"><span class="badge badge-info">Sem Dados</span></span></div>
+                    <div class="info-item"><span class="info-label">Status Atual</span><span class="info-val" id="lastStatusVal"><span class="badge badge-info">Sem dados</span></span></div>
                     <div class="info-item"><span class="info-label">Local / Destino</span><span class="info-val" id="lastDestinoVal">--</span></div>
                 </div>
             </div>
@@ -4037,11 +3999,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="vehicleModel">Modelo da Viatura *</label>
+                        <label for="vehicleModel">Modelo da viatura *</label>
                         <select id="vehicleModel" required onchange="checkVisitorDropdownSelect('model', this, false)"></select>
                         <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
                             <button type="button" class="btn btn-outline btn-3d btn-sm" style="font-size: 0.8rem; justify-content: center;" onclick="addNewModelPrompt()">➕ Adicionar Modelo</button>
-                            <button type="button" class="btn btn-danger btn-3d btn-sm" style="font-size: 0.8rem; justify-content: center;" onclick="removeSelectedModel()">🗑️ Excluir Modelo</button>
+                            <button type="button" class="btn btn-danger btn-3d btn-sm" style="font-size: 0.8rem; justify-content: center;" onclick="removeSelectedModel()">🗑️ Excluir modelo</button>
                         </div>
                     </div>
                     <div class="form-group">
@@ -4049,52 +4011,52 @@
                         <select id="vehiclePelotao" required onchange="checkVisitorDropdownSelect('pelotao', this, false)"></select>
                         <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
                             <button type="button" class="btn btn-outline btn-3d btn-sm" style="font-size: 0.8rem; justify-content: center;" onclick="addNewPelotaoPrompt()">➕ Adicionar Pelotão</button>
-                            <button type="button" class="btn btn-danger btn-3d btn-sm" style="font-size: 0.8rem; justify-content: center;" onclick="removeSelectedPelotao()">🗑️ Excluir Pelotão</button>
+                            <button type="button" class="btn btn-danger btn-3d btn-sm" style="font-size: 0.8rem; justify-content: center;" onclick="removeSelectedPelotao()">🗑️ Excluir pelotão</button>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="vehicleStatus">Situação Operacional (Status) *</label>
+                        <label for="vehicleStatus">Situação operacional (status) *</label>
                         <select id="vehicleStatus" required onchange="onStatusFormChange(); checkVisitorDropdownSelect('status', this, false);"></select>
                         <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
                             <button type="button" class="btn btn-outline btn-3d btn-sm" style="font-size: 0.8rem; justify-content: center;" onclick="addNewStatusPrompt()">➕ Adicionar Status</button>
-                            <button type="button" class="btn btn-danger btn-3d btn-sm" style="font-size: 0.8rem; justify-content: center;" onclick="removeSelectedStatus()">🗑️ Excluir Status</button>
+                            <button type="button" class="btn btn-danger btn-3d btn-sm" style="font-size: 0.8rem; justify-content: center;" onclick="removeSelectedStatus()">🗑️ Excluir status</button>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="vehicleLocation">QTH da VTR (Destino) *</label>
+                        <label for="vehicleLocation">QTH da viatura (destino) *</label>
                         <select id="vehicleLocation" required onchange="checkVisitorDropdownSelect('destino', this, false)"></select>
                         <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
                             <button type="button" class="btn btn-outline btn-3d btn-sm" style="font-size: 0.8rem; justify-content: center;" onclick="addNewLocalPrompt()">➕ Adicionar Local</button>
-                            <button type="button" class="btn btn-danger btn-3d btn-sm" style="font-size: 0.8rem; justify-content: center;" onclick="removeSelectedLocal()">🗑️ Excluir Local</button>
+                            <button type="button" class="btn btn-danger btn-3d btn-sm" style="font-size: 0.8rem; justify-content: center;" onclick="removeSelectedLocal()">🗑️ Excluir local</button>
                         </div>
                     </div>
                     <div class="form-group full">
-                        <label for="vehicleObs">Motivo da Baixa / Observações</label>
+                        <label for="vehicleObs">Motivo da baixa / observações</label>
                         <input type="text" id="vehicleObs" placeholder="Ex: Sistema de Arrefecimento, Motor, Motor de Arranque, Embreagem, Câmbio, Rádio, Pneus, Luminosos">
                     </div>
                     <div class="form-group">
-                        <label for="vehicleDate">Data do Registro *</label>
+                        <label for="vehicleDate">Data do registro *</label>
                         <input type="date" id="vehicleDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="vehicleDataForms">Referência Forms / Texto</label>
+                        <label for="vehicleDataForms">Referência forms / texto</label>
                         <input type="text" id="vehicleDataForms" placeholder="Ex: Sd PM Vagner 210687-6">
                     </div>
                 </div>
                 <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="submit" class="btn btn-primary btn-3d">💾 Salvar Atualização da Viatura</button>
+                    <button type="submit" class="btn btn-primary btn-3d">💾 Salvar atualização da viatura</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Setor de Manutenções da Frota -->
+    <!-- Setor de Manutenções da frota -->
     <div class="card" id="maintenanceSection" style="margin-top: 24px;">
         <div class="card-header">
-            <div class="card-title">🔧 Manutenções da Frota</div>
+            <div class="card-title">🔧 Manutenções da frota</div>
             <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                 <button type="button" class="btn btn-excel btn-3d btn-sm" onclick="exportMaintenanceExcel()" title="Exportar apenas a planilha com a tabela de manutenções (.xlsx)">
-                    📊 Exportar Planilha de Manutenções
+                    📊 Exportar planilha de manutenções
                 </button>
                 <button type="button" class="btn-collapse" onclick="toggleSection('maintenanceSectionBodyContent', this)" title="Ocultar / Expandir Manutenções">▲</button>
             </div>
@@ -4102,9 +4064,9 @@
         <div id="maintenanceSectionBodyContent" class="collapsible-content">
             <!-- Indicadores Rápidos / Botões de Filtro de Manutenção (Estilo Cartões da Frota) -->
             <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px;">
-                <!-- 1. Total de Manutenções -->
+                <!-- 1. Total de manutenções -->
                 <div class="kpi-card kpi-total" id="maintKpiCard_ALL" onclick="setMaintQuickFilter('ALL')" style="cursor: pointer;" title="Clique para filtrar: Todas as Manutenções">
-                    <div class="kpi-title">Total de Manutenções</div>
+                    <div class="kpi-title">Total de manutenções</div>
                     <div class="kpi-value" style="color: var(--primary);" id="maintStatTotal">0</div>
                     <div class="kpi-sub">Ver Todas as Ordens</div>
                 </div>
@@ -4132,9 +4094,9 @@
                     <div class="kpi-value" style="color: #d97706;" id="maintStatOutras">0</div>
                     <div class="kpi-sub" style="color: #f59e0b;">🔍 Segurança / Recomendações</div>
                 </div>
-                <!-- 6. Investimento / Custo (Por último conforme solicitado) -->
+                <!-- 6. Investimento / custo (Por último conforme solicitado) -->
                 <div class="kpi-card" id="maintKpiCard_Custo" onclick="setMaintQuickFilter('ALL')" style="cursor: pointer; border-left: 4px solid #16a34a; background: #f0fdf4;" title="Custo total acumulado das manutenções">
-                    <div class="kpi-title" style="color: #15803d;">Investimento / Custo</div>
+                    <div class="kpi-title" style="color: #15803d;">Investimento / custo</div>
                     <div class="kpi-value" style="color: #16a34a;" id="maintStatCost">R$ 0,00</div>
                     <div class="kpi-sub" style="color: #22c55e;">💰 Valor Total Acumulado</div>
                 </div>
@@ -4147,7 +4109,7 @@
                     <span class="filter-label">📅 Mês/Ano:</span>
                     <div class="custom-month-dropdown" id="monthDropdownContainerMaint">
                         <button type="button" id="monthDropdownBtnMaint" class="month-dropdown-btn" onclick="toggleMonthDropdown(event, 'maint')" title="Filtrar Manutenções por Mês ou Ano">
-                            <span id="monthDropdownBtnLabelMaint">Todos os Meses</span>
+                            <span id="monthDropdownBtnLabelMaint">Todos os meses</span>
                             <span class="month-dropdown-arrow">▼</span>
                         </button>
                         <div id="monthDropdownMenuMaint" class="month-dropdown-menu" style="display: none;"></div>
@@ -4158,7 +4120,7 @@
                 <div class="filter-group">
                     <label for="filterMaintVehicle" class="filter-label">🚓 Viatura:</label>
                     <select id="filterMaintVehicle" class="filter-select" onchange="renderMaintenanceTable()">
-                        <option value="ALL">Todas as Viaturas</option>
+                        <option value="ALL">Todas as viaturas</option>
                     </select>
                 </div>
                 <div class="filter-group">
@@ -4187,20 +4149,24 @@
                 </div>
             </div>
 
-            <!-- Painel para Inserir Manutenção Diretamente na Tabela -->
+            <!-- Painel para Inserir manutenção direta -->
             <div class="quick-add-panel" style="margin-bottom: 20px;">
                 <div class="quick-add-header">
-                    <span>➕ Inserir Manutenção Diretamente na Tabela</span>
+                    <span>➕ Inserir manutenção direta</span>
                     <button type="button" class="btn-collapse btn-collapse-sm" onclick="toggleSection('quickAddMaintFormContent', this)" title="Ocultar / Expandir Formulário">▲</button>
                 </div>
                 <div id="quickAddMaintFormContent" class="collapsible-content">
                     <form id="quickAddMaintForm" onsubmit="handleQuickAddMaintenance(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; padding: 12px 0;">
+                        <div class="quick-add-field" id="maintCiaFilterContainer">
+                            <label for="maintCiaFilter">🏢 Unidade / Companhia</label>
+                            <select id="maintCiaFilter" onchange="onMaintCiaFilterChange()" style="font-weight: 600;"></select>
+                        </div>
                         <div class="quick-add-field">
                             <label for="maintVehicle">Viatura *</label>
                             <select id="maintVehicle" required></select>
                         </div>
                         <div class="quick-add-field">
-                            <label for="maintType">Tipo de Manutenção *</label>
+                            <label for="maintType">Tipo de manutenção *</label>
                             <select id="maintType" required onchange="onMaintTypeChange()">
                                 <option value="Preventiva">🛠️ Preventiva</option>
                                 <option value="Corretiva">⚠️ Corretiva</option>
@@ -4218,11 +4184,11 @@
                             <input type="number" id="maintKm" placeholder="Ex: 85200" min="0">
                         </div>
                         <div class="quick-add-field" style="grid-column: span 2;">
-                            <label for="maintDesc">Descrição / Peças / Serviço Realizado *</label>
+                            <label for="maintDesc">Descrição / peças / serviço realizado *</label>
                             <input type="text" id="maintDesc" placeholder="Ex: Troca de óleo 5W30, filtro e pastilhas de freio dianteiras" required>
                         </div>
                         <div class="quick-add-field">
-                            <label for="maintProvider">Oficina / Mecânica / CSM</label>
+                            <label for="maintProvider">Oficina / mecânica / CSM</label>
                             <input type="text" id="maintProvider" placeholder="Ex: Garagem Central / CSM">
                         </div>
                         <div class="quick-add-field">
@@ -4239,7 +4205,7 @@
                         </div>
                         <div class="quick-add-field" style="grid-column: span 2; display: flex; align-items: flex-end;">
                             <button type="submit" class="btn btn-primary btn-3d" style="width: 100%; height: 38px; justify-content: center; font-weight: 700;">
-                                ➕ Registrar Manutenção na Tabela
+                                ➕ Registrar manutenção direta
                             </button>
                         </div>
                     </form>
@@ -4250,7 +4216,7 @@
                 </div>
             </div>
 
-            <!-- Tabela de Manutenções da Frota (Visível, legível e completa) -->
+            <!-- Tabela de Manutenções da frota (Visível, legível e completa) -->
             <div class="table-responsive" id="maintenanceTableContainer" style="margin-top: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--card-bg);">
                 <table id="maintenanceTable" style="width: 100%; border-collapse: collapse;">
                     <thead>
@@ -4280,7 +4246,7 @@
     <!-- Barra de Comandos e Ações Principais -->
     <div class="card" style="padding: 20px;">
         <div class="card-header" style="margin-bottom: 12px;">
-            <div class="card-title">⚙️ Comandos & Ações do Banco de Dados</div>
+            <div class="card-title">⚙️ Comandos e ações do banco de dados</div>
             <button type="button" class="btn-collapse" onclick="toggleSection('footerActionsContent', this)" title="Expandir Setor (Requer Senha ADM)" aria-expanded="false">▼</button>
         </div>
         <div id="footerActionsContent" class="collapsible-content collapsed">
@@ -4292,17 +4258,17 @@
                 <button type="button" class="btn btn-outline btn-3d admin-only-btn" title="Alterar Nome do Painel (Requer Senha)" onclick="editAppTitle()">
                     ✏️ Editar Título
                 </button>
-                <button type="button" class="btn btn-outline btn-3d admin-only-btn" title="Gerenciar Cias, Pelotões, Status, Locais e Modelos (Requer Senha)" onclick="openConfigModal()">
+                <button type="button" class="btn btn-outline btn-3d admin-only-btn" title="Gerenciar Cias, pelotões, status, locais e modelos (Requer Senha)" onclick="openConfigModal()">
                     ⚙️ Cias, Pelotões, Status
                 </button>
-                <button type="button" class="btn btn-outline btn-3d admin-only-btn" style="border-color: #8b5cf6; color: #6d28d9; background: #f5f3ff; font-weight: 700;" title="Gerenciar Usuários e Permissões por Setor com Ticks Verdes (Requer Senha ADM)" onclick="openUsersManagementModal()">
-                    👥 Usuários e Permissões
+                <button type="button" class="btn btn-outline btn-3d admin-only-btn" style="border-color: #8b5cf6; color: #6d28d9; background: #f5f3ff; font-weight: 700;" title="Gerenciar usuários e permissões por Setor com Ticks Verdes (Requer Senha ADM)" onclick="openUsersManagementModal()">
+                    👥 Usuários e permissões
                 </button>
                 <button type="button" class="btn btn-excel btn-3d" id="btnExportExcelFooter" title="Exportar Planilha Completa para Excel (.xlsx)" onclick="exportExcel()">
-                    📊 Exportar Planilha Excel
+                    📊 Exportar planilha Excel
                 </button>
-                <button type="button" class="btn btn-outline btn-3d" id="btnExportJsonFooter" style="border-color: #0284c7; color: #0369a1; background: #f0f9ff; font-weight: 700;" title="Exportar Backup do Banco de Dados (.json)" onclick="exportJSON()">
-                    📤 Exportar Banco de Dados
+                <button type="button" class="btn btn-outline btn-3d" id="btnExportJsonFooter" style="border-color: #0284c7; color: #0369a1; background: #f0f9ff; font-weight: 700;" title="Exportar backup do banco de dados (.json)" onclick="exportJSON()">
+                    📤 Exportar banco de dados
                 </button>
                 <input type="file" id="importInput" accept=".json,.xlsx,.xls,.csv" style="display:none" onchange="importAnyFile(event, true)">
             </div>
@@ -4326,7 +4292,7 @@
                 <span id="modalVehiclePrefix" style="color: var(--primary); text-decoration: underline;">--</span>
             </div>
             <div style="display: flex; align-items: center; gap: 8px;">
-                <button type="submit" form="modalEditForm" class="btn btn-primary btn-3d btn-sm" style="padding: 5px 14px; font-weight: 700; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 4px;" title="Salvar Alterações">💾 Salvar</button>
+                <button type="submit" form="modalEditForm" class="btn btn-primary btn-3d btn-sm" style="padding: 5px 14px; font-weight: 700; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 4px;" title="Salvar alterações">💾 Salvar</button>
                 <button type="button" class="modal-close" onclick="closeEditModal()" title="Fechar">✖</button>
             </div>
         </div>
@@ -4334,7 +4300,7 @@
             <input type="hidden" id="modalVehicleId">
             <div class="form-grid">
                 <div class="form-group">
-                    <label for="modalPrefixInput">Prefixo da Viatura *</label>
+                    <label for="modalPrefixInput">Prefixo da viatura *</label>
                     <input type="text" id="modalPrefixInput" placeholder="Ex: T-1104" required style="font-weight: 700;">
                 </div>
                 <div class="form-group">
@@ -4350,23 +4316,23 @@
                     <select id="modalPelotao"></select>
                 </div>
                 <div class="form-group">
-                    <label for="modalStatus">Situação Operacional (Status) * <span class="label-btn-add" onclick="addNewStatusPrompt()">+ Criar</span></label>
+                    <label for="modalStatus">Situação operacional (status) * <span class="label-btn-add" onclick="addNewStatusPrompt()">+ Criar</span></label>
                     <select id="modalStatus" required onchange="onModalStatusChange()"></select>
                 </div>
                 <div class="form-group">
-                    <label for="modalLocation">QTH da VTR (Destino) * <span class="label-btn-add" onclick="addNewLocalPrompt()">+ Criar</span></label>
+                    <label for="modalLocation">QTH da viatura (destino) * <span class="label-btn-add" onclick="addNewLocalPrompt()">+ Criar</span></label>
                     <select id="modalLocation" required></select>
                 </div>
                 <div class="form-group">
-                    <label for="modalDate">Data do Registro *</label>
+                    <label for="modalDate">Data do registro *</label>
                     <input type="date" id="modalDate" required>
                 </div>
                 <div class="form-group full">
-                    <label for="modalObs">Motivo da Baixa / Observações</label>
+                    <label for="modalObs">Motivo da baixa / observações</label>
                     <input type="text" id="modalObs" placeholder="Ex: Sistema de Arrefecimento, Motor, Arranque, Embreagem, Câmbio, Rádio, Luminosos">
                 </div>
                 <div class="form-group full">
-                    <label for="modalDataForms">Referência Forms / Texto</label>
+                    <label for="modalDataForms">Referência forms / texto</label>
                     <input type="text" id="modalDataForms" placeholder="Ex: 29/07 ou 07/07/2026 E 29/07">
                 </div>
                 
@@ -4445,7 +4411,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline btn-3d" onclick="closeEditModal()">Cancelar</button>
-                <button type="submit" class="btn btn-primary btn-3d">💾 Salvar Alterações</button>
+                <button type="submit" class="btn btn-primary btn-3d">💾 Salvar alterações</button>
             </div>
         </form>
     </div>
@@ -4454,13 +4420,13 @@
 <!-- Modal Unificado de Importação -->
 <div id="mergeModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card">
-        <div class="modal-header"><div class="modal-title"><span>📥 Importar e Alimentar Banco de Dados</span></div><button class="modal-close" onclick="closeMergeModal()" title="Fechar">✖</button></div>
+        <div class="modal-header"><div class="modal-title"><span>📥 Importar e alimentar banco de dados</span></div><button class="modal-close" onclick="closeMergeModal()" title="Fechar">✖</button></div>
         <div style="display:flex; flex-direction:column; gap:14px;">
             <div class="import-tabs">
-                <button type="button" class="import-tab-btn active" id="tabBtnOnline" onclick="switchImportTab('online')">🌐 Link Online (Google Sheets)</button>
+                <button type="button" class="import-tab-btn active" id="tabBtnOnline" onclick="switchImportTab('online')">🌐 Link online (Google Sheets)</button>
                 <button type="button" class="import-tab-btn" id="tabBtnDrive" onclick="switchImportTab('drive')">☁️ Do Google Drive</button>
-                <button type="button" class="import-tab-btn" id="tabBtnFile" onclick="switchImportTab('file')">📁 Planilha Pronta (.xlsx, .csv, .json)</button>
-                <button type="button" class="import-tab-btn" id="tabBtnText" onclick="switchImportTab('text')">📋 Colar Células / JSON</button>
+                <button type="button" class="import-tab-btn" id="tabBtnFile" onclick="switchImportTab('file')">📁 Planilha pronta (.xlsx, .csv, .json)</button>
+                <button type="button" class="import-tab-btn" id="tabBtnText" onclick="switchImportTab('text')">📋 Colar células / JSON</button>
             </div>
             <div class="modal-section-box modal-section-unit">
                 <label for="mergeCiaSelect" style="font-size:0.88rem; font-weight:bold; display:block; margin-bottom:5px;">🏛️ Identificação da Unidade de Destino: *</label>
@@ -4483,6 +4449,57 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Aba 2: Do Google Drive (Corretamente posicionada dentro do Modal) -->
+            <div id="tabContentDrive" class="tab-content">
+                <div class="modal-section-box" style="display: flex; flex-direction: column; gap: 10px; background: #fff5f5; border: 1px solid #fecaca; border-radius: 8px; padding: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                        <span style="font-size: 0.9rem; font-weight: 800; color: #991b1b; display: flex; align-items: center; gap: 6px;">
+                            ☁️ Planilhas e Backups no seu Google Drive
+                        </span>
+                        <button type="button" class="btn btn-outline btn-3d btn-sm" id="btnRefreshDriveFiles" style="border-color: #ea4335; color: #c5221f; font-weight: 700;" onclick="loadGoogleDriveFilesList()">
+                            🔄 Atualizar lista
+                        </button>
+                    </div>
+
+                    <!-- Banner de status da conta conectada -->
+                    <div id="driveAccountStatusBanner" style="display: none; font-size: 0.82rem; font-weight: 600; padding: 8px 12px; border-radius: 6px; background: #ffffff; border: 1px solid #86efac; color: #15803d; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
+                        <span id="driveAccountStatusText">🟢 Conectado ao Google Drive</span>
+                        <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.74rem; padding: 3px 8px; border-color: #15803d; color: #15803d;" onclick="handleGoogleDriveAuthClick(() => loadGoogleDriveFilesList())">
+                            🔄 Alternar conta
+                        </button>
+                    </div>
+
+                    <!-- Aviso caso não esteja autenticado -->
+                    <div id="driveAuthNotice" style="display: none; padding: 14px; border-radius: 6px; background: #ffffff; border: 1px dashed #f87171; text-align: center;">
+                        <p style="font-size: 0.86rem; color: #7f1d1d; margin-bottom: 10px; line-height: 1.4;">
+                            Conecte sua conta do Google para visualizar e importar as planilhas ou backups salvos no seu Drive.
+                        </p>
+                        <button type="button" class="btn btn-primary btn-3d btn-sm" style="padding: 8px 16px; font-weight: 700; background: #ea4335; border-color: #dc2626;" onclick="handleGoogleDriveAuthClick(() => loadGoogleDriveFilesList())">
+                            🔑 Conectar conta Google Drive
+                        </button>
+                    </div>
+
+                    <!-- Lista de arquivos do Google Drive -->
+                    <div id="driveFilesListContainer" style="max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding: 4px 0;">
+                        <!-- Preenchido via loadGoogleDriveFilesList() -->
+                    </div>
+
+                    <!-- Opção de carregar diretamente pelo Link/ID do Google Drive -->
+                    <div style="border-top: 1px dashed #fca5a5; padding-top: 10px; margin-top: 4px;">
+                        <label for="driveDirectFileIdInput" style="display: block; font-size: 0.8rem; font-weight: 700; color: #991b1b; margin-bottom: 5px;">
+                            🔗 Ou cole o link / ID do arquivo no Google Drive:
+                        </label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="driveDirectFileIdInput" placeholder="Cole o link https://drive.google.com/file/d/... ou ID do arquivo" style="flex: 1; font-size: 0.82rem; padding: 8px 12px; border: 1px solid #f87171; border-radius: 6px; box-sizing: border-box;" oninput="onDriveDirectInputChanged()">
+                            <button type="button" class="btn btn-primary btn-3d btn-sm" style="font-weight: 700; padding: 8px 14px; background: #ea4335;" onclick="importFromDriveDirectInput()">
+                                📥 Baixar e importar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="tabContentFile" class="tab-content">
                 <div class="modal-section-box modal-section-file">
                     <label for="mergeFileInput" style="font-size:0.9rem; font-weight:bold; display:block; margin-bottom:8px; cursor:pointer;">📄 Clique aqui para selecionar a Planilha Pronta (.xlsx, .xls, .csv, .json)</label>
@@ -4512,7 +4529,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-outline btn-3d" onclick="closeMergeModal()">Cancelar</button>
-            <button type="button" class="btn btn-merge btn-3d" id="btnExecuteImportAction" onclick="executeCurrentImportTab()">🚀 Processar e Carregar Dados</button>
+            <button type="button" class="btn btn-merge btn-3d" id="btnExecuteImportAction" onclick="executeCurrentImportTab()">🚀 Processar e carregar dados</button>
         </div>
     </div>
 </div>
@@ -4538,7 +4555,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-outline btn-3d" onclick="closeConfirmUnitModal()">Cancelar</button>
-            <button type="button" class="btn btn-success btn-3d" onclick="proceedWithConfirmedImport()">✅ Confirmar e Adicionar</button>
+            <button type="button" class="btn btn-success btn-3d" onclick="proceedWithConfirmedImport()">✅ Confirmar e adicionar</button>
         </div>
     </div>
 </div>
@@ -4546,13 +4563,13 @@
 <!-- Modal de Gerenciamento -->
 <div id="configModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card">
-        <div class="modal-header"><div class="modal-title"><span>⚙️ Gerenciar Cias, Pelotões, Status, Locais e Modelos</span></div><button class="modal-close" onclick="closeConfigModal()" title="Fechar">✖</button></div>
+        <div class="modal-header"><div class="modal-title"><span>⚙️ Gerenciar Cias, pelotões, status, locais e modelos</span></div><button class="modal-close" onclick="closeConfigModal()" title="Fechar">✖</button></div>
         <div style="display:flex; flex-direction:column; gap:20px; max-height: 70vh; overflow-y: auto; padding-right: 4px;">
             <div><div style="display:flex; justify-content:space-between; align-items:center;"><label style="font-size:0.95rem; font-weight:bold; color:var(--primary);">🏛️ Companhias / Setores (Cias):</label><button class="btn btn-outline btn-3d btn-sm" onclick="addNewCiaPrompt()">➕ Acrescentar Cia</button></div><div class="manage-tags-list" id="ciasListContainer"></div></div>
-            <div style="border-top:1px solid var(--border); padding-top:16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><label style="font-size:0.95rem; font-weight:bold; color:var(--primary);">🚗 Modelos de Viaturas Cadastrados:</label><button class="btn btn-outline btn-3d btn-sm" onclick="addNewModelPrompt()">➕ Acrescentar Modelo</button></div><div class="manage-tags-list" id="modelsListContainer"></div></div>
-            <div style="border-top:1px solid var(--border); padding-top:16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><label style="font-size:0.95rem; font-weight:bold; color:var(--primary);">🛡️ Pelotões Cadastrados:</label><button class="btn btn-outline btn-3d btn-sm" onclick="addNewPelotaoPrompt()">➕ Acrescentar Pelotão</button></div><div class="manage-tags-list" id="pelotoesListContainer"></div></div>
-            <div style="border-top:1px solid var(--border); padding-top:16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><label style="font-size:0.95rem; font-weight:bold; color:var(--primary);">🚥 Status Cadastrados:</label><button class="btn btn-outline btn-3d btn-sm" onclick="addNewStatusPrompt()">➕ Acrescentar Status</button></div><div class="manage-tags-list" id="statusesListContainer"></div></div>
-            <div style="border-top:1px solid var(--border); padding-top:16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><label style="font-size:0.95rem; font-weight:bold; color:var(--primary);">📍 Locais / Destinos Cadastrados:</label><button class="btn btn-outline btn-3d btn-sm" onclick="addNewLocalPrompt()">➕ Acrescentar Local</button></div><div class="manage-tags-list" id="locaisListContainer"></div></div>
+            <div style="border-top:1px solid var(--border); padding-top:16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><label style="font-size:0.95rem; font-weight:bold; color:var(--primary);">🚗 Modelos de Viaturas Cadastrados:</label><button class="btn btn-outline btn-3d btn-sm" onclick="addNewModelPrompt()">➕ Acrescentar modelo</button></div><div class="manage-tags-list" id="modelsListContainer"></div></div>
+            <div style="border-top:1px solid var(--border); padding-top:16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><label style="font-size:0.95rem; font-weight:bold; color:var(--primary);">🛡️ Pelotões Cadastrados:</label><button class="btn btn-outline btn-3d btn-sm" onclick="addNewPelotaoPrompt()">➕ Acrescentar pelotão</button></div><div class="manage-tags-list" id="pelotoesListContainer"></div></div>
+            <div style="border-top:1px solid var(--border); padding-top:16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><label style="font-size:0.95rem; font-weight:bold; color:var(--primary);">🚥 Status Cadastrados:</label><button class="btn btn-outline btn-3d btn-sm" onclick="addNewStatusPrompt()">➕ Acrescentar status</button></div><div class="manage-tags-list" id="statusesListContainer"></div></div>
+            <div style="border-top:1px solid var(--border); padding-top:16px;"><div style="display:flex; justify-content:space-between; align-items:center;"><label style="font-size:0.95rem; font-weight:bold; color:var(--primary);">📍 Locais / Destinos Cadastrados:</label><button class="btn btn-outline btn-3d btn-sm" onclick="addNewLocalPrompt()">➕ Acrescentar local</button></div><div class="manage-tags-list" id="locaisListContainer"></div></div>
         </div>
         <div class="modal-footer"><button type="button" class="btn btn-primary btn-3d" onclick="closeConfigModal()">Concluído</button></div>
     </div>
@@ -4562,7 +4579,7 @@
 <div id="serverConfigModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 600px;">
         <div class="modal-header">
-            <div class="modal-title"><span>☁️ Banco de Dados do Servidor (Online)</span></div>
+            <div class="modal-title"><span>☁️ Banco de dados do servidor (online)</span></div>
             <button class="modal-close" onclick="closeServerConfigModal()" title="Fechar">✖</button>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px; padding: 4px 0;">
@@ -4587,10 +4604,10 @@
 
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="forcePushToServer()" style="flex: 1; min-width: 150px; justify-content: center;">
-                    📤 Enviar Dados Locais para o Servidor
+                    📤 Enviar dados locais para o servidor
                 </button>
                 <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="forcePullFromServer()" style="flex: 1; min-width: 150px; justify-content: center;">
-                    📥 Baixar Dados do Servidor
+                    📥 Baixar dados do servidor
                 </button>
             </div>
 
@@ -4598,11 +4615,11 @@
         </div>
         <div class="modal-footer" style="justify-content: space-between; flex-wrap: wrap; gap: 8px;">
             <button type="button" class="btn btn-outline btn-3d" id="btnTestServerConnection" onclick="testServerConnection()">
-                🔍 Testar Conexão com o Servidor
+                🔍 Testar conexão com o servidor
             </button>
             <div style="display: flex; gap: 8px;">
                 <button type="button" class="btn btn-outline btn-3d" onclick="closeServerConfigModal()">Fechar</button>
-                <button type="button" class="btn btn-success btn-3d" onclick="saveServerConfigUrl()">💾 Salvar e Conectar</button>
+                <button type="button" class="btn btn-success btn-3d" onclick="saveServerConfigUrl()">💾 Salvar e conectar</button>
             </div>
         </div>
     </div>
@@ -4612,7 +4629,7 @@
 <div id="adminPasswordModal" class="modal-overlay" onclick="event.stopPropagation()">
     <div class="modal-card" style="max-width: 440px;" onclick="event.stopPropagation()">
         <div class="modal-header">
-            <div class="modal-title"><span>👮 Identificação de Usuário:</span></div>
+            <div class="modal-title"><span>👮 Identificação de usuário:</span></div>
             <button type="button" class="modal-close" onclick="closeAdminPasswordModal(false)" title="Fechar">✖</button>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px; padding: 10px 0;">
@@ -4621,19 +4638,19 @@
             </p>
 
             <div style="display: flex; flex-direction: column; gap: 4px;">
-                <label for="adminUserSelect" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">👤 Selecione o Usuário / Operador:</label>
+                <label for="adminUserSelect" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">👤 Selecione o usuário / operador:</label>
                 <select id="adminUserSelect" style="font-size: 0.95rem; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; width: 100%; box-sizing: border-box; background-color: var(--card-bg); color: var(--text-main); font-weight: 600;" onchange="onAdminUserSelectChange(true)"></select>
             </div>
 
             <div id="adminUnitSelectGroup" style="display: flex; flex-direction: column; gap: 4px;">
-                <label for="adminUnitSelect" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">🏢 Unidade / Companhia de Atuação:</label>
+                <label for="adminUnitSelect" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">🏢 Unidade / companhia de atuação:</label>
                 <select id="adminUnitSelect" style="font-size: 0.95rem; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; width: 100%; box-sizing: border-box; background-color: var(--card-bg); color: var(--text-main); font-weight: 600;">
                     <option value="1ª Cia">1ª Cia</option>
                     <option value="2ª Cia">2ª Cia</option>
                     <option value="3ª Cia">3ª Cia</option>
                     <option value="4ª Cia">4ª Cia</option>
                     <option value="PTT">PTT (Pelotão de Trânsito)</option>
-                    <option value="Batalhão" id="optAdminBatalhao">🏛️ Batalhão Geral (Todas as Unidades)</option>
+                    <option value="Batalhão" id="optAdminBatalhao">🏛️ Batalhão geral (todas as unidades)</option>
                 </select>
             </div>
 
@@ -4661,7 +4678,7 @@
 
             <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: center; padding: 10px 14px; font-weight: 700; border-color: #ea4335; color: #c5221f; background: #ffffff; gap: 8px;" onclick="loginWithGoogleAuth()" title="Fazer login usando sua conta do Gmail / Google">
                 <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.8s.2-2.1.4-2.8L1.9 6.3C.7 8.7 0 10.8 0 12s.7 3.3 1.9 5.7l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/></svg>
-                <span>Entrar com a Conta Google / Gmail</span>
+                <span>Entrar com a conta Google / Gmail</span>
             </button>
 
             <div id="adminPermissionError" style="display: none; color: #b45309; font-size: 0.84rem; font-weight: 700; padding: 8px 12px; background: rgba(245, 158, 11, 0.15); border-radius: 6px; border: 1px solid #f59e0b;">
@@ -4670,7 +4687,7 @@
         </div>
         <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px;">
             <button type="button" class="btn btn-outline btn-3d" onclick="closeAdminPasswordModal(false)" style="color: #ef4444; border-color: #ef4444; font-weight: 700;">✖ Sair</button>
-            <button type="button" class="btn btn-primary btn-3d" onclick="submitAdminPassword()">🔑 Confirmar Acesso</button>
+            <button type="button" class="btn btn-primary btn-3d" onclick="submitAdminPassword()">🔑 Confirmar acesso</button>
         </div>
     </div>
 </div>
@@ -4696,7 +4713,7 @@
                         <div id="quickDetailsPlaca" style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); font-family: ui-monospace, monospace; background: var(--card-bg); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); margin-top: 2px;">--</div>
                     </div>
                     <div>
-                        <span style="display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Patrimônio da Viatura</span>
+                        <span style="display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Patrimônio da viatura</span>
                         <div id="quickDetailsPatrimonioVtr" style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); font-family: ui-monospace, monospace; background: var(--card-bg); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); margin-top: 2px;">--</div>
                     </div>
                 </div>
@@ -4709,15 +4726,15 @@
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div>
-                        <span style="display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Modelo do Rádio</span>
+                        <span style="display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Modelo do rádio</span>
                         <div id="quickDetailsRadioModelo" style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); background: var(--card-bg); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); margin-top: 2px;">--</div>
                     </div>
                     <div>
-                        <span style="display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Patrimônio do Rádio</span>
+                        <span style="display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Patrimônio do rádio</span>
                         <div id="quickDetailsRadioPatrimonio" style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); font-family: ui-monospace, monospace; background: var(--card-bg); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); margin-top: 2px;">--</div>
                     </div>
                     <div style="grid-column: span 2;">
-                        <span style="display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Data da Atualização do Rádio</span>
+                        <span style="display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Data de atualização do rádio</span>
                         <div id="quickDetailsRadioData" style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); background: var(--card-bg); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); margin-top: 2px;">--</div>
                     </div>
                 </div>
@@ -4730,11 +4747,11 @@
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div>
-                        <span style="display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Número do Cartão de Abastecimento</span>
+                        <span style="display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Número do cartão de abastecimento</span>
                         <div id="quickDetailsCartaoAbast" style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); font-family: ui-monospace, monospace; background: var(--card-bg); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); margin-top: 2px;">--</div>
                     </div>
                     <div>
-                        <span style="display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">TAG de Abastecimento</span>
+                        <span style="display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">TAG de abastecimento</span>
                         <div id="quickDetailsTagAbast" style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); background: var(--card-bg); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); margin-top: 2px;">--</div>
                     </div>
                 </div>
@@ -4772,11 +4789,11 @@
     </div>
 </div>
 
-<!-- Modal: Primeiro Acesso — Crie sua própria senha -->
+<!-- Modal: Primeiro acesso — crie sua própria senha -->
 <div id="firstLoginChangePasswordModal" class="modal-overlay" style="z-index: 10002;">
     <div class="modal-card" style="max-width: 440px;" onclick="event.stopPropagation()">
         <div class="modal-header">
-            <div class="modal-title"><span>🔐 Primeiro Acesso — Crie sua própria senha</span></div>
+            <div class="modal-title"><span>🔐 Primeiro acesso — crie sua própria senha</span></div>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px; padding: 12px 0;">
             <p style="font-size: 0.9rem; color: var(--text-main); line-height: 1.4;">
@@ -4821,13 +4838,13 @@
 <div id="editAccountModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 480px;" onclick="event.stopPropagation()">
         <div class="modal-header">
-            <div class="modal-title"><span>👤 Editar Conta: <strong id="accModalUserName" style="color: var(--primary);">--</strong></span></div>
+            <div class="modal-title"><span>👤 Editar conta: <strong id="accModalUserName" style="color: var(--primary);">--</strong></span></div>
             <button type="button" class="modal-close" onclick="closeEditAccountModal()" title="Fechar">✖</button>
         </div>
         <div style="display: flex; flex-direction: column; gap: 16px; padding: 12px 0;">
             <!-- Seção 1: Foto Própria do Usuário -->
             <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; background: var(--bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border);">
-                <span style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Foto de Perfil</span>
+                <span style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Foto de perfil</span>
                 <div style="position: relative; width: 84px; height: 84px; border-radius: 50%; overflow: hidden; border: 3px solid var(--primary); background: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
                     <img id="accPhotoPreview" src="" alt="Foto" style="width: 100%; height: 100%; object-fit: cover; display: none;">
                     <span id="accPhotoPlaceholder" style="font-size: 2.6rem;">👤</span>
@@ -4847,7 +4864,7 @@
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <label for="accOldPassInput" style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Senha Original (Atual):</label>
+                    <label for="accOldPassInput" style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Senha original (atual):</label>
                     <input type="password" id="accOldPassInput" placeholder="Digite sua senha atual..." style="font-size: 0.95rem; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; width: 100%; box-sizing: border-box; background: var(--card-bg); color: var(--text-main);">
                 </div>
 
@@ -4857,7 +4874,7 @@
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <label for="accConfirmPassInput" style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Confirmar Nova Senha:</label>
+                    <label for="accConfirmPassInput" style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Confirmar nova senha:</label>
                     <input type="password" id="accConfirmPassInput" placeholder="Confirme a nova senha..." style="font-size: 0.95rem; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; width: 100%; box-sizing: border-box; background: var(--card-bg); color: var(--text-main);">
                     <div style="display: flex; align-items: center; margin-top: 4px;">
                         <label style="display: inline-flex; align-items: center; gap: 7px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); cursor: pointer; user-select: none;">
@@ -4904,7 +4921,7 @@
 <div id="userSessionSwitchModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 420px;" onclick="event.stopPropagation()">
         <div class="modal-header">
-            <div class="modal-title"><span>👤 Sessão de Operador</span></div>
+            <div class="modal-title"><span>👤 Sessão de operador</span></div>
             <button type="button" class="modal-close" onclick="closeUserSessionSwitchModal()" title="Fechar">✖</button>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px; padding: 12px 0;">
@@ -4914,13 +4931,13 @@
             <div style="display: flex; flex-direction: column; gap: 10px;">
                 <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #ea4335; color: #c5221f; background: #fff5f5; font-weight: 700; gap: 8px;" onclick="closeUserSessionSwitchModal(); linkCurrentUserWithGoogle();" title="Vincular sua conta Google para salvar tudo em tempo real">
                     <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.8s.2-2.1.4-2.8L1.9 6.3C.7 8.7 0 10.8 0 12s.7 3.3 1.9 5.7l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/></svg>
-                    <span>🔗 Sincronizar este Usuário com a Conta Google (Gmail)</span>
+                    <span>🔗 Sincronizar este usuário com a conta Google (Gmail)</span>
                 </button>
                 <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #3b82f6; color: #1d4ed8; background: #eff6ff;" onclick="switchUserAction()">
-                    🔄 Alternar Usuário (Trocar de Operador)
+                    🔄 Alternar usuário (trocar de operador)
                 </button>
                 <button type="button" class="btn btn-danger btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem;" onclick="closeUserSessionSwitchModal(); logoutAdmin();">
-                    🔒 Encerrar Sessão (Bloquear Sistema)
+                    🔒 Encerrar sessão (bloquear sistema)
                 </button>
             </div>
         </div>
@@ -4930,12 +4947,12 @@
     </div>
 </div>
 
-<!-- Modal de Gerenciamento de Usuários e Permissões -->
+<!-- Modal de Gerenciamento de usuários e permissões -->
 <!-- Modal de Vinculação de Conta Google para Usuários / Operadores -->
 <div id="googleUserLinkModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();" style="display: none; z-index: 10050;">
     <div class="modal-card" style="max-width: 480px;" onclick="event.stopPropagation()">
         <div class="modal-header">
-            <div class="modal-title"><span>🔐 Vincular Conta Google</span></div>
+            <div class="modal-title"><span>🔐 Vincular conta Google</span></div>
             <button type="button" class="modal-close" onclick="closeGoogleUserLinkModal()" title="Fechar">✖</button>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px; padding: 10px 0;">
@@ -4957,16 +4974,16 @@
                     Opção 1: Vincular a um Operador Cadastrado (ex: Cb Laura)
                 </div>
                 <div>
-                    <label for="googleLinkUserSelect" style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Selecionar Operador:</label>
+                    <label for="googleLinkUserSelect" style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Selecionar operador:</label>
                     <select id="googleLinkUserSelect" style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); font-weight: 600;"></select>
                 </div>
                 <div>
-                    <label for="googleLinkUserPass" style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Senha do Operador:</label>
+                    <label for="googleLinkUserPass" style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Senha do operador:</label>
                     <input type="password" id="googleLinkUserPass" placeholder="Senha cadastrada..." style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main);" onkeydown="if(event.key==='Enter') confirmGoogleLinkExistingUser()">
                 </div>
                 <div id="googleLinkError" style="display: none; color: #ef4444; font-size: 0.82rem; font-weight: 700; padding: 6px 10px; background: rgba(239, 68, 68, 0.1); border-radius: 6px;"></div>
                 <button type="button" class="btn btn-primary btn-3d" style="width: 100%; justify-content: center; padding: 10px; font-weight: 700; margin-top: 4px;" onclick="confirmGoogleLinkExistingUser()">
-                    🔗 Vincular este Gmail e Entrar
+                    🔗 Vincular este Gmail e entrar
                 </button>
             </div>
 
@@ -4983,11 +5000,11 @@
                     Opção 2: Entrar como Novo Operador
                 </div>
                 <div>
-                    <label for="googleLinkNewUserName" style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Nome de Exibição / Guerra:</label>
+                    <label for="googleLinkNewUserName" style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Nome de exibição / guerra:</label>
                     <input type="text" id="googleLinkNewUserName" placeholder="Ex: Cb Laura, Sd Silva..." style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main);">
                 </div>
                 <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: center; padding: 10px; font-weight: 700;" onclick="confirmGoogleCreateNewOperator()">
-                    ➕ Criar Perfil e Entrar com Google
+                    ➕ Criar perfil e entrar com Google
                 </button>
             </div>
         </div>
@@ -4998,7 +5015,7 @@
 <div id="unitSelectionModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();" style="display: none; z-index: 10060;">
     <div class="modal-card" style="max-width: 480px;" onclick="event.stopPropagation()">
         <div class="modal-header">
-            <div class="modal-title"><span>🏢 Selecionar Unidade de Atuação</span></div>
+            <div class="modal-title"><span>🏢 Selecionar unidade de atuação</span></div>
             <button type="button" class="modal-close" onclick="closeUnitSelectionModal()" title="Fechar">✖</button>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px; padding: 12px 0;">
@@ -5016,7 +5033,7 @@
                     <option value="3ª Cia">3ª Companhia (3ª Cia)</option>
                     <option value="4ª Cia">4ª Companhia (4ª Cia)</option>
                     <option value="PTT">Pelotão de Trânsito (PTT / CTT)</option>
-                    <option value="Batalhão" id="optModalUnitBatalhao">🏛️ Batalhão Geral (Todas as Unidades)</option>
+                    <option value="Batalhão" id="optModalUnitBatalhao">🏛️ Batalhão geral (todas as unidades)</option>
                 </select>
             </div>
 
@@ -5026,7 +5043,7 @@
 
             <div class="modal-footer" style="padding-top: 6px;">
                 <button type="button" class="btn btn-primary btn-3d" style="width: 100%; justify-content: center; padding: 10px 14px; font-weight: 700;" onclick="confirmUnitSelection()">
-                    ✅ Confirmar Unidade e Continuar
+                    ✅ Confirmar unidade e continuar
                 </button>
             </div>
         </div>
@@ -5037,7 +5054,7 @@
 <div id="exportOptionsModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();" style="display: none; z-index: 10070;">
     <div class="modal-card" style="max-width: 520px;" onclick="event.stopPropagation()">
         <div class="modal-header">
-            <div class="modal-title"><span>📊 Exportar Planilha Excel (.xlsx)</span></div>
+            <div class="modal-title"><span>📊 Exportar planilha Excel (.xlsx)</span></div>
             <button type="button" class="modal-close" onclick="closeExportOptionsModal()" title="Fechar">✖</button>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px; padding: 12px 0;">
@@ -5048,7 +5065,7 @@
             <!-- Seleção de Unidade para Exportação -->
             <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
                 <label for="exportUnitSelect" style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); text-transform: uppercase;">
-                    🏢 Unidade a Exportar:
+                    🏢 Unidade a exportar:
                 </label>
                 <select id="exportUnitSelect" style="width: 100%; font-size: 0.95rem; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); font-weight: 700;" onchange="updateExportSummary()">
                     <!-- Preenchido dinamicamente -->
@@ -5062,7 +5079,7 @@
             <div style="display: flex; flex-direction: column; gap: 8px; padding: 0 4px;">
                 <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-main); cursor: pointer;">
                     <input type="checkbox" id="exportIncludeMaintenance" checked style="width: 16px; height: 16px; accent-color: var(--primary);">
-                    <span>Incluir aba com o histórico de <strong>Manutenções da Frota</strong></span>
+                    <span>Incluir aba com o histórico de <strong>Manutenções da frota</strong></span>
                 </label>
                 <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-main); cursor: pointer;">
                     <input type="checkbox" id="exportSaveToDrive" style="width: 16px; height: 16px; accent-color: var(--primary);">
@@ -5075,7 +5092,7 @@
                     Cancelar
                 </button>
                 <button type="button" class="btn btn-primary btn-3d" style="flex: 2; justify-content: center; height: 42px; font-weight: 700;" onclick="confirmExecuteExportExcel()">
-                    📥 Baixar Planilha Excel
+                    📥 Baixar planilha Excel
                 </button>
             </div>
         </div>
@@ -5104,10 +5121,10 @@
 
             <div class="modal-footer" style="padding-top: 6px; display: flex; gap: 10px;">
                 <button type="button" class="btn btn-outline btn-3d" style="flex: 1; justify-content: center; height: 42px;" onclick="declineDriveImportOnLogin()">
-                    ❌ Não, Manter Atual
+                    ❌ Não, manter atual
                 </button>
                 <button type="button" class="btn btn-primary btn-3d" style="flex: 1; justify-content: center; height: 42px; font-weight: 700; background: #2563eb;" onclick="acceptDriveImportOnLogin()">
-                    ✅ Sim, Importar
+                    ✅ Sim, importar
                 </button>
             </div>
         </div>
@@ -5117,7 +5134,7 @@
 <div id="usersManagementModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 680px;" onclick="event.stopPropagation()">
         <div class="modal-header">
-            <div class="modal-title"><span>👥 Gerenciamento de Usuários e Permissões</span></div>
+            <div class="modal-title"><span>👥 Gerenciamento de usuários e permissões</span></div>
             <button type="button" class="modal-close" onclick="closeUsersManagementModal()" title="Fechar">✖</button>
         </div>
         
@@ -5129,10 +5146,10 @@
             <!-- Seletor de Usuário ou Criar Novo -->
             <div style="display: flex; gap: 10px; align-items: flex-end; background: var(--bg); padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
                 <div style="flex: 1;">
-                    <label for="mgmtUserSelect" style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">Usuário para Configurar:</label>
+                    <label for="mgmtUserSelect" style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">Usuário para configurar:</label>
                     <select id="mgmtUserSelect" style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); font-weight: 600;" onchange="onMgmtUserSelectChange()"></select>
                 </div>
-                <button type="button" class="btn btn-outline btn-3d btn-sm" style="height: 38px;" onclick="startCreateNewUser()">➕ Novo Usuário</button>
+                <button type="button" class="btn btn-outline btn-3d btn-sm" style="height: 38px;" onclick="startCreateNewUser()">➕ Novo usuário</button>
             </div>
 
             <!-- Dados Básicos do Usuário -->
@@ -5142,7 +5159,7 @@
                     <input type="text" id="mgmtUserNameInput" placeholder="Ex: Cb Souza, Plantão 1" style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main);">
                 </div>
                 <div>
-                    <label for="mgmtUserPassInput" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">Senha de Acesso *</label>
+                    <label for="mgmtUserPassInput" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">Senha de acesso *</label>
                     <input type="text" id="mgmtUserPassInput" placeholder="Senha do operador..." style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main);">
                 </div>
                 <div>
@@ -5150,7 +5167,7 @@
                     <input type="email" id="mgmtUserGoogleEmailInput" placeholder="Ex: operador@gmail.com" style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main);">
                 </div>
                 <div>
-                    <label for="mgmtUserUnitSelect" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">🏢 Unidade Fixada:</label>
+                    <label for="mgmtUserUnitSelect" style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 4px;">🏢 Unidade fixada:</label>
                     <select id="mgmtUserUnitSelect" style="width: 100%; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); box-sizing: border-box; background: var(--card-bg); color: var(--text-main); font-weight: 600;">
                         <option value="1ª Cia">1ª Cia</option>
                         <option value="2ª Cia">2ª Cia</option>
@@ -5165,21 +5182,21 @@
             <!-- Setores com Ticks Verdes -->
             <div>
                 <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; background: rgba(30, 58, 138, 0.04); padding: 8px 10px; border-radius: 8px; border: 1px dashed var(--border); align-items: center;">
-                    <span style="font-size: 0.78rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Atalhos de Perfil:</span>
+                    <span style="font-size: 0.78rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Atalhos de perfil:</span>
                     <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.76rem; border-color: #3b82f6; color: #1d4ed8; font-weight: 700; background: #eff6ff;" onclick="applyAdminOperacionalPreset()" title="Define Unidade como Batalhão e libera alteração de toda a tabela sem acesso a usuários ou servidor">
-                        🛡️ Perfil Admin Operacional (Batalhão / Toda a Tabela)
+                        🛡️ Perfil admin operacional (Batalhão / toda a tabela)
                     </button>
                     <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.76rem; border-color: #64748b; color: #334155; font-weight: 600;" onclick="applyOperadorComumPreset()" title="Define perfil padrão apenas com alteração de status/destino e manutenção na Cia">
-                        👤 Perfil Operador Comum
+                        👤 Perfil operador comum
                     </button>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <span style="font-size: 0.82rem; font-weight: 800; text-transform: uppercase; color: #15803d;">
-                        ✅ Permissões por Setor (Clique para ligar/desligar o tick verde):
+                        ✅ Permissões por setor (clique para ligar/desligar o tick verde):
                     </span>
                     <div style="display: flex; gap: 6px;">
-                        <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.72rem; padding: 3px 8px;" onclick="setAllPermissions(true)">Marcar Todos</button>
+                        <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.72rem; padding: 3px 8px;" onclick="setAllPermissions(true)">Marcar todos</button>
                         <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.72rem; padding: 3px 8px;" onclick="setAllPermissions(false)">Desmarcar</button>
                     </div>
                 </div>
@@ -5190,10 +5207,10 @@
         </div>
 
         <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <button type="button" id="btnDeleteUser" class="btn btn-danger btn-3d btn-sm" onclick="deleteCurrentUser()" style="display: none;">🗑️ Excluir Usuário</button>
+            <button type="button" id="btnDeleteUser" class="btn btn-danger btn-3d btn-sm" onclick="deleteCurrentUser()" style="display: none;">🗑️ Excluir usuário</button>
             <div style="display: flex; gap: 10px; margin-left: auto;">
                 <button type="button" class="btn btn-outline btn-3d" onclick="closeUsersManagementModal()">Fechar</button>
-                <button type="button" class="btn btn-success btn-3d" onclick="saveCurrentUserData()">💾 Salvar Usuário e Permissões</button>
+                <button type="button" class="btn btn-success btn-3d" onclick="saveCurrentUserData()">💾 Salvar usuário e permissões</button>
             </div>
         </div>
     </div>
@@ -5219,7 +5236,7 @@
                     <select id="editMaintVehicle" required></select>
                 </div>
                 <div class="form-group">
-                    <label for="editMaintType">Tipo de Manutenção *</label>
+                    <label for="editMaintType">Tipo de manutenção *</label>
                     <select id="editMaintType" required>
                         <option value="Preventiva">🛠️ Preventiva</option>
                         <option value="Corretiva">⚠️ Corretiva</option>
@@ -5237,7 +5254,7 @@
                     <input type="number" id="editMaintKm" min="0">
                 </div>
                 <div class="form-group" style="grid-column: span 2;">
-                    <label for="editMaintDesc">Descrição do Serviço / Peças Trocadas *</label>
+                    <label for="editMaintDesc">Descrição do serviço / peças trocadas *</label>
                     <input type="text" id="editMaintDesc" required>
                 </div>
                 <div class="form-group">
@@ -5267,7 +5284,7 @@
                 </button>
                 <div style="display: flex; gap: 8px;">
                     <button type="button" class="btn btn-outline btn-3d" onclick="closeEditMaintenanceModal()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary btn-3d">💾 Salvar Alterações</button>
+                    <button type="submit" class="btn btn-primary btn-3d">💾 Salvar alterações</button>
                 </div>
             </div>
         </form>
@@ -5282,25 +5299,25 @@
         </div>
         <div style="display: flex; flex-direction: column; gap: 10px; padding: 10px 0;">
             <button type="button" class="btn btn-merge btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem;" onclick="closeDatabaseActionsModal(); openMergeModal();">
-                📥 Importar / Conectar Planilha
+                📥 Importar / conectar planilha
             </button>
             <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem;" onclick="closeDatabaseActionsModal(); exportJSON();">
-                📤 Exportar Backup do Banco de Dados (.json)
+                📤 Exportar backup do banco de dados (.json)
             </button>
             <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #8b5cf6; color: #6d28d9; background: #f5f3ff; font-weight: 700;" onclick="closeDatabaseActionsModal(); openUsersManagementModal();">
-                👥 Gerenciar Usuários e Permissões (Ticks Verdes)
+                👥 Gerenciar usuários e permissões (Ticks Verdes)
             </button>
             <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #0284c7; color: #0284c7; background: #f0f9ff; font-weight: 700;" onclick="closeDatabaseActionsModal(); saveCurrentAsFinalBaseline();">
-                📌 Gravar Atualização como Definitiva (Salvar Estado Atual)
+                📌 Gravar atualização como definitiva (salvar estado atual)
             </button>
             <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem;" onclick="closeDatabaseActionsModal(); triggerImport();">
-                📥 Definir padrão (Importar Planilha/Arquivo)
+                📥 Definir padrão (importar planilha/arquivo)
             </button>
             <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #f59e0b; color: #b45309; background: #fffbeb; font-weight: 700;" onclick="closeDatabaseActionsModal(); restoreFactoryDefaults();">
-                🏭 Restaurar Padrão de Fábrica (28 Viaturas Oficiais)
+                🏭 Restaurar padrão de fábrica (28 viaturas oficiais)
             </button>
             <button type="button" class="btn btn-danger-solid btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem;" onclick="closeDatabaseActionsModal(); factoryResetDatabase();">
-                ⚠️ Limpar Banco de Dados (Reset Geral - Requer Senha)
+                ⚠️ Limpar banco de dados (reset geral - requer senha)
             </button>
 
             <!-- Configuração do Google Drive / Gmail (OAuth Client ID) -->
@@ -5351,21 +5368,21 @@
 <div id="tableEditOptionsModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 480px;" onclick="event.stopPropagation()">
         <div class="modal-header">
-            <div class="modal-title"><span>✏️ Opções da Tabela de Viaturas</span></div>
+            <div class="modal-title"><span>✏️ Opções da tabela de viaturas</span></div>
             <button type="button" class="modal-close" onclick="closeTableEditOptionsModal()" title="Fechar">✖</button>
         </div>
         <div style="display: flex; flex-direction: column; gap: 10px; padding: 10px 0;">
             <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #0284c7; color: #0284c7; background-color: #f0f9ff; font-weight: 700;" onclick="closeTableEditOptionsModal(); saveAsOriginalBaseline();">
-                📌 Gravar Atualização como Definitiva (Salvar Estado Atual)
+                📌 Gravar atualização como definitiva (salvar estado atual)
             </button>
             <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #f59e0b; color: #b45309; background-color: #fffbeb; font-weight: 700;" onclick="closeTableEditOptionsModal(); restoreFactoryDefaults();">
-                🏭 Restaurar Padrão de Fábrica (28 Viaturas Oficiais)
+                🏭 Restaurar padrão de fábrica (28 viaturas oficiais)
             </button>
             <button type="button" class="btn btn-danger btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem;" onclick="closeTableEditOptionsModal(); clearAllData();">
-                🔄 Restaurar Última Base Salva
+                🔄 Restaurar última base salva
             </button>
             <button type="button" class="btn btn-excel btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem;" onclick="closeTableEditOptionsModal(); exportExcel();">
-                📊 Exportar Tabela para Excel (.xlsx)
+                📊 Exportar tabela para Excel (.xlsx)
             </button>
         </div>
         <div class="modal-footer">
@@ -5378,15 +5395,15 @@
 <div id="rowActionModal" class="modal-overlay" onclick="if(event.target===this) event.stopPropagation();">
     <div class="modal-card" style="max-width: 450px;" onclick="event.stopPropagation()">
         <div class="modal-header">
-            <div class="modal-title"><span>✏️ Opções da Viatura:</span> <span id="rowActionVehiclePrefix" style="color: var(--primary); font-weight: 800; text-decoration: underline;">--</span></div>
+            <div class="modal-title"><span>✏️ Opções da viatura:</span> <span id="rowActionVehiclePrefix" style="color: var(--primary); font-weight: 800; text-decoration: underline;">--</span></div>
             <button type="button" class="modal-close" onclick="closeRowActionModal()" title="Fechar">✖</button>
         </div>
         <div style="display: flex; flex-direction: column; gap: 10px; padding: 12px 0;">
             <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.95rem; border-color: #3b82f6; color: #1d4ed8; background-color: #eff6ff;" onclick="closeRowActionModal(); openEditModal(selectedRowActionVehicle);">
-                ✏️ Mais (Formulário Completo de Edição)
+                ✏️ Mais (formulário completo de edição)
             </button>
             <button type="button" class="btn btn-danger btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.95rem;" onclick="closeRowActionModal(); deleteRecord(selectedRowActionVehicle);">
-                🗑️ Excluir Viatura da Lista
+                🗑️ Excluir viatura da lista
             </button>
         </div>
         <div class="modal-footer">
@@ -6412,8 +6429,8 @@
         if (currentViewMode === 'BATALHAO') {
             btnBat.classList.add('active');
             btnCia.classList.remove('active');
-            kpiTitle.textContent = "Total da Frota (Batalhão)";
-            cardTitle.textContent = "📋 Relação Geral de Viaturas do Batalhão";
+            kpiTitle.textContent = "Total da frota (Batalhão)";
+            cardTitle.textContent = "📋 Relação geral de viaturas do Batalhão";
             if (filterCiaContainer) filterCiaContainer.style.display = 'inline-flex';
             if (filterPelotaoContainer) filterPelotaoContainer.style.display = 'none';
             if (filterPelotao) filterPelotao.value = 'ALL';
@@ -6680,7 +6697,7 @@
             const currentVal = el.value;
             el.innerHTML = '';
             if (id === 'filterCia' || id === 'filterCiaTable') {
-                el.innerHTML = '<option value="ALL">Todas as Unidades (Geral)</option>';
+                el.innerHTML = '<option value="ALL">Todas as unidades (geral)</option>';
             }
             customCias.forEach(c => {
                 const opt = document.createElement('option');
@@ -6832,7 +6849,7 @@
             customQuickReasons.forEach(r => {
                 html += `<span class="reason-tag" onclick="appendQaReason('${r.key}')">+ ${r.label}</span>\n`;
             });
-            html += `<button type="button" class="btn-add-quick-reason" onclick="addNewQuickReasonPrompt()" title="Criar novo motivo rápido">➕ Novo Motivo</button>`;
+            html += `<button type="button" class="btn-add-quick-reason" onclick="addNewQuickReasonPrompt()" title="Criar novo motivo rápido">➕ Novo motivo</button>`;
             qaContainer.innerHTML = html;
         }
         if (qeContainer) {
@@ -6840,7 +6857,7 @@
             customQuickReasons.forEach(r => {
                 html += `<span class="reason-tag" onclick="appendQeReason('${r.key}')">+ ${r.label}</span>\n`;
             });
-            html += `<button type="button" class="btn-add-quick-reason" onclick="addNewQuickReasonPrompt()" title="Criar novo motivo rápido">➕ Novo Motivo</button>`;
+            html += `<button type="button" class="btn-add-quick-reason" onclick="addNewQuickReasonPrompt()" title="Criar novo motivo rápido">➕ Novo motivo</button>`;
             qeContainer.innerHTML = html;
         }
     }
@@ -7086,7 +7103,7 @@
             const currentVal = el.value;
             el.innerHTML = '';
             if (id === 'filterPelotao' || id === 'filterPelotaoTable') {
-                el.innerHTML = '<option value="ALL">Todos os Pelotões</option>';
+                el.innerHTML = '<option value="ALL">Todos os pelotões</option>';
             }
             customPelotoes.forEach(p => {
                 const opt = document.createElement('option');
@@ -7269,7 +7286,7 @@
                 filterSelect.innerHTML = '';
                 const optAll = document.createElement('option');
                 optAll.value = "ALL";
-                optAll.textContent = "Todas as Viaturas";
+                optAll.textContent = "Todas as viaturas";
                 filterSelect.appendChild(optAll);
 
                 const optGroupStatus = document.createElement('optgroup');
@@ -7341,7 +7358,7 @@
                 modContainer.innerHTML += `
                     <div class="manage-tag-item">
                         <span>🚗 ${m}</span>
-                        <span class="remove-tag" onclick="removeModel('${m}')" title="Excluir Modelo">✖</span>
+                        <span class="remove-tag" onclick="removeModel('${m}')" title="Excluir modelo">✖</span>
                     </div>
                 `;
             });
@@ -7353,7 +7370,7 @@
             pelContainer.innerHTML += `
                 <div class="manage-tag-item">
                     <span>🛡️ ${p}</span>
-                    <span class="remove-tag" onclick="removePelotao('${p}')" title="Excluir Pelotão">✖</span>
+                    <span class="remove-tag" onclick="removePelotao('${p}')" title="Excluir pelotão">✖</span>
                 </div>
             `;
         });
@@ -7364,7 +7381,7 @@
             stContainer.innerHTML += `
                 <div class="manage-tag-item">
                     <span>🚥 ${s}</span>
-                    <span class="remove-tag" onclick="removeStatus('${s}')" title="Excluir Status">✖</span>
+                    <span class="remove-tag" onclick="removeStatus('${s}')" title="Excluir status">✖</span>
                 </div>
             `;
         });
@@ -7376,7 +7393,7 @@
                 locContainer.innerHTML += `
                     <div class="manage-tag-item">
                         <span>📍 ${l}</span>
-                        <span class="remove-tag" onclick="removeLocal('${l}')" title="Excluir Local">✖</span>
+                        <span class="remove-tag" onclick="removeLocal('${l}')" title="Excluir local">✖</span>
                     </div>
                 `;
             });
@@ -8312,7 +8329,7 @@
         let html = `<div class="inline-reason-menu-header">📋 Opções (${vehicleId})</div>`;
         html += `
             <button type="button" class="inline-reason-item item-clear" onclick="executeInlineReasonChoice('${vehicleId}', 'CLEAR')">
-                <span>🧹</span> <span>Limpar Motivo</span>
+                <span>🧹</span> <span>Limpar motivo</span>
             </button>
             <div class="inline-reason-divider"></div>
             <div class="inline-reason-menu-header" style="font-size: 0.72rem; border: none; padding-top: 2px;">Clique para acrescentar:</div>
@@ -8637,15 +8654,15 @@
     
     const AVAILABLE_PERMISSIONS = [
         { key: 'status_destino', label: 'Alterar Status, Pelotão e QTH', desc: 'Atualizar status, pelotão, QTH/destino e motivo da viatura em toda a frota' },
-        { key: 'maintenance', label: 'Gerenciar Manutenções da Frota', desc: 'Registrar, editar e acompanhar serviços e manutenções' },
+        { key: 'maintenance', label: 'Gerenciar Manutenções da frota', desc: 'Registrar, editar e acompanhar serviços e manutenções' },
         { key: 'quick_add', label: 'Acrescentar Viaturas no Painel', desc: 'Cadastrar novas viaturas diretamente no painel rápido' },
         { key: 'edit_full_vtr', label: 'Edição Completa de Viatura', desc: 'Editar dados cadastrais: prefixo, placa, rádio e patrimônio' },
         { key: 'delete_vtr', label: 'Excluir Viaturas da Frota', desc: 'Remover viaturas cadastradas' },
         { key: 'manage_lists', label: 'Gerenciar Parâmetros e Listas', desc: 'Adicionar ou excluir Cias, Pelotões, Modelos, Status, Locais e Motivos' },
-        { key: 'database_import', label: 'Importar / Conectar Planilha', desc: 'Importar arquivos Excel/CSV/JSON ou conectar Google Sheets' },
+        { key: 'database_import', label: 'Importar / conectar planilha', desc: 'Importar arquivos Excel/CSV/JSON ou conectar Google Sheets' },
         { key: 'database_reset', label: 'Comandos Avançados de Banco (Exclusivo Administrador Mestre)', desc: 'Definir base original, restaurar e reset geral de fábrica' },
         { key: 'server_config', label: 'Configurações do Servidor (Exclusivo Administrador Mestre)', desc: 'Configurar endpoints de sincronização e banco de dados' },
-        { key: 'manage_users', label: 'Gerenciar Usuários e Permissões (Exclusivo Administrador Mestre)', desc: 'Criar, editar e excluir operadores e administradores' },
+        { key: 'manage_users', label: 'Gerenciar usuários e permissões (Exclusivo Administrador Mestre)', desc: 'Criar, editar e excluir operadores e administradores' },
         { key: 'edit_title', label: 'Editar Título do Painel (Exclusivo Administrador Mestre)', desc: 'Alterar o nome do sistema no cabeçalho' }
     ];
 
@@ -8953,6 +8970,7 @@
         }
 
         renderDashboard();
+        populateMaintCiaFilter();
         if (!suppressToast) {
             showToast('🏢 Unidade operacional ativa: <strong>' + (unitName === 'Batalhão' ? 'Batalhão (Todas as Unidades)' : unitName) + '</strong>');
         }
@@ -8973,7 +8991,7 @@
 
         if (optBatalhao) {
             optBatalhao.disabled = !isMaster;
-            optBatalhao.textContent = isMaster ? '🏛️ Batalhão Geral (Todas as Unidades)' : '🏛️ Batalhão Geral (Apenas Administrador)';
+            optBatalhao.textContent = isMaster ? '🏛️ Batalhão geral (todas as unidades)' : '🏛️ Batalhão geral (apenas administrador)';
         }
 
         if (notice) {
@@ -9039,7 +9057,7 @@
             if (isMaster) {
                 const optAll = document.createElement('option');
                 optAll.value = 'Batalhão';
-                optAll.textContent = '🏛️ Todas as Unidades do Batalhão (Geral Completo)';
+                optAll.textContent = '🏛️ Todas as unidades do Batalhão (geral completo)';
                 select.appendChild(optAll);
             }
 
@@ -9117,6 +9135,7 @@
 
     function updateAdminBadgeUI() {
         updateAdminVisibility();
+        populateMaintCiaFilter();
         const badge = document.getElementById('adminSessionBadge');
         const badgeUser = document.getElementById('adminSessionBadgeUser');
         const accountBtn = document.getElementById('userAccountBtn');
@@ -9315,7 +9334,7 @@
             }
             if (optBatalhao) {
                 optBatalhao.disabled = false;
-                optBatalhao.textContent = "🏛️ Batalhão Geral (Todas as Unidades)";
+                optBatalhao.textContent = "🏛️ Batalhão geral (todas as unidades)";
             }
         } else if (user) {
             const isBatalhaoUser = (user.unit === 'Batalhão' || user.unit === 'batalhao');
@@ -9327,7 +9346,7 @@
                 }
                 if (optBatalhao) {
                     optBatalhao.disabled = false;
-                    optBatalhao.textContent = "🏛️ Batalhão Geral (Toda a Frota)";
+                    optBatalhao.textContent = "🏛️ Batalhão geral (toda a frota)";
                 }
             } else {
                 const lockedUnit = user.unit || '1ª Cia';
@@ -9338,7 +9357,7 @@
                 }
                 if (optBatalhao) {
                     optBatalhao.disabled = true;
-                    optBatalhao.textContent = "🏛️ Batalhão Geral (Apenas Administradores)";
+                    optBatalhao.textContent = "🏛️ Batalhão geral (apenas administradores)";
                 }
             }
         }
@@ -10073,7 +10092,7 @@
             edit_title: false
         };
         renderPermissionsGrid(editingUserPermissions, false, false);
-        showToast('👤 <strong>Perfil Operador Comum aplicado.</strong>');
+        showToast('👤 <strong>Perfil operador comum aplicado.</strong>');
     }
 
     function renderPermissionsGrid(perms, isMaster = false, isVisitante = false) {
@@ -10230,7 +10249,7 @@
 
         // Se for o setor de Comandos e Ações do Banco de Dados e estiver fechado, exigir senha de ADM para abrir
         if (contentId === 'footerActionsContent' && el.classList.contains('collapsed')) {
-            const ok = await requestAdminPassword("expandir o setor de Comandos & Ações do Banco de Dados");
+            const ok = await requestAdminPassword("expandir o setor de Comandos e ações do banco de dados");
             if (!ok) return;
         }
 
@@ -10380,7 +10399,7 @@
             if (labelText) {
                 labelBtn.textContent = labelText;
             } else if (val === 'ALL') {
-                labelBtn.textContent = 'Todos os Meses';
+                labelBtn.textContent = 'Todos os meses';
             } else if (/^\d{4}$/.test(val)) {
                 labelBtn.textContent = `Ano ${val} (Completo)`;
             } else if (/^\d{4}-\d{2}$/.test(val)) {
@@ -10408,7 +10427,7 @@
         if (customLabel) {
             text = customLabel;
         } else if (val === 'ALL') {
-            text = 'Todos os Meses';
+            text = 'Todos os meses';
         } else if (/^\d{4}$/.test(val)) {
             text = `Ano ${val} (Completo)`;
         } else if (/^\d{4}-\d{2}$/.test(val)) {
@@ -10490,8 +10509,8 @@
         const clickFn = (target === 'maint') ? 'selectMaintMonthFilter' : 'selectMonthFilter';
 
         let html = `
-            <div class="month-menu-item ${currentVal === 'ALL' ? 'active' : ''}" onclick="${clickFn}('ALL', 'Todos os Meses')">
-                <span>🌐 Todos os Meses (Geral)</span>
+            <div class="month-menu-item ${currentVal === 'ALL' ? 'active' : ''}" onclick="${clickFn}('ALL', 'Todos os meses')">
+                <span>🌐 Todos os meses (Geral)</span>
                 ${currentVal === 'ALL' ? '<span>✓</span>' : ''}
             </div>
             <div class="month-menu-divider"></div>
@@ -10562,7 +10581,120 @@
         updateMonthButtonLabel(currentVal);
     }
 
-    function populateVehicleSelects() {
+        function populateMaintCiaFilter() {
+        const filterEl = document.getElementById('maintCiaFilter');
+        if (!filterEl) return;
+
+        const isMaster = currentAuthUser && (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL');
+        const isBatalhaoUser = isMaster || (currentAuthUser && (currentAuthUser.unit === 'Batalhão' || currentAuthUser.unit === 'batalhao'));
+        const userUnit = (currentAuthUser && currentAuthUser.unit) || currentUserActiveUnit || '1ª Cia';
+
+        const prevVal = filterEl.value;
+        filterEl.innerHTML = '';
+
+        if (isBatalhaoUser) {
+            filterEl.disabled = false;
+            filterEl.title = 'Selecione a unidade para filtrar as viaturas da manutenção';
+
+            const optAll = document.createElement('option');
+            optAll.value = 'ALL';
+            optAll.textContent = '🏛️ Todas as unidades (Batalhão)';
+            filterEl.appendChild(optAll);
+
+            const cias = ['1ª Cia', '2ª Cia', '3ª Cia', '4ª Cia', 'PTT'];
+            if (typeof customCias !== 'undefined' && Array.isArray(customCias)) {
+                customCias.forEach(c => {
+                    if (c !== 'Batalhão' && !cias.includes(c)) cias.push(c);
+                });
+            }
+
+            cias.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = '🏢 ' + c;
+                filterEl.appendChild(opt);
+            });
+
+            if (prevVal && (prevVal === 'ALL' || cias.includes(prevVal))) {
+                filterEl.value = prevVal;
+            } else if (currentUserActiveUnit && currentUserActiveUnit !== 'Batalhão' && cias.includes(currentUserActiveUnit)) {
+                filterEl.value = currentUserActiveUnit;
+            } else {
+                filterEl.value = 'ALL';
+            }
+        } else {
+            // Operador de Companhia fixada: apenas sua unidade disponível
+            filterEl.disabled = true;
+            filterEl.title = `Unidade fixada: ${userUnit} (apenas o Administrador Geral pode alterar)`;
+
+            const opt = document.createElement('option');
+            opt.value = userUnit;
+            opt.textContent = `🏢 ${userUnit} (Sua unidade)`;
+            filterEl.appendChild(opt);
+            filterEl.value = userUnit;
+        }
+
+        populateMaintVehicleSelect();
+    }
+
+    function onMaintCiaFilterChange() {
+        populateMaintVehicleSelect();
+    }
+
+    function populateMaintVehicleSelect() {
+        const maintVehicle = document.getElementById('maintVehicle');
+        if (!maintVehicle) return;
+
+        const isMaster = currentAuthUser && (currentAuthUser.isMaster || currentAuthUser.username === 'ADMINISTRADOR GERAL');
+        const isBatalhaoUser = isMaster || (currentAuthUser && (currentAuthUser.unit === 'Batalhão' || currentAuthUser.unit === 'batalhao'));
+        const userUnit = (currentAuthUser && currentAuthUser.unit) || currentUserActiveUnit || '1ª Cia';
+
+        let targetCia = 'ALL';
+        const filterEl = document.getElementById('maintCiaFilter');
+        if (isBatalhaoUser) {
+            targetCia = filterEl ? filterEl.value : 'ALL';
+        } else {
+            targetCia = userUnit;
+        }
+
+        let filteredRecords = records || [];
+        if (targetCia !== 'ALL') {
+            const tc = targetCia.toLowerCase().trim();
+            filteredRecords = filteredRecords.filter(r => {
+                const rc = (r.cia || '1ª Cia').toLowerCase().trim();
+                const isPttEq = (tc.includes('ptt') || tc.includes('ctt')) && (rc.includes('ptt') || rc.includes('ctt'));
+                return rc === tc || isPttEq;
+            });
+        }
+
+        const vSet = new Set(filteredRecords.map(r => r.vehicle));
+        const sortedVtrs = Array.from(vSet).sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+
+        const curVal = maintVehicle.value;
+        maintVehicle.innerHTML = '';
+
+        if (sortedVtrs.length === 0) {
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = (targetCia === 'ALL') ? 'Nenhuma viatura cadastrada' : `Nenhuma viatura na ${targetCia}`;
+            maintVehicle.appendChild(opt);
+        } else {
+            sortedVtrs.forEach(v => {
+                const r = records.find(rec => rec.vehicle === v);
+                const opt = document.createElement('option');
+                opt.value = v;
+                opt.textContent = (targetCia === 'ALL' && r && r.cia) ? `🚓 ${v} (${r.cia})` : `🚓 ${v}`;
+                maintVehicle.appendChild(opt);
+            });
+            if (curVal && sortedVtrs.includes(curVal)) {
+                maintVehicle.value = curVal;
+            } else {
+                maintVehicle.value = sortedVtrs[0];
+            }
+        }
+    }
+
+function populateVehicleSelects() {
         const vehicleSelect = document.getElementById('vehicleSelect');
         const qeVehicle = document.getElementById('qeVehicle');
         const currentSelection = vehicleSelect ? vehicleSelect.value : null;
@@ -10615,11 +10747,11 @@
             }
         }
 
-        // Popula os seletores do Setor de Manutenções da Frota
+        // Popula os seletores do Setor de Manutenções da frota
         const filterMaintVehicle = document.getElementById('filterMaintVehicle');
         if (filterMaintVehicle) {
             const curVal = filterMaintVehicle.value;
-            filterMaintVehicle.innerHTML = '<option value="ALL">Todas as Viaturas</option>';
+            filterMaintVehicle.innerHTML = '<option value="ALL">Todas as viaturas</option>';
             sortedVehicles.forEach(v => {
                 const opt = document.createElement('option');
                 opt.value = v;
@@ -10631,22 +10763,8 @@
             }
         }
 
-        const maintVehicle = document.getElementById('maintVehicle');
-        if (maintVehicle) {
-            const curVal = maintVehicle.value;
-            maintVehicle.innerHTML = '';
-            sortedVehicles.forEach(v => {
-                const opt = document.createElement('option');
-                opt.value = v;
-                opt.textContent = '🚓 ' + v;
-                maintVehicle.appendChild(opt);
-            });
-            if (curVal && sortedVehicles.includes(curVal)) {
-                maintVehicle.value = curVal;
-            } else if (sortedVehicles.length > 0) {
-                maintVehicle.value = sortedVehicles[0];
-            }
-        }
+        // Atualiza filtro de unidade e viaturas para lançamento de manutenção direta
+        populateMaintCiaFilter();
 
         const editMaintVehicle = document.getElementById('editMaintVehicle');
         if (editMaintVehicle) {
@@ -10777,7 +10895,7 @@
             if (!m) return false;
             if (filterVehicle !== 'ALL' && String(m.vehicle || '').trim() !== filterVehicle) return false;
 
-            // Filtro por Tipo de Manutenção (via botão KPI ou select)
+            // Filtro por Tipo de manutenção (via botão KPI ou select)
             if (activeMaintQuickFilter === 'OUTRAS') {
                 if (m.type !== 'Detectiva' && m.type !== 'Prescritiva') return false;
             } else if (activeMaintQuickFilter !== 'ALL') {
@@ -11088,7 +11206,7 @@
                 const formattedMaintDate = m.date ? (m.date.includes('-') ? m.date.split('-').reverse().join('/') : m.date) : '-';
                 return {
                     "Viatura / Prefixo": m.vehicle || '-',
-                    "Tipo de Manutenção": m.type || '-',
+                    "Tipo de manutenção": m.type || '-',
                     "Data da Manutenção": formattedMaintDate,
                     "Quilometragem (KM)": m.km !== undefined && m.km !== '' ? Number(m.km) : '-',
                     "Descrição do Serviço / Peças Trocadas": m.description || '-',
@@ -11104,7 +11222,7 @@
                 { wch: 45 }, { wch: 25 }, { wch: 16 }, { wch: 16 }, { wch: 30 }
             ];
             const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Manutenções da Frota");
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Manutenções da frota");
             const filename = `Manutencoes_Frota_${new Date().toISOString().slice(0, 10)}.xlsx`;
             XLSX.writeFile(workbook, filename);
             showToast('📊 <strong>Planilha só de Manutenções exportada com sucesso!</strong>');
@@ -11161,17 +11279,17 @@
                 "Companhia / Setor": r.cia || 'Batalhão',
                 "Modelo da Viatura": r.model || '-',
                 "Pelotão": r.pelotao || '-',
-                "Situação Operacional (Status)": r.status || 'OPERANDO',
-                "QTH da VTR (Destino)": r.destino || '-',
-                "Motivo da Baixa / Observações": r.obs || '-',
+                "Situação operacional (status)": r.status || 'OPERANDO',
+                "QTH da viatura (destino)": r.destino || '-',
+                "Motivo da baixa / observações": r.obs || '-',
                 "Data do Registro": formattedDate,
                 "Placa da Viatura": r.placa || '-',
-                "Patrimônio da Viatura": r.patrimonio_vtr || '-',
-                "Modelo do Rádio": r.radio_modelo || '-',
-                "Patrimônio do Rádio": r.radio_patrimonio || '-',
-                "Data da Atualização do Rádio": radioDateFormatted,
+                "Patrimônio da viatura": r.patrimonio_vtr || '-',
+                "Modelo do rádio": r.radio_modelo || '-',
+                "Patrimônio do rádio": r.radio_patrimonio || '-',
+                "Data de atualização do rádio": radioDateFormatted,
                 "Cartão de Abastecimento": r.cartao_abastecimento || '-',
-                "TAG de Abastecimento": r.tag_abastecimento || '-',
+                "TAG de abastecimento": r.tag_abastecimento || '-',
                 "Referência Forms": r.data_forms || '-'
             };
         });
@@ -11180,7 +11298,7 @@
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, sheetTitle);
 
-        // Inclui a aba de Manutenções da Frota quando selecionado
+        // Inclui a aba de Manutenções da frota quando selecionado
         if (includeMaintenance && maintenances && maintenances.length > 0) {
             let targetMaints = maintenances;
             if (selectedUnit && selectedUnit !== 'Batalhão' && selectedUnit !== 'ALL') {
@@ -11191,7 +11309,7 @@
                     const formattedMaintDate = m.date ? (m.date.includes('-') ? m.date.split('-').reverse().join('/') : m.date) : '-';
                     return {
                         "Viatura / Prefixo": m.vehicle || '-',
-                        "Tipo de Manutenção": m.type || '-',
+                        "Tipo de manutenção": m.type || '-',
                         "Data da Manutenção": formattedMaintDate,
                         "Quilometragem (KM)": m.km !== undefined && m.km !== '' ? Number(m.km) : '-',
                         "Descrição do Serviço / Peças Trocadas": m.description || '-',
@@ -11206,7 +11324,7 @@
                     { wch: 18 }, { wch: 18 }, { wch: 18 }, { wch: 18 },
                     { wch: 45 }, { wch: 25 }, { wch: 16 }, { wch: 16 }, { wch: 30 }
                 ];
-                XLSX.utils.book_append_sheet(workbook, maintWorksheet, "Manutenções da Frota");
+                XLSX.utils.book_append_sheet(workbook, maintWorksheet, "Manutenções da frota");
             }
         }
 
@@ -11375,7 +11493,7 @@
             document.getElementById('lastCiaVal').textContent = '--';
             document.getElementById('lastModeloVal').textContent = '--';
             document.getElementById('lastPelotaoVal').textContent = '--';
-            document.getElementById('lastStatusVal').innerHTML = '<span class="badge badge-info">Sem Dados</span>';
+            document.getElementById('lastStatusVal').innerHTML = '<span class="badge badge-info">Sem dados</span>';
             document.getElementById('lastDestinoVal').textContent = '--';
             document.getElementById('vehicleObs').value = '';
             document.getElementById('vehicleDataForms').value = '';
@@ -11846,7 +11964,7 @@
     }
 
     function triggerImport() {
-        if (confirm('Atenção: A substituição irá SOBRESCREVER o banco de dados atual pelo arquivo selecionado (.xlsx, .csv, .json).\n\nPara apenas mesclar mantendo as viaturas atuais, use a opção "📥 Importar / Conectar Planilha".\n\nDeseja continuar?')) {
+        if (confirm('Atenção: A substituição irá SOBRESCREVER o banco de dados atual pelo arquivo selecionado (.xlsx, .csv, .json).\n\nPara apenas mesclar mantendo as viaturas atuais, use a opção "📥 Importar / conectar planilha".\n\nDeseja continuar?')) {
             document.getElementById('importInput').click();
         }
     }
@@ -12229,10 +12347,12 @@
             await executeImportFromOnlineUrl();
         } else if (currentImportTab === 'drive') {
             const input = document.getElementById('driveDirectFileIdInput');
-            if (input && input.value.trim()) {
+            if (selectedDriveFile && selectedDriveFile.id) {
+                downloadAndImportDriveFile(selectedDriveFile.id, selectedDriveFile.name, selectedDriveFile.mimeType);
+            } else if (input && input.value.trim()) {
                 importFromDriveDirectInput();
             } else {
-                alert('Selecione um arquivo na lista do Google Drive ou cole o Link/ID no campo correspondente.');
+                alert('Por favor, selecione um arquivo na lista do Google Drive acima ou cole o Link/ID no campo correspondente.');
             }
         } else if (currentImportTab === 'file') {
             const fileInput = document.getElementById('mergeFileInput');
@@ -12766,7 +12886,7 @@
 
         const statusBannerBox = document.getElementById('statusBannerBox');
         if (filterVal !== 'ALL' || filterMonth !== 'ALL' || filterCia !== 'ALL' || (currentViewMode === 'COMPANHIA' && filterPelotao !== 'ALL')) {
-            document.getElementById('bannerTitle').textContent = "📌 Filtro Ativo";
+            document.getElementById('bannerTitle').textContent = "📌 Filtro ativo";
             let filterDesc = `Exibindo <strong>${baseRecords.length}</strong> viaturas filtradas.`;
             if (filterCia !== 'ALL') filterDesc += ` Unidade/Setor: <strong>${filterCia}</strong> |`;
             if (currentViewMode === 'COMPANHIA' && filterPelotao !== 'ALL') filterDesc += ` Pelotão: <strong>${filterPelotao}</strong> |`;
@@ -12790,7 +12910,7 @@
         tbody.innerHTML = '';
 
         if (filteredRecords.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 30px; font-size: 0.95rem;">📭 Nenhuma viatura cadastrada com os filtros atuais.<br><span style="font-size: 0.82rem;">Utilize o painel <strong>➕ Acrescentar Nova Viatura</strong> ou o botão <strong>📥 Importar / Conectar Planilha</strong> para alimentar.</span></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 30px; font-size: 0.95rem;">📭 Nenhuma viatura cadastrada com os filtros atuais.<br><span style="font-size: 0.82rem;">Utilize o painel <strong>➕ Acrescentar nova viatura</strong> ou o botão <strong>📥 Importar / conectar planilha</strong> para alimentar.</span></td></tr>`;
         } else {
             const fragment = document.createDocumentFragment();
             filteredRecords.forEach(r => {
@@ -13545,12 +13665,12 @@
             if (btnEl) btnEl.title = 'Mudar para Tema Claro Padrão';
         } else {
             if (iconEl) iconEl.textContent = '🌙';
-            if (textEl) textEl.textContent = 'Modo Noturno';
-            if (btnEl) btnEl.title = 'Mudar para Modo Noturno';
+            if (textEl) textEl.textContent = 'Modo noturno';
+            if (btnEl) btnEl.title = 'Mudar para Modo noturno';
         }
 
         if (showFeedback) {
-            showToast(theme === 'dark' ? '🌙 <strong>Modo Noturno</strong> ativado!' : '☀️ <strong>Modo Claro</strong> ativado!');
+            showToast(theme === 'dark' ? '🌙 <strong>Modo noturno</strong> ativado!' : '☀️ <strong>Modo Claro</strong> ativado!');
         }
 
         if (typeof updateKPIsAndChartsOnly === 'function' && typeof records !== 'undefined' && records) {
@@ -13581,23 +13701,74 @@
         }
     }
 
+    let selectedDriveFile = null;
+
+    function onDriveDirectInputChanged() {
+        selectedDriveFile = null;
+        document.querySelectorAll('.drive-file-item').forEach(el => {
+            el.style.borderColor = '#fecaca';
+            el.style.backgroundColor = '#ffffff';
+            const radio = el.querySelector('input[type="radio"]');
+            if (radio) radio.checked = false;
+        });
+    }
+
+    function selectDriveFileFromList(fileId, fileName, mimeType, element) {
+        selectedDriveFile = { id: fileId, name: fileName, mimeType: mimeType };
+        const input = document.getElementById('driveDirectFileIdInput');
+        if (input) input.value = fileId;
+
+        document.querySelectorAll('.drive-file-item').forEach(el => {
+            el.style.borderColor = '#fecaca';
+            el.style.backgroundColor = '#ffffff';
+            const radio = el.querySelector('input[type="radio"]');
+            if (radio) radio.checked = false;
+        });
+
+        if (element) {
+            element.style.borderColor = '#15803d';
+            element.style.backgroundColor = '#f0fdf4';
+            const radio = element.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+        }
+
+        showToast('📄 Arquivo selecionado: <strong>' + fileName + '</strong>. Clique em "Processar e carregar dados" para importar.');
+    }
+
     async function loadGoogleDriveFilesList() {
         const listContainer = document.getElementById('driveFilesListContainer');
         const notice = document.getElementById('driveAuthNotice');
+        const statusBanner = document.getElementById('driveAccountStatusBanner');
+        const statusText = document.getElementById('driveAccountStatusText');
         if (!listContainer) return;
 
+        const email = googleUserEmail || localStorage.getItem('batalhao_vtr_google_email') || (currentAuthUser && currentAuthUser.googleEmail) || '';
+
         if (!googleAccessToken) {
-            if (notice) notice.style.display = 'block';
+            if (statusBanner) statusBanner.style.display = 'none';
+            if (notice) {
+                notice.style.display = 'block';
+                if (email) {
+                    notice.querySelector('p').innerHTML = `Sua conta Google <strong>${email}</strong> está identificada.<br>Clique no botão abaixo para autorizar o acesso e carregar seus arquivos do Google Drive:`;
+                }
+            }
             listContainer.innerHTML = '';
             return;
         }
 
         if (notice) notice.style.display = 'none';
-        listContainer.innerHTML = '<div style="text-align:center; padding:14px; color:#64748b; font-size:0.84rem;">⏳ Buscando planilhas e backups no seu Google Drive...</div>';
+        if (statusBanner) {
+            statusBanner.style.display = 'flex';
+            if (statusText) {
+                statusText.innerHTML = `🟢 Conectado ao Google Drive: <strong>${email || 'Conta Google'}</strong>`;
+            }
+        }
+
+        listContainer.innerHTML = '<div style="text-align:center; padding:18px; color:#64748b; font-size:0.86rem;"><span class="spinner"></span> ⏳ Buscando planilhas e backups no seu Google Drive...</div>';
 
         try {
-            const q = "trashed = false and (name contains '.json' or name contains '.xlsx' or name contains '.xls' or name contains '.csv' or mimeType = 'application/vnd.google-apps.spreadsheet' or mimeType = 'application/json')";
-            const url = 'https://www.googleapis.com/drive/v3/files?pageSize=30&orderBy=modifiedTime desc&fields=files(id,name,mimeType,size,modifiedTime)&q=' + encodeURIComponent(q);
+            const q = "trashed = false and (name contains '.json' or name contains '.xlsx' or name contains '.xls' or name contains '.csv' or mimeType = 'application/vnd.google-apps.spreadsheet' or mimeType = 'application/json' or mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or mimeType = 'application/vnd.ms-excel' or mimeType = 'text/csv')";
+            const url = 'https://www.googleapis.com/drive/v3/files?pageSize=40&orderBy=modifiedTime desc&fields=files(id,name,mimeType,size,modifiedTime)&q=' + encodeURIComponent(q);
 
             const res = await fetch(url, {
                 headers: { 'Authorization': 'Bearer ' + googleAccessToken }
@@ -13607,6 +13778,7 @@
                 if (res.status === 401) {
                     googleAccessToken = null;
                     if (notice) notice.style.display = 'block';
+                    if (statusBanner) statusBanner.style.display = 'none';
                     listContainer.innerHTML = '';
                     return;
                 }
@@ -13614,30 +13786,44 @@
             }
 
             const data = await res.json();
-            const files = data.files || [];
+            let files = data.files || [];
+
+            // Fallback: se não encontrou com a busca restrita, busca arquivos gerais recentes que não sejam pastas
+            if (files.length === 0) {
+                const fallbackUrl = 'https://www.googleapis.com/drive/v3/files?pageSize=40&orderBy=modifiedTime desc&fields=files(id,name,mimeType,size,modifiedTime)&q=' + encodeURIComponent("trashed = false and mimeType != 'application/vnd.google-apps.folder'");
+                const resFallback = await fetch(fallbackUrl, {
+                    headers: { 'Authorization': 'Bearer ' + googleAccessToken }
+                });
+                if (resFallback.ok) {
+                    const fbData = await resFallback.json();
+                    files = fbData.files || [];
+                }
+            }
 
             if (files.length === 0) {
-                listContainer.innerHTML = '<div style="text-align:center; padding:14px; color:#64748b; font-size:0.84rem;">Nenhum arquivo recente do Excel ou JSON encontrado no Drive.<br><span style="font-size:0.75rem;">Você também pode colar o link do arquivo abaixo.</span></div>';
+                listContainer.innerHTML = '<div style="text-align:center; padding:16px; color:#64748b; font-size:0.84rem;">📭 Nenhum arquivo recente encontrado no seu Google Drive.<br><span style="font-size:0.75rem;">Você também pode colar o link do arquivo no campo abaixo.</span></div>';
                 return;
             }
 
             let listHtml = '';
-            files.forEach(f => {
+            files.forEach((f, idx) => {
                 const isJson = f.name.toLowerCase().endsWith('.json') || f.mimeType === 'application/json';
                 const icon = isJson ? '📄' : '📊';
                 const modified = f.modifiedTime ? new Date(f.modifiedTime).toLocaleDateString('pt-BR') : '-';
                 const safeName = f.name.replace(/'/g, "\'");
+                const isSelected = selectedDriveFile && selectedDriveFile.id === f.id;
 
                 listHtml += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:7px 10px; border-radius:6px; border:1px solid #fecaca; gap:8px;">
-                        <div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">
-                            <span style="font-size:1.1rem;">${icon}</span>
+                    <div class="drive-file-item" style="display:flex; justify-content:space-between; align-items:center; background:${isSelected ? '#f0fdf4' : '#ffffff'}; padding:8px 12px; border-radius:6px; border:1px solid ${isSelected ? '#15803d' : '#fecaca'}; gap:10px; cursor:pointer; transition:all 0.15s;" onclick="selectDriveFileFromList('${f.id}', '${safeName}', '${f.mimeType}', this)">
+                        <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
+                            <input type="radio" name="driveFileSelectRadio" ${isSelected ? 'checked' : ''} style="cursor:pointer; width:16px; height:16px; accent-color:var(--primary);" onclick="event.stopPropagation(); selectDriveFileFromList('${f.id}', '${safeName}', '${f.mimeType}', this.closest('.drive-file-item'))">
+                            <span style="font-size:1.25rem;">${icon}</span>
                             <div style="display:flex; flex-direction:column; min-width:0;">
-                                <span style="font-size:0.84rem; font-weight:700; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${f.name}">${f.name}</span>
-                                <span style="font-size:0.70rem; color:#64748b;">Modificado em: ${modified}</span>
+                                <span style="font-size:0.86rem; font-weight:700; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${f.name}">${f.name}</span>
+                                <span style="font-size:0.72rem; color:#64748b;">Modificado em: ${modified}</span>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-merge btn-3d btn-sm" style="padding:4px 10px; font-size:0.76rem;" onclick="downloadAndImportDriveFile('${f.id}', '${safeName}', '${f.mimeType}')">
+                        <button type="button" class="btn btn-merge btn-3d btn-sm" style="padding:4px 10px; font-size:0.76rem;" onclick="event.stopPropagation(); downloadAndImportDriveFile('${f.id}', '${safeName}', '${f.mimeType}')" title="Importar este arquivo imediatamente">
                             📥 Importar
                         </button>
                     </div>
@@ -13646,7 +13832,7 @@
 
             listContainer.innerHTML = listHtml;
         } catch (err) {
-            listContainer.innerHTML = '<div style="color:#ef4444; padding:10px; font-size:0.82rem; text-align:center;">Erro ao listar arquivos do Drive: ' + err.message + '<br><button type="button" class="btn btn-outline btn-sm" style="margin-top:6px;" onclick="loadGoogleDriveFilesList()">Tentar novamente</button></div>';
+            listContainer.innerHTML = '<div style="color:#ef4444; padding:12px; font-size:0.84rem; text-align:center;">Erro ao listar arquivos do Google Drive: ' + err.message + '<br><button type="button" class="btn btn-outline btn-sm" style="margin-top:6px;" onclick="loadGoogleDriveFilesList()">Tentar novamente</button></div>';
         }
     }
 
@@ -14084,7 +14270,7 @@
             el.style.display = isMaster ? 'inline-flex' : 'none';
         });
 
-        // 2. Painel de Acrescentar Nova Viatura (#quickAddPanel)
+        // 2. Painel de Acrescentar nova viatura (#quickAddPanel)
         const quickAdd = document.getElementById('quickAddPanel');
         if (quickAdd) {
             quickAdd.style.display = canQuickAdd ? 'flex' : 'none';
@@ -14102,7 +14288,7 @@
             el.style.display = canManageLists ? 'inline-flex' : 'none';
         });
 
-        // 5. Card de Comandos & Ações do Banco de Dados no rodapé
+        // 5. Card de Comandos e ações do banco de dados no rodapé
         const footerCard = document.getElementById('footerActionsContent') ? document.getElementById('footerActionsContent').closest('.card') : null;
         if (footerCard) {
             footerCard.style.display = isVisitante ? 'none' : 'block';
@@ -14159,7 +14345,7 @@
     <div class="modal-card" style="max-width: 480px;" onclick="event.stopPropagation()">
         <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 10px;">
             <div class="modal-title" style="font-size: 1.1rem; font-weight: 800; color: var(--primary);">
-                <span>✏️ Editar Título e Imagem da "Pizza"</span>
+                <span>✏️ Editar título e imagem da "pizza"</span>
             </div>
             <button type="button" class="btn-close" onclick="closeEditTitleAndImageModal()" title="Fechar">✖</button>
         </div>
@@ -14187,15 +14373,15 @@
                 <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
                     <div id="pizzaImagePreviewBox" style="width: 85px; height: 85px; border-radius: 10px; border: 2px dashed var(--border); display: flex; align-items: center; justify-content: center; background: var(--bg); overflow: hidden; position: relative;">
                         <img id="pizzaImagePreviewImg" src="" alt="Prévia" style="max-width: 100%; max-height: 100%; object-fit: contain; display: none;" onerror="this.style.display='none';">
-                        <span id="pizzaImagePreviewPlaceholder" style="font-size: 0.72rem; color: var(--text-muted); text-align: center; padding: 4px;">Sem Imagem</span>
+                        <span id="pizzaImagePreviewPlaceholder" style="font-size: 0.72rem; color: var(--text-muted); text-align: center; padding: 4px;">Sem imagem</span>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 160px;">
                         <input type="file" id="inputPizzaCenterImage" accept="image/*" style="display: none;" onchange="handlePizzaCenterImageSelect(event)">
                         <button type="button" class="btn btn-primary btn-3d btn-sm" onclick="document.getElementById('inputPizzaCenterImage').click()" style="justify-content: center; font-weight: 700;">
-                            📁 Carregar Nova Imagem
+                            📁 Carregar nova imagem
                         </button>
                         <button type="button" class="btn btn-outline btn-3d btn-sm" onclick="removePizzaCenterImage()" style="justify-content: center; color: #ef4444; border-color: #ef4444; font-weight: 700;">
-                            🗑️ Remover Imagem
+                            🗑️ Remover imagem
                         </button>
                     </div>
                 </div>
@@ -14203,7 +14389,7 @@
 
             <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border); padding-top: 14px; margin-top: 6px;">
                 <button type="button" class="btn btn-outline btn-3d" onclick="closeEditTitleAndImageModal()">Cancelar</button>
-                <button type="submit" class="btn btn-primary btn-3d">💾 Salvar Alterações</button>
+                <button type="submit" class="btn btn-primary btn-3d">💾 Salvar alterações</button>
             </div>
         </form>
     </div>
