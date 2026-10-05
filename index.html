@@ -4979,8 +4979,14 @@
             <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #8b5cf6; color: #6d28d9; background: #f5f3ff; font-weight: 700;" onclick="closeDatabaseActionsModal(); openUsersManagementModal();">
                 👥 Gerenciar Usuários e Permissões (Ticks Verdes)
             </button>
+            <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #0284c7; color: #0284c7; background: #f0f9ff; font-weight: 700;" onclick="closeDatabaseActionsModal(); saveCurrentAsFinalBaseline();">
+                📌 Gravar Atualização como Definitiva (Salvar Estado Atual)
+            </button>
             <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem;" onclick="closeDatabaseActionsModal(); triggerImport();">
-                📌 Definir padrão
+                📥 Definir padrão (Importar Planilha/Arquivo)
+            </button>
+            <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #f59e0b; color: #b45309; background: #fffbeb; font-weight: 700;" onclick="closeDatabaseActionsModal(); restoreFactoryDefaults();">
+                🏭 Restaurar Padrão de Fábrica (28 Viaturas Oficiais)
             </button>
             <button type="button" class="btn btn-danger-solid btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem;" onclick="closeDatabaseActionsModal(); factoryResetDatabase();">
                 ⚠️ Limpar Banco de Dados (Reset Geral - Requer Senha)
@@ -5020,11 +5026,14 @@
             <button type="button" class="modal-close" onclick="closeTableEditOptionsModal()" title="Fechar">✖</button>
         </div>
         <div style="display: flex; flex-direction: column; gap: 10px; padding: 10px 0;">
-            <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #3b82f6; color: #1d4ed8; background-color: #eff6ff;" onclick="closeTableEditOptionsModal(); saveAsOriginalBaseline();">
-                📌 Aplicar como Original (Salvar Estado Atual)
+            <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #0284c7; color: #0284c7; background-color: #f0f9ff; font-weight: 700;" onclick="closeTableEditOptionsModal(); saveAsOriginalBaseline();">
+                📌 Gravar Atualização como Definitiva (Salvar Estado Atual)
+            </button>
+            <button type="button" class="btn btn-outline btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem; border-color: #f59e0b; color: #b45309; background-color: #fffbeb; font-weight: 700;" onclick="closeTableEditOptionsModal(); restoreFactoryDefaults();">
+                🏭 Restaurar Padrão de Fábrica (28 Viaturas Oficiais)
             </button>
             <button type="button" class="btn btn-danger btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem;" onclick="closeTableEditOptionsModal(); clearAllData();">
-                🔄 Restaurar Originais (Voltar ao Padrão)
+                🔄 Restaurar Última Base Salva
             </button>
             <button type="button" class="btn btn-excel btn-3d" style="width: 100%; justify-content: flex-start; padding: 12px 16px; font-size: 0.92rem;" onclick="closeTableEditOptionsModal(); exportExcel();">
                 📊 Exportar Tabela para Excel (.xlsx)
@@ -5820,6 +5829,7 @@
             customStatuses: customStatuses || [],
             customLocais: customLocais || [],
             customQuickReasons: customQuickReasons || [],
+            maintenances: maintenances || [],
             appTitle: appTitle || '🚓 CONTROLE DE VIATURAS - FROTA 1ª CIA DO 1º BPTRAN',
             lastStatusUpdate: localStorage.getItem('batalhao_vtr_last_status_update') || '',
             updatedAt: new Date().toISOString()
@@ -5845,6 +5855,11 @@
             if (data && Array.isArray(data.records)) {
                 records = data.records;
                 localStorage.setItem('batalhao_vtr_records', JSON.stringify(records));
+                if (Array.isArray(data.maintenances)) {
+                    maintenances = data.maintenances;
+                    localStorage.setItem('batalhao_vtr_maintenances', JSON.stringify(maintenances));
+                    renderMaintenanceTable();
+                }
                 if (Array.isArray(data.customCias)) { customCias = data.customCias; localStorage.setItem('batalhao_vtr_custom_cias', JSON.stringify(customCias)); }
                 if (Array.isArray(data.customModels)) { customModels = data.customModels; localStorage.setItem('batalhao_vtr_custom_models', JSON.stringify(customModels)); }
                 if (Array.isArray(data.customPelotoes)) { customPelotoes = data.customPelotoes; localStorage.setItem('batalhao_vtr_custom_pelotoes', JSON.stringify(customPelotoes)); }
@@ -7048,35 +7063,539 @@
 
     // Embed all default viaturas so on first load on mobile it immediately renders 28 vehicles
     const defaultDataset = [
-        {"id": "T-01100", "vehicle": "T-01100", "cia": "1ª Cia", "model": "TRAIL BLAZER", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01103", "vehicle": "T-01103", "cia": "1ª Cia", "model": "DUSTER", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01104", "vehicle": "T-01104", "cia": "1ª Cia", "model": "DUSTER", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01105", "vehicle": "T-01105", "cia": "1ª Cia", "model": "DUSTER", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01106", "vehicle": "T-01106", "cia": "1ª Cia", "model": "DUSTER", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01107", "vehicle": "T-01107", "cia": "1ª Cia", "model": "DUSTER", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01109", "vehicle": "T-01109", "cia": "1ª Cia", "model": "SPIN", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01110", "vehicle": "T-01110", "cia": "1ª Cia", "model": "SPIN", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01112", "vehicle": "T-01112", "cia": "1ª Cia", "model": "SPIN", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01114", "vehicle": "T-01114", "cia": "1ª Cia", "model": "SPIN", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01115", "vehicle": "T-01115", "cia": "1ª Cia", "model": "SPIN", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01116", "vehicle": "T-01116", "cia": "1ª Cia", "model": "SPIN", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01118", "vehicle": "T-01118", "cia": "1ª Cia", "model": "SPIN", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01119", "vehicle": "T-01119", "cia": "1ª Cia", "model": "SPIN", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01120", "vehicle": "T-01120", "cia": "1ª Cia", "model": "DUSTER", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01124", "vehicle": "T-01124", "cia": "1ª Cia", "model": "DUSTER", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01125", "vehicle": "T-01125", "cia": "1ª Cia", "model": "SPIN", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01126", "vehicle": "T-01126", "cia": "1ª Cia", "model": "SPIN", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01127", "vehicle": "T-01127", "cia": "1ª Cia", "model": "SPIN", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01130", "vehicle": "T-01130", "cia": "1ª Cia", "model": "TRAIL BLAZER", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01135", "vehicle": "T-01135", "cia": "1ª Cia", "model": "SPIN", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01136", "vehicle": "T-01136", "cia": "1ª Cia", "model": "RANGER", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01137", "vehicle": "T-01137", "cia": "1ª Cia", "model": "RANGER", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "T-01147", "vehicle": "T-01147", "cia": "1ª Cia", "model": "S-10", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "3-106", "vehicle": "3-106", "cia": "1ª Cia", "model": "S-10", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "26-24", "vehicle": "26-24", "cia": "1ª Cia", "model": "MASTER", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "19-167", "vehicle": "19-167", "cia": "1ª Cia", "model": "XT-660", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""},
-        {"id": "13-26", "vehicle": "13-26", "cia": "1ª Cia", "model": "CARGO", "pelotao": "ADM", "status": "OPERANDO", "obs": "", "destino": "BASE", "date": "", "data_forms": ""}
-    ];
+        {
+                "id": "T-01100",
+                "vehicle": "T-01100",
+                "cia": "1ª Cia",
+                "model": "TRAIL BLAZER",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "ADM",
+                "date": "",
+                "data_forms": "",
+                "placa": "FSD-4079",
+                "patrimonio_vtr": "216026429",
+                "radio_modelo": "MOTOROLA APX 7500",
+                "radio_patrimonio": "216032998",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01103",
+                "vehicle": "T-01103",
+                "cia": "1ª Cia",
+                "model": "DUSTER",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "BASE",
+                "date": "",
+                "data_forms": "",
+                "placa": "FUG-7E96",
+                "patrimonio_vtr": "222001593",
+                "radio_modelo": "MOTOROLA APX 5500",
+                "radio_patrimonio": "213050405",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01104",
+                "vehicle": "T-01104",
+                "cia": "1ª Cia",
+                "model": "DUSTER",
+                "pelotao": "1º PEL",
+                "status": "BAIXADA",
+                "obs": "ELÉTRICO",
+                "destino": "BASE",
+                "date": "2026-09-18",
+                "data_forms": "18/09/2026",
+                "placa": "DCD-2E41",
+                "patrimonio_vtr": "222001594",
+                "radio_modelo": "MOTOROLA APX 5500",
+                "radio_patrimonio": "212079511",
+                "radio_data": "2026-08-27",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01105",
+                "vehicle": "T-01105",
+                "cia": "1ª Cia",
+                "model": "DUSTER",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "BASE",
+                "date": "",
+                "data_forms": "",
+                "placa": "FJW-5C43",
+                "patrimonio_vtr": "222001595",
+                "radio_modelo": "MOTOROLA APX 5500",
+                "radio_patrimonio": "213032228",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01106",
+                "vehicle": "T-01106",
+                "cia": "1ª Cia",
+                "model": "DUSTER",
+                "pelotao": "1º PEL",
+                "status": "BAIXADA",
+                "obs": "ARREFECIMENTO",
+                "destino": "BASE",
+                "date": "2026-08-24",
+                "data_forms": "24/08/2026",
+                "placa": "FMQ-0B54",
+                "patrimonio_vtr": "222001596",
+                "radio_modelo": "MOTOROLA APX 5500",
+                "radio_patrimonio": "213032126",
+                "radio_data": "2026-08-27",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01107",
+                "vehicle": "T-01107",
+                "cia": "1ª Cia",
+                "model": "DUSTER",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "BASE",
+                "date": "",
+                "data_forms": "",
+                "placa": "FWN-9E65",
+                "patrimonio_vtr": "222001597",
+                "radio_modelo": "MOTOROLA APX 5500",
+                "radio_patrimonio": "213032515",
+                "radio_data": "2026-08-27",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01109",
+                "vehicle": "T-01109",
+                "cia": "1ª Cia",
+                "model": "SPIN",
+                "pelotao": "1º PEL",
+                "status": "BAIXADA",
+                "obs": "CÂMBIO",
+                "destino": "OFICINA",
+                "date": "2026-09-01",
+                "data_forms": "01/09/2026",
+                "placa": "FZE-0D92",
+                "patrimonio_vtr": "222013174",
+                "radio_modelo": "MOTOROLA APX 7500",
+                "radio_patrimonio": "215050626",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01110",
+                "vehicle": "T-01110",
+                "cia": "1ª Cia",
+                "model": "SPIN",
+                "pelotao": "1º PEL",
+                "status": "DESCARGA",
+                "obs": "SINISTRO",
+                "destino": "CPTRAN",
+                "date": "2026-03-18",
+                "data_forms": "18/03/2026",
+                "placa": "EJZ-2821",
+                "patrimonio_vtr": "219023442",
+                "radio_modelo": "MOTOROLA APX 8500",
+                "radio_patrimonio": "219040835",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01112",
+                "vehicle": "T-01112",
+                "cia": "1ª Cia",
+                "model": "SPIN",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "BASE",
+                "date": "",
+                "data_forms": "",
+                "placa": "DWT-5E59",
+                "patrimonio_vtr": "219007389",
+                "radio_modelo": "MOTOROLA APX 8500",
+                "radio_patrimonio": "219001330",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01114",
+                "vehicle": "T-01114",
+                "cia": "1ª Cia",
+                "model": "SPIN",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "BATERIA",
+                "destino": "BASE",
+                "date": "2026-09-04",
+                "data_forms": "04/09/2026",
+                "placa": "DRT-7A92",
+                "patrimonio_vtr": "222013175",
+                "radio_modelo": "MOTOROLA APX 7500",
+                "radio_patrimonio": "215050634",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01115",
+                "vehicle": "T-01115",
+                "cia": "1ª Cia",
+                "model": "SPIN",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "BASE",
+                "date": "",
+                "data_forms": "",
+                "placa": "BVT-4J09",
+                "patrimonio_vtr": "219007692",
+                "radio_modelo": "MOTOROLA APX 8500",
+                "radio_patrimonio": "219001494",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01116",
+                "vehicle": "T-01116",
+                "cia": "1ª Cia",
+                "model": "SPIN",
+                "pelotao": "1º PEL",
+                "status": "BAIXADA",
+                "obs": "CÂMBIO",
+                "destino": "CPTRAN",
+                "date": "2026-08-17",
+                "data_forms": "17/08/2026",
+                "placa": "FCJ-6G67",
+                "patrimonio_vtr": "218034135",
+                "radio_modelo": "MOTOROLA APX 8500",
+                "radio_patrimonio": "218036671",
+                "radio_data": "2024-01-31",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01118",
+                "vehicle": "T-01118",
+                "cia": "1ª Cia",
+                "model": "SPIN",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "SONORO",
+                "destino": "BASE",
+                "date": "2026-09-04",
+                "data_forms": "04/09/2026",
+                "placa": "BSZ-1H27",
+                "patrimonio_vtr": "218034137",
+                "radio_modelo": "MOTOROLA APX 8500",
+                "radio_patrimonio": "218036673",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01119",
+                "vehicle": "T-01119",
+                "cia": "1ª Cia",
+                "model": "SPIN",
+                "pelotao": "1º PEL",
+                "status": "BAIXADA",
+                "obs": "CÂMBIO",
+                "destino": "CPTRAN",
+                "date": "2026-07-21",
+                "data_forms": "21/07/2026",
+                "placa": "GBO-6B42",
+                "patrimonio_vtr": "222013176",
+                "radio_modelo": "MOTOROLA APX 7500",
+                "radio_patrimonio": "215050628",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01120",
+                "vehicle": "T-01120",
+                "cia": "1ª Cia",
+                "model": "DUSTER",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "BASE",
+                "date": "",
+                "data_forms": "",
+                "placa": "FTM-7A45",
+                "patrimonio_vtr": "220046494",
+                "radio_modelo": "MOTOROLA APX 7500",
+                "radio_patrimonio": "214006465",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01124",
+                "vehicle": "T-01124",
+                "cia": "1ª Cia",
+                "model": "DUSTER",
+                "pelotao": "1º PEL",
+                "status": "BAIXADA",
+                "obs": "CÂMBIO",
+                "destino": "BASE",
+                "date": "2026-09-03",
+                "data_forms": "03/09/2026",
+                "placa": "FRV-2C08",
+                "patrimonio_vtr": "220046489",
+                "radio_modelo": "MOTOROLA APX 7500",
+                "radio_patrimonio": "214006495",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01125",
+                "vehicle": "T-01125",
+                "cia": "1ª Cia",
+                "model": "SPIN",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "CPTRAN",
+                "date": "2026-09-03",
+                "data_forms": "03/09/2026",
+                "placa": "FOA-6102",
+                "patrimonio_vtr": "222013177",
+                "radio_modelo": "MOTOROLA APX 7500",
+                "radio_patrimonio": "215050537",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01126",
+                "vehicle": "T-01126",
+                "cia": "1ª Cia",
+                "model": "SPIN",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "BASE",
+                "date": "",
+                "data_forms": "",
+                "placa": "EIB-6D41",
+                "patrimonio_vtr": "222013178",
+                "radio_modelo": "MOTOROLA APX 7500",
+                "radio_patrimonio": "215050629",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01127",
+                "vehicle": "T-01127",
+                "cia": "1ª Cia",
+                "model": "SPIN",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "BASE",
+                "date": "",
+                "data_forms": "",
+                "placa": "DIB-8F92",
+                "patrimonio_vtr": "222013179",
+                "radio_modelo": "MOTOROLA APX 7500",
+                "radio_patrimonio": "215050585",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01130",
+                "vehicle": "T-01130",
+                "cia": "1ª Cia",
+                "model": "TRAIL BLAZER",
+                "pelotao": "1º PEL",
+                "status": "BAIXADA",
+                "obs": "RÁDIO, ARREFECIMENTO",
+                "destino": "BASE",
+                "date": "2026-09-18",
+                "data_forms": "18/09/2026",
+                "placa": "FZT-1D98",
+                "patrimonio_vtr": "217014881",
+                "radio_modelo": "MOTOROLA APX 8500",
+                "radio_patrimonio": "217027175",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01135",
+                "vehicle": "T-01135",
+                "cia": "1ª Cia",
+                "model": "SPIN",
+                "pelotao": "1º PEL",
+                "status": "ADM",
+                "obs": "",
+                "destino": "EAP",
+                "date": "2026-08-24",
+                "data_forms": "24/08/2026",
+                "placa": "BWY-8C11",
+                "patrimonio_vtr": "219023266",
+                "radio_modelo": "MOTOROLA APX 8500",
+                "radio_patrimonio": "219042444",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01136",
+                "vehicle": "T-01136",
+                "cia": "1ª Cia",
+                "model": "RANGER",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "BASE",
+                "date": "",
+                "data_forms": "",
+                "placa": "FQF-2H92",
+                "patrimonio_vtr": "222039782",
+                "radio_modelo": "MOTOROLA APX 2500",
+                "radio_patrimonio": "222028024",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01137",
+                "vehicle": "T-01137",
+                "cia": "1ª Cia",
+                "model": "RANGER",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "BASE",
+                "date": "2026-08-24",
+                "data_forms": "24/08/2026",
+                "placa": "GBN-9E31",
+                "patrimonio_vtr": "222039783",
+                "radio_modelo": "MOTOROLA APX 2500",
+                "radio_patrimonio": "222028025",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "T-01147",
+                "vehicle": "T-01147",
+                "cia": "1ª Cia",
+                "model": "S-10",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "BASE",
+                "date": "2026-08-24",
+                "data_forms": "24/08/2026",
+                "placa": "GEV-6999",
+                "patrimonio_vtr": "216026572",
+                "radio_modelo": "MOTOROLA APX 7500",
+                "radio_patrimonio": "216033036",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "3-106",
+                "vehicle": "3-106",
+                "cia": "1ª Cia",
+                "model": "S-10",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "RÁDIO",
+                "destino": "BASE",
+                "date": "2026-09-04",
+                "data_forms": "04/09/2026",
+                "placa": "GFP-3234",
+                "patrimonio_vtr": "217000154",
+                "radio_modelo": "MOTOROLA APX 7500",
+                "radio_patrimonio": "217000122",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "26-24",
+                "vehicle": "26-24",
+                "cia": "1ª Cia",
+                "model": "MASTER",
+                "pelotao": "1º PEL",
+                "status": "OPERANDO",
+                "obs": "",
+                "destino": "BASE",
+                "date": "",
+                "data_forms": "",
+                "placa": "FNV-9496",
+                "patrimonio_vtr": "217038437",
+                "radio_modelo": "",
+                "radio_patrimonio": "",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "19-167",
+                "vehicle": "19-167",
+                "cia": "1ª Cia",
+                "model": "XT-660",
+                "pelotao": "ADM",
+                "status": "OPERANDO",
+                "obs": "ADM",
+                "destino": "ADM",
+                "date": "2026-09-02",
+                "data_forms": "02/09/2026",
+                "placa": "FXS-5E25",
+                "patrimonio_vtr": "216015594",
+                "radio_modelo": "APX 900",
+                "radio_patrimonio": "ESTAFETA",
+                "radio_data": "2026-09-01",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        },
+        {
+                "id": "13-26",
+                "vehicle": "13-26",
+                "cia": "1ª Cia",
+                "model": "CARGO",
+                "pelotao": "ADM",
+                "status": "ADM",
+                "obs": "ADM",
+                "destino": "ADM",
+                "date": "2026-09-02",
+                "data_forms": "02/09/2026",
+                "placa": "EGX-1326",
+                "patrimonio_vtr": "209078705",
+                "radio_modelo": "MOTOROLA APX 7500",
+                "radio_patrimonio": "214044067",
+                "radio_data": "",
+                "cartao_abastecimento": "",
+                "tag_abastecimento": ""
+        }
+];
 
     function migrateVehiclePrefixes(recList) {
         if (!Array.isArray(recList)) return recList;
@@ -7750,6 +8269,7 @@
     
     const AVAILABLE_PERMISSIONS = [
         { key: 'status_destino', label: 'Alterar Status, Pelotão e QTH', desc: 'Permissão para atualizar status, pelotão, QTH/destino e motivo da viatura' },
+        { key: 'maintenance', label: 'Gerenciar Manutenções da Frota', desc: 'Registrar, editar e excluir manutenções da frota' },
         { key: 'quick_add', label: 'Acrescentar Viaturas', desc: 'Cadastrar novas viaturas no painel rápido' },
         { key: 'edit_full_vtr', label: 'Edição Completa de Viatura (Apenas Administrador Geral)', desc: 'Editar prefixo, placa, rádio e patrimônio da viatura' },
         { key: 'delete_vtr', label: 'Excluir Viaturas (Apenas Administrador Geral)', desc: 'Remover viaturas cadastradas da frota' },
@@ -7771,6 +8291,7 @@
             photo: "",
             permissions: {
                 status_destino: true,
+                maintenance: true,
                 quick_add: true,
                 edit_full_vtr: true,
                 delete_vtr: true,
@@ -7885,6 +8406,7 @@
 
     function getPermissionForAction(actionDescription) {
         const desc = (actionDescription || '').toLowerCase();
+        if (desc.includes('manutenç') || desc.includes('manutenc') || desc.includes('manutenção') || desc.includes('manutencao')) return 'maintenance';
         if (desc.includes('usuário') || desc.includes('usuario') || desc.includes('permiss')) return 'manage_users';
         if (desc.includes('servidor') || desc.includes('conexão') || desc.includes('conexao')) return 'server_config';
         if (desc.includes('título') || desc.includes('titulo') || desc.includes('nome do painel')) return 'edit_title';
@@ -7914,6 +8436,9 @@
         // Permissão para operadores comuns: Alterar status, pelotão e QTH/destino
         if (permKey === 'status_destino') {
             return !!(user.permissions && user.permissions.status_destino);
+        }
+        if (permKey === 'maintenance') {
+            return !!(user.permissions && user.permissions.maintenance);
         }
 
         return false;
@@ -8721,6 +9246,7 @@
 
         editingUserPermissions = {
             status_destino: true, // ✅ Permissão de alterar status, pelotão e QTH da viatura
+            maintenance: true, // ✅ Permissão de gerenciar manutenções da frota
             quick_add: false,
             edit_full_vtr: false, // ❌ Exclusivo Admin
             delete_vtr: false,    // ❌ Exclusivo Admin
@@ -9832,6 +10358,39 @@
 
             XLSX.writeFile(workbook, defaultExcelName);
             showToast(`📊 Planilha exportada como <strong>${defaultExcelName}</strong>!`);
+        }
+    }
+
+    async function saveCurrentAsFinalBaseline() {
+        const ok = await requestAdminPassword("gravar atualização como estado definitivo", "database_reset");
+        if (!ok) return;
+
+        if (await adminConfirm("Deseja fixar o estado atual de todas as viaturas e manutenções como a versão FINAL / DEFINITIVA?\n\nIsso garante que esses dados não serão perdidos e serão usados como a base oficial.")) {
+            const currentSnapshot = JSON.parse(JSON.stringify(records));
+            localStorage.setItem('batalhao_vtr_custom_original_dataset', JSON.stringify(currentSnapshot));
+            localStorage.setItem('batalhao_vtr_saved_final_records', JSON.stringify(currentSnapshot));
+            if (Array.isArray(maintenances)) {
+                localStorage.setItem('batalhao_vtr_saved_final_maintenances', JSON.stringify(maintenances));
+            }
+            await syncAllDataToOnline(true);
+            showToast("📌 <strong>Última atualização salva como versão DEFINITIVA no sistema e no Firebase!</strong>");
+        }
+    }
+
+    async function restoreFactoryDefaults() {
+        const ok = await requestAdminPassword("restaurar para padrão de fábrica", "database_reset");
+        if (!ok) return;
+
+        if (await adminConfirm("🏭 Deseja restaurar a frota para o PADRÃO DE FÁBRICA oficial?\n\nIsso carregará as 28 viaturas padrão com todas as placas, patrimônios, modelos de rádio e status oficiais.")) {
+            records = JSON.parse(JSON.stringify(defaultDataset));
+            localStorage.setItem('batalhao_vtr_records', JSON.stringify(records));
+            saveRecords();
+            updateStatusTimestamp();
+            populateMonthSelect();
+            populateVehicleSelects();
+            renderDashboard();
+            await syncAllDataToOnline(true);
+            showToast("🏭 <strong>Frota restaurada para o Padrão de Fábrica oficial!</strong>");
         }
     }
 
