@@ -812,6 +812,138 @@
         tbody tr:nth-child(even) { background-color: var(--row-even-bg); }
         tbody tr:hover { background-color: var(--row-hover-bg) !important; }
 
+        /* 🎨 Cores discretas para as linhas da tabela acompanhando o status da viatura */
+        tbody tr.vtr-table-row,
+        tbody tr.vtr-table-row td {
+            transition: background-color 0.25s ease;
+        }
+
+        /* Status: OPERANDO (Tom verde bem clarinho e discreto) */
+        tbody tr.row-status-operando,
+        tbody tr.row-status-operando:nth-child(odd),
+        tbody tr.row-status-operando:nth-child(even),
+        tbody tr.row-status-operando td.col-td-prefixo,
+        tbody tr.row-status-operando:nth-child(even) td.col-td-prefixo {
+            background-color: #f0fbf5 !important;
+        }
+        tbody tr.row-status-operando:hover,
+        tbody tr.row-status-operando:hover td.col-td-prefixo {
+            background-color: #e0f7eb !important;
+        }
+
+        /* Status: BAIXADA (Tom vermelho/salmão bem clarinho e discreto) */
+        tbody tr.row-status-baixada,
+        tbody tr.row-status-baixada:nth-child(odd),
+        tbody tr.row-status-baixada:nth-child(even),
+        tbody tr.row-status-baixada td.col-td-prefixo,
+        tbody tr.row-status-baixada:nth-child(even) td.col-td-prefixo {
+            background-color: #fef3f3 !important;
+        }
+        tbody tr.row-status-baixada:hover,
+        tbody tr.row-status-baixada:hover td.col-td-prefixo {
+            background-color: #fee2e2 !important;
+        }
+
+        /* Status: ADM (Tom azul bem clarinho e discreto) */
+        tbody tr.row-status-adm,
+        tbody tr.row-status-adm:nth-child(odd),
+        tbody tr.row-status-adm:nth-child(even),
+        tbody tr.row-status-adm td.col-td-prefixo,
+        tbody tr.row-status-adm:nth-child(even) td.col-td-prefixo {
+            background-color: #f0f8fd !important;
+        }
+        tbody tr.row-status-adm:hover,
+        tbody tr.row-status-adm:hover td.col-td-prefixo {
+            background-color: #e0f2fe !important;
+        }
+
+        /* Status: DESCARGA (Tom cinza/escuro suave e discreto) */
+        tbody tr.row-status-descarga,
+        tbody tr.row-status-descarga:nth-child(odd),
+        tbody tr.row-status-descarga:nth-child(even),
+        tbody tr.row-status-descarga td.col-td-prefixo,
+        tbody tr.row-status-descarga:nth-child(even) td.col-td-prefixo {
+            background-color: #f4f5f8 !important;
+        }
+        tbody tr.row-status-descarga:hover,
+        tbody tr.row-status-descarga:hover td.col-td-prefixo {
+            background-color: #e5e7eb !important;
+        }
+
+        /* Status customizado / outro (Tom âmbar suave e discreto) */
+        tbody tr.row-status-custom,
+        tbody tr.row-status-custom:nth-child(odd),
+        tbody tr.row-status-custom:nth-child(even),
+        tbody tr.row-status-custom td.col-td-prefixo,
+        tbody tr.row-status-custom:nth-child(even) td.col-td-prefixo {
+            background-color: #fefce8 !important;
+        }
+        tbody tr.row-status-custom:hover,
+        tbody tr.row-status-custom:hover td.col-td-prefixo {
+            background-color: #fef3c7 !important;
+        }
+
+        /* 🌙 Tema Escuro (Dark Theme) */
+        [data-theme="dark"] tbody tr.row-status-operando,
+        [data-theme="dark"] tbody tr.row-status-operando:nth-child(odd),
+        [data-theme="dark"] tbody tr.row-status-operando:nth-child(even),
+        [data-theme="dark"] tbody tr.row-status-operando td.col-td-prefixo,
+        [data-theme="dark"] tbody tr.row-status-operando:nth-child(even) td.col-td-prefixo {
+            background-color: rgba(16, 185, 129, 0.08) !important;
+        }
+        [data-theme="dark"] tbody tr.row-status-operando:hover,
+        [data-theme="dark"] tbody tr.row-status-operando:hover td.col-td-prefixo {
+            background-color: rgba(16, 185, 129, 0.16) !important;
+        }
+
+        [data-theme="dark"] tbody tr.row-status-baixada,
+        [data-theme="dark"] tbody tr.row-status-baixada:nth-child(odd),
+        [data-theme="dark"] tbody tr.row-status-baixada:nth-child(even),
+        [data-theme="dark"] tbody tr.row-status-baixada td.col-td-prefixo,
+        [data-theme="dark"] tbody tr.row-status-baixada:nth-child(even) td.col-td-prefixo {
+            background-color: rgba(239, 68, 68, 0.08) !important;
+        }
+        [data-theme="dark"] tbody tr.row-status-baixada:hover,
+        [data-theme="dark"] tbody tr.row-status-baixada:hover td.col-td-prefixo {
+            background-color: rgba(239, 68, 68, 0.16) !important;
+        }
+
+        [data-theme="dark"] tbody tr.row-status-adm,
+        [data-theme="dark"] tbody tr.row-status-adm:nth-child(odd),
+        [data-theme="dark"] tbody tr.row-status-adm:nth-child(even),
+        [data-theme="dark"] tbody tr.row-status-adm td.col-td-prefixo,
+        [data-theme="dark"] tbody tr.row-status-adm:nth-child(even) td.col-td-prefixo {
+            background-color: rgba(14, 165, 233, 0.08) !important;
+        }
+        [data-theme="dark"] tbody tr.row-status-adm:hover,
+        [data-theme="dark"] tbody tr.row-status-adm:hover td.col-td-prefixo {
+            background-color: rgba(14, 165, 233, 0.16) !important;
+        }
+
+        [data-theme="dark"] tbody tr.row-status-descarga,
+        [data-theme="dark"] tbody tr.row-status-descarga:nth-child(odd),
+        [data-theme="dark"] tbody tr.row-status-descarga:nth-child(even),
+        [data-theme="dark"] tbody tr.row-status-descarga td.col-td-prefixo,
+        [data-theme="dark"] tbody tr.row-status-descarga:nth-child(even) td.col-td-prefixo {
+            background-color: rgba(148, 163, 184, 0.08) !important;
+        }
+        [data-theme="dark"] tbody tr.row-status-descarga:hover,
+        [data-theme="dark"] tbody tr.row-status-descarga:hover td.col-td-prefixo {
+            background-color: rgba(148, 163, 184, 0.16) !important;
+        }
+
+        [data-theme="dark"] tbody tr.row-status-custom,
+        [data-theme="dark"] tbody tr.row-status-custom:nth-child(odd),
+        [data-theme="dark"] tbody tr.row-status-custom:nth-child(even),
+        [data-theme="dark"] tbody tr.row-status-custom td.col-td-prefixo,
+        [data-theme="dark"] tbody tr.row-status-custom:nth-child(even) td.col-td-prefixo {
+            background-color: rgba(245, 158, 11, 0.08) !important;
+        }
+        [data-theme="dark"] tbody tr.row-status-custom:hover,
+        [data-theme="dark"] tbody tr.row-status-custom:hover td.col-td-prefixo {
+            background-color: rgba(245, 158, 11, 0.16) !important;
+        }
+
         .inline-select {
             padding: 4px 6px;
             border-radius: 6px;
@@ -8290,6 +8422,18 @@
         // 🚀 1. ATUALIZAÇÃO OTIMISTA IMEDIATA NA TELA (0ms)
         v[fieldName] = selectedValue;
         localPendingEdits[vehicleId] = { time: Date.now(), field: fieldName, value: selectedValue };
+
+        if (fieldName === 'status') {
+            const rowEl = document.getElementById(`row-vtr-${vehicleId}`);
+            if (rowEl) {
+                const sLow = String(selectedValue || '').toLowerCase().trim();
+                const newRowClass = ['operando', 'baixada', 'descarga', 'adm'].includes(sLow)
+                    ? `row-status-${sLow}` : 'row-status-custom';
+                rowEl.className = `vtr-table-row ${newRowClass}`;
+                rowEl.dataset.status = sLow;
+            }
+        }
+
         saveRecords();
         updateStatusTimestamp();
         renderDashboard(); // Atualiza a tabela e os botões na hora!
@@ -8637,6 +8781,14 @@
         saveRecords();
 
         if (fieldName === 'status') {
+            const rowEl = document.getElementById(`row-vtr-${vehicleId}`);
+            if (rowEl) {
+                const sLow = String(cleanVal || '').toLowerCase().trim();
+                const newRowClass = ['operando', 'baixada', 'descarga', 'adm'].includes(sLow)
+                    ? `row-status-${sLow}` : 'row-status-custom';
+                rowEl.className = `vtr-table-row ${newRowClass}`;
+                rowEl.dataset.status = sLow;
+            }
             updateStatusTimestamp();
             renderDashboard(); // Muda na hora na tela
             syncAllDataToOnline(true); // Salva na nuvem logo em seguida
@@ -12940,8 +13092,16 @@ function populateVehicleSelects() {
                     prefixTitle = 'Clique para ver se possui Placa ou dados do Rádio';
                 }
 
-                const statusClass = ['operando', 'baixada', 'descarga', 'adm'].includes((r.status || '').toLowerCase()) 
-                    ? `status-${(r.status || 'operando').toLowerCase()}` : 'status-custom';
+                const statusLower = (r.status || 'operando').toLowerCase().trim();
+                const statusClass = ['operando', 'baixada', 'descarga', 'adm'].includes(statusLower) 
+                    ? `status-${statusLower}` : 'status-custom';
+                const rowStatusClass = ['operando', 'baixada', 'descarga', 'adm'].includes(statusLower)
+                    ? `row-status-${statusLower}` : 'row-status-custom';
+
+                tr.className = `vtr-table-row ${rowStatusClass}`;
+                tr.id = `row-vtr-${r.vehicle}`;
+                tr.dataset.vehicle = r.vehicle;
+                tr.dataset.status = statusLower;
 
                 const isHidPrefix = hiddenColumns.includes('prefixo') ? 'col-hidden' : '';
                 const isHidCia = hiddenColumns.includes('cia') ? 'col-hidden' : '';
