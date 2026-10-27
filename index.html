@@ -3721,6 +3721,32 @@
         </div>
     </div>
 
+    <!-- Banner de Alerta de Vencimento de Bateria (6 meses) -->
+    <div id="batteryDashboardBanner" style="display: none; background: #fef2f2; border: 1px solid #f87171; border-left: 5px solid #dc2626; border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; align-items: flex-start; justify-content: space-between; gap: 12px; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.08);">
+        <div style="display: flex; align-items: flex-start; gap: 10px; flex: 1;">
+            <span style="font-size: 1.4rem; line-height: 1;">🪫</span>
+            <div style="flex: 1;">
+                <div style="font-size: 0.9rem; font-weight: 800; color: #991b1b; margin-bottom: 4px;">
+                    Alerta de bateria — Prazo de 6 meses atingido
+                </div>
+                <div id="batteryDashboardBannerList" style="font-size: 0.82rem; color: #7f1d1d; display: flex; flex-direction: column; gap: 4px;"></div>
+            </div>
+        </div>
+        <button type="button" onclick="document.getElementById('batteryDashboardBanner').style.display='none'" style="background: transparent; border: none; color: #991b1b; font-weight: 800; cursor: pointer; font-size: 1rem;" title="Ocultar aviso">✖</button>
+    </div>
+
+    <!-- Alertazinho Flutuante na Tela quando Bateria Atinge 6 Meses -->
+    <div id="batteryFloatingAlert" style="display: none; position: fixed; bottom: 22px; left: 22px; z-index: 9995; max-width: 390px; width: calc(100% - 44px); background: #ffffff; border: 2px solid #ef4444; border-radius: 12px; box-shadow: 0 10px 25px rgba(220, 38, 38, 0.25); padding: 14px 16px; font-family: inherit;">
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #fecaca; padding-bottom: 8px; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 800; color: #b91c1c;">
+                <span style="font-size: 1.2rem;">🚨</span>
+                <span>Alerta de troca de bateria (6 meses)</span>
+            </div>
+            <button type="button" onclick="dismissBatteryFloatingAlert()" style="background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; border-radius: 6px; padding: 2px 7px; font-size: 0.78rem; font-weight: 800; cursor: pointer;" title="Fechar alerta">✖</button>
+        </div>
+        <div id="batteryFloatingAlertBody" style="font-size: 0.8rem; color: #1e293b; max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
+    </div>
+
     <!-- Setor 2: Gráficos Separados por Blocos -->
     <div>
         <div class="section-header-bar">
@@ -4539,6 +4565,59 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Item 4: BATERIA (Principal e Auxiliar) -->
+                    <div class="modal-accordion-card" id="accordionBateriaCard">
+                        <div class="modal-accordion-header" onclick="toggleModalAccordion('accordionBateriaContent', 'accordionBateriaArrow')" title="Clique para expandir/recolher dados das baterias (principal e auxiliar)">
+                            <div class="accordion-header-title">
+                                <span>🔋 <strong>BATERIA</strong> (principal e auxiliar)</span>
+                            </div>
+                            <span id="accordionBateriaArrow" class="accordion-arrow">▼</span>
+                        </div>
+                        <div id="accordionBateriaContent" class="modal-accordion-content" style="display: none;">
+                            <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 6px;">
+                                <!-- Bateria Principal -->
+                                <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px;">
+                                    <div style="font-size: 0.82rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                        <span>⚡ Bateria principal</span>
+                                    </div>
+                                    <div class="form-grid-inner">
+                                        <div class="form-group">
+                                            <label for="modalBatPrincipalModelo">🏷️ <strong>Modelo:</strong></label>
+                                            <input type="text" id="modalBatPrincipalModelo" placeholder="Ex: Moura 60Ah, Heliar 70Ah...">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="modalBatPrincipalData">📅 <strong>Data da troca:</strong></label>
+                                            <input type="date" id="modalBatPrincipalData" class="inline-input" style="width: 100%;" onchange="updateModalBatteryCountdowns()" oninput="updateModalBatteryCountdowns()">
+                                        </div>
+                                    </div>
+                                    <div id="modalBatPrincipalCounter" style="margin-top: 8px; font-size: 0.78rem; padding: 7px 10px; border-radius: 6px; background: var(--card-bg); border: 1px solid var(--border); color: var(--text-muted); font-weight: 600;">
+                                        ⏳ Informe a data da troca para calcular o vencimento (prazo de 6 meses).
+                                    </div>
+                                </div>
+
+                                <!-- Bateria Auxiliar -->
+                                <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px;">
+                                    <div style="font-size: 0.82rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                        <span>🔋 Bateria auxiliar</span>
+                                    </div>
+                                    <div class="form-grid-inner">
+                                        <div class="form-group">
+                                            <label for="modalBatAuxiliarModelo">🏷️ <strong>Modelo:</strong></label>
+                                            <input type="text" id="modalBatAuxiliarModelo" placeholder="Ex: Moura Auxiliar, Heliar AGM...">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="modalBatAuxiliarData">📅 <strong>Data da troca:</strong></label>
+                                            <input type="date" id="modalBatAuxiliarData" class="inline-input" style="width: 100%;" onchange="updateModalBatteryCountdowns()" oninput="updateModalBatteryCountdowns()">
+                                        </div>
+                                    </div>
+                                    <div id="modalBatAuxiliarCounter" style="margin-top: 8px; font-size: 0.78rem; padding: 7px 10px; border-radius: 6px; background: var(--card-bg); border: 1px solid var(--border); color: var(--text-muted); font-weight: 600;">
+                                        ⏳ Informe a data da troca para calcular o vencimento (prazo de 6 meses).
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -4885,6 +4964,46 @@
                     <div>
                         <span style="display: block; font-size: 0.74rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">TAG de abastecimento</span>
                         <div id="quickDetailsTagAbast" style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); background: var(--card-bg); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); margin-top: 2px;">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cartão 4: Bateria (Principal e Auxiliar) -->
+            <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px;">
+                <div style="font-size: 0.82rem; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+                    <span>🔋 BATERIA (PRINCIPAL E AUXILIAR)</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <!-- Bateria principal -->
+                    <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+                        <div style="font-size: 0.78rem; font-weight: 800; color: var(--primary); margin-bottom: 6px;">⚡ Bateria principal</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div>
+                                <span style="display: block; font-size: 0.72rem; font-weight: 700; color: var(--text-muted);">Modelo</span>
+                                <div id="quickDetailsBatPrincipalModelo" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-top: 2px;">--</div>
+                            </div>
+                            <div>
+                                <span style="display: block; font-size: 0.72rem; font-weight: 700; color: var(--text-muted);">Data da troca</span>
+                                <div id="quickDetailsBatPrincipalData" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-top: 2px;">--</div>
+                            </div>
+                        </div>
+                        <div id="quickDetailsBatPrincipalCounter" style="margin-top: 8px; font-size: 0.76rem; padding: 6px 8px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); font-weight: 600;">--</div>
+                    </div>
+
+                    <!-- Bateria auxiliar -->
+                    <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+                        <div style="font-size: 0.78rem; font-weight: 800; color: var(--primary); margin-bottom: 6px;">🔋 Bateria auxiliar</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div>
+                                <span style="display: block; font-size: 0.72rem; font-weight: 700; color: var(--text-muted);">Modelo</span>
+                                <div id="quickDetailsBatAuxiliarModelo" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-top: 2px;">--</div>
+                            </div>
+                            <div>
+                                <span style="display: block; font-size: 0.72rem; font-weight: 700; color: var(--text-muted);">Data da troca</span>
+                                <div id="quickDetailsBatAuxiliarData" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-top: 2px;">--</div>
+                            </div>
+                        </div>
+                        <div id="quickDetailsBatAuxiliarCounter" style="margin-top: 8px; font-size: 0.76rem; padding: 6px 8px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); font-weight: 600;">--</div>
                     </div>
                 </div>
             </div>
@@ -11442,6 +11561,12 @@ function populateVehicleSelects() {
                 "Data de atualização do rádio": radioDateFormatted,
                 "Cartão de Abastecimento": r.cartao_abastecimento || '-',
                 "TAG de abastecimento": r.tag_abastecimento || '-',
+                "Bateria principal (modelo)": r.bateria_principal_modelo || '-',
+                "Bateria principal (data da troca)": r.bateria_principal_data ? (r.bateria_principal_data.includes('-') ? r.bateria_principal_data.split('-').reverse().join('/') : r.bateria_principal_data) : '-',
+                "Bateria principal (próxima troca 6m)": computeBatterySixMonthStatus(r.bateria_principal_data).dueDateFormatted,
+                "Bateria auxiliar (modelo)": r.bateria_auxiliar_modelo || '-',
+                "Bateria auxiliar (data da troca)": r.bateria_auxiliar_data ? (r.bateria_auxiliar_data.includes('-') ? r.bateria_auxiliar_data.split('-').reverse().join('/') : r.bateria_auxiliar_data) : '-',
+                "Bateria auxiliar (próxima troca 6m)": computeBatterySixMonthStatus(r.bateria_auxiliar_data).dueDateFormatted,
                 "Referência Forms": r.data_forms || '-'
             };
         });
@@ -11770,7 +11895,233 @@ function populateVehicleSelects() {
         }
     }
 
-    function openVehicleQuickDetailsModal(vehicleId, e) {
+        let dismissedBatteryAlertSignature = '';
+
+    function computeBatterySixMonthStatus(dateStr) {
+        if (!dateStr || !String(dateStr).trim()) {
+            return {
+                hasDate: false,
+                isExpired: false,
+                isWarning: false,
+                swapDateFormatted: 'Não informada',
+                dueDateFormatted: '--',
+                diffDays: null,
+                badgeHtml: '<span style="color: var(--text-muted);">⏳ Informe a data da troca para calcular o vencimento (6 meses).</span>',
+                styleBg: 'var(--bg)',
+                styleBorder: 'var(--border)',
+                styleColor: 'var(--text-muted)'
+            };
+        }
+
+        const clean = String(dateStr).trim();
+        let y, m, d;
+        if (clean.includes('-')) {
+            const parts = clean.split('-');
+            y = parseInt(parts[0], 10);
+            m = parseInt(parts[1], 10);
+            d = parseInt(parts[2], 10);
+        } else if (clean.includes('/')) {
+            const parts = clean.split('/');
+            d = parseInt(parts[0], 10);
+            m = parseInt(parts[1], 10);
+            y = parseInt(parts[2], 10);
+        }
+
+        if (!y || !m || !d || isNaN(y) || isNaN(m) || isNaN(d)) {
+            return {
+                hasDate: false,
+                isExpired: false,
+                isWarning: false,
+                swapDateFormatted: clean,
+                dueDateFormatted: '--',
+                diffDays: null,
+                badgeHtml: '<span style="color: var(--text-muted);">⏳ Data inválida</span>',
+                styleBg: 'var(--bg)',
+                styleBorder: 'var(--border)',
+                styleColor: 'var(--text-muted)'
+            };
+        }
+
+        const swapDate = new Date(y, m - 1, d);
+        swapDate.setHours(0, 0, 0, 0);
+
+        // Vencimento: 6 meses após a data da troca
+        const dueDate = new Date(swapDate.getFullYear(), swapDate.getMonth() + 6, swapDate.getDate());
+        dueDate.setHours(0, 0, 0, 0);
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const diffMs = dueDate.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+        const pad = n => String(n).padStart(2, '0');
+        const swapDateFormatted = `${pad(swapDate.getDate())}/${pad(swapDate.getMonth() + 1)}/${swapDate.getFullYear()}`;
+        const dueDateFormatted = `${pad(dueDate.getDate())}/${pad(dueDate.getMonth() + 1)}/${dueDate.getFullYear()}`;
+
+        if (diffDays <= 0) {
+            const overdueText = diffDays === 0
+                ? `Vence hoje (${dueDateFormatted})`
+                : `Vencida há ${Math.abs(diffDays)} dia(s) (venceu em ${dueDateFormatted})`;
+            return {
+                hasDate: true,
+                isExpired: true,
+                isWarning: false,
+                swapDateFormatted,
+                dueDateFormatted,
+                diffDays,
+                badgeHtml: `🚨 <strong>Prazo de 6 meses atingido!</strong> ${overdueText}`,
+                styleBg: '#fef2f2',
+                styleBorder: '#ef4444',
+                styleColor: '#b91c1c'
+            };
+        } else if (diffDays <= 30) {
+            return {
+                hasDate: true,
+                isExpired: false,
+                isWarning: true,
+                swapDateFormatted,
+                dueDateFormatted,
+                diffDays,
+                badgeHtml: `⚠️ <strong>Próxima troca: ${dueDateFormatted}</strong> — faltam <strong>${diffDays} dia(s)</strong>`,
+                styleBg: '#fffbeb',
+                styleBorder: '#f59e0b',
+                styleColor: '#b45309'
+            };
+        } else {
+            const months = Math.floor(diffDays / 30);
+            const remDays = diffDays % 30;
+            const timeDesc = months > 0
+                ? `${months} mês(es)${remDays > 0 ? ' e ' + remDays + ' dia(s)' : ''} (${diffDays} dias)`
+                : `${diffDays} dias`;
+            return {
+                hasDate: true,
+                isExpired: false,
+                isWarning: false,
+                swapDateFormatted,
+                dueDateFormatted,
+                diffDays,
+                badgeHtml: `✅ <strong>Próxima troca: ${dueDateFormatted}</strong> — faltam <strong>${timeDesc}</strong>`,
+                styleBg: '#f0fdf4',
+                styleBorder: '#86efac',
+                styleColor: '#15803d'
+            };
+        }
+    }
+
+    function applyCounterStyleAndHtml(el, statusObj) {
+        if (!el || !statusObj) return;
+        el.innerHTML = statusObj.badgeHtml;
+        el.style.background = statusObj.styleBg;
+        el.style.borderColor = statusObj.styleBorder;
+        el.style.color = statusObj.styleColor;
+    }
+
+    function updateModalBatteryCountdowns() {
+        const pDataEl = document.getElementById('modalBatPrincipalData');
+        const pCounterEl = document.getElementById('modalBatPrincipalCounter');
+        if (pCounterEl) {
+            const stP = computeBatterySixMonthStatus(pDataEl ? pDataEl.value : '');
+            applyCounterStyleAndHtml(pCounterEl, stP);
+        }
+
+        const aDataEl = document.getElementById('modalBatAuxiliarData');
+        const aCounterEl = document.getElementById('modalBatAuxiliarCounter');
+        if (aCounterEl) {
+            const stA = computeBatterySixMonthStatus(aDataEl ? aDataEl.value : '');
+            applyCounterStyleAndHtml(aCounterEl, stA);
+        }
+    }
+
+    function dismissBatteryFloatingAlert() {
+        const floatEl = document.getElementById('batteryFloatingAlert');
+        if (floatEl) floatEl.style.display = 'none';
+    }
+
+    function checkAndRenderBatteryAlerts() {
+        const bannerEl = document.getElementById('batteryDashboardBanner');
+        const bannerListEl = document.getElementById('batteryDashboardBannerList');
+        const floatEl = document.getElementById('batteryFloatingAlert');
+        const floatBodyEl = document.getElementById('batteryFloatingAlertBody');
+
+        const expiredItems = [];
+
+        (records || []).forEach(r => {
+            if (!canUserEditVehicle(r) && currentAuthUser && !currentAuthUser.isMaster && currentAuthUser.unit && currentAuthUser.unit !== 'Batalhão') {
+                return;
+            }
+            const stP = computeBatterySixMonthStatus(r.bateria_principal_data);
+            if (stP.isExpired) {
+                expiredItems.push({
+                    vehicle: r.vehicle,
+                    cia: r.cia || '1ª Cia',
+                    type: 'Bateria principal',
+                    model: r.bateria_principal_modelo || 'Modelo não informado',
+                    swapDate: stP.swapDateFormatted,
+                    dueDate: stP.dueDateFormatted,
+                    diffDays: stP.diffDays
+                });
+            }
+            const stA = computeBatterySixMonthStatus(r.bateria_auxiliar_data);
+            if (stA.isExpired) {
+                expiredItems.push({
+                    vehicle: r.vehicle,
+                    cia: r.cia || '1ª Cia',
+                    type: 'Bateria auxiliar',
+                    model: r.bateria_auxiliar_modelo || 'Modelo não informado',
+                    swapDate: stA.swapDateFormatted,
+                    dueDate: stA.dueDateFormatted,
+                    diffDays: stA.diffDays
+                });
+            }
+        });
+
+        if (expiredItems.length === 0) {
+            if (bannerEl) bannerEl.style.display = 'none';
+            if (floatEl) floatEl.style.display = 'none';
+            return;
+        }
+
+        let bannerHtml = '';
+        let floatHtml = '';
+        expiredItems.forEach(item => {
+            const statusText = item.diffDays === 0
+                ? `atingiu hoje (${item.dueDate}) o prazo de 6 meses`
+                : `atingiu o prazo de 6 meses em ${item.dueDate} (trocada em ${item.swapDate})`;
+
+            bannerHtml += `
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #ffffff; padding: 6px 10px; border-radius: 6px; border: 1px solid #fecaca;">
+                    <span>🚗 <strong>${item.vehicle}</strong> (${item.cia}) — <strong>${item.type}</strong> (${item.model}): ${statusText}.</span>
+                    <button type="button" class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 0.74rem; border-color: #dc2626; color: #b91c1c; font-weight: 700; white-space: nowrap;" onclick="openVehicleQuickDetailsModal('${item.vehicle}')">🔍 Ver viatura</button>
+                </div>
+            `;
+
+            floatHtml += `
+                <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; gap: 4px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 800; color: #991b1b;">🚗 Viatura ${item.vehicle} (${item.cia})</span>
+                        <button type="button" onclick="openVehicleQuickDetailsModal('${item.vehicle}')" style="background: #dc2626; color: #ffffff; border: none; border-radius: 4px; padding: 2px 8px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">Ver dados</button>
+                    </div>
+                    <div style="color: #7f1d1d; font-size: 0.76rem;">
+                        <strong>${item.type}</strong> (${item.model}) ${statusText}.
+                    </div>
+                </div>
+            `;
+        });
+
+        if (bannerListEl && bannerEl) {
+            bannerListEl.innerHTML = bannerHtml;
+            bannerEl.style.display = 'flex';
+        }
+
+        const sig = expiredItems.map(i => `${i.vehicle}_${i.type}_${i.dueDate}`).join('|');
+        if (floatBodyEl && floatEl && sig !== dismissedBatteryAlertSignature) {
+            floatBodyEl.innerHTML = floatHtml;
+            floatEl.style.display = 'block';
+        }
+    }
+
+function openVehicleQuickDetailsModal(vehicleId, e) {
         if (e) {
             e.stopPropagation();
             e.preventDefault();
@@ -11803,6 +12154,22 @@ function populateVehicleSelects() {
         const tagEl = document.getElementById('quickDetailsTagAbast');
         if (cartaoEl) cartaoEl.textContent = (v.cartao_abastecimento && v.cartao_abastecimento.trim()) ? v.cartao_abastecimento.trim() : 'Não cadastrado';
         if (tagEl) tagEl.textContent = (v.tag_abastecimento && v.tag_abastecimento.trim()) ? v.tag_abastecimento.trim() : 'Não cadastrada';
+
+        const batPModEl = document.getElementById('quickDetailsBatPrincipalModelo');
+        const batPDataEl = document.getElementById('quickDetailsBatPrincipalData');
+        const batPCounterEl = document.getElementById('quickDetailsBatPrincipalCounter');
+        const stBatP = computeBatterySixMonthStatus(v.bateria_principal_data);
+        if (batPModEl) batPModEl.textContent = (v.bateria_principal_modelo && v.bateria_principal_modelo.trim()) ? v.bateria_principal_modelo.trim() : 'Não informado';
+        if (batPDataEl) batPDataEl.textContent = stBatP.hasDate ? stBatP.swapDateFormatted : 'Não informada';
+        if (batPCounterEl) applyCounterStyleAndHtml(batPCounterEl, stBatP);
+
+        const batAModEl = document.getElementById('quickDetailsBatAuxiliarModelo');
+        const batADataEl = document.getElementById('quickDetailsBatAuxiliarData');
+        const batACounterEl = document.getElementById('quickDetailsBatAuxiliarCounter');
+        const stBatA = computeBatterySixMonthStatus(v.bateria_auxiliar_data);
+        if (batAModEl) batAModEl.textContent = (v.bateria_auxiliar_modelo && v.bateria_auxiliar_modelo.trim()) ? v.bateria_auxiliar_modelo.trim() : 'Não informado';
+        if (batADataEl) batADataEl.textContent = stBatA.hasDate ? stBatA.swapDateFormatted : 'Não informada';
+        if (batACounterEl) applyCounterStyleAndHtml(batACounterEl, stBatA);
 
         const modal = document.getElementById('vehicleQuickDetailsModal');
         if (modal) modal.style.display = 'flex';
@@ -11863,6 +12230,31 @@ function populateVehicleSelects() {
         }
         if (document.getElementById('modalTagAbastecimento')) {
             document.getElementById('modalTagAbastecimento').value = v.tag_abastecimento || '';
+        }
+        if (document.getElementById('modalBatPrincipalModelo')) {
+            document.getElementById('modalBatPrincipalModelo').value = v.bateria_principal_modelo || '';
+        }
+        if (document.getElementById('modalBatPrincipalData')) {
+            document.getElementById('modalBatPrincipalData').value = v.bateria_principal_data || '';
+        }
+        if (document.getElementById('modalBatAuxiliarModelo')) {
+            document.getElementById('modalBatAuxiliarModelo').value = v.bateria_auxiliar_modelo || '';
+        }
+        if (document.getElementById('modalBatAuxiliarData')) {
+            document.getElementById('modalBatAuxiliarData').value = v.bateria_auxiliar_data || '';
+        }
+        updateModalBatteryCountdowns();
+
+        const batContent = document.getElementById('accordionBateriaContent');
+        const batArrow = document.getElementById('accordionBateriaArrow');
+        if (batContent) {
+            if (v.bateria_principal_modelo || v.bateria_principal_data || v.bateria_auxiliar_modelo || v.bateria_auxiliar_data) {
+                batContent.style.display = 'block';
+                if (batArrow) batArrow.classList.add('open');
+            } else {
+                batContent.style.display = 'none';
+                if (batArrow) batArrow.classList.remove('open');
+            }
         }
 
         const abastContent = document.getElementById('accordionAbastecimentoContent');
@@ -11959,6 +12351,10 @@ function populateVehicleSelects() {
         v.radio_data = document.getElementById('modalRadioData').value.trim();
         v.cartao_abastecimento = document.getElementById('modalCartaoAbastecimento') ? document.getElementById('modalCartaoAbastecimento').value.trim() : (v.cartao_abastecimento || '');
         v.tag_abastecimento = document.getElementById('modalTagAbastecimento') ? document.getElementById('modalTagAbastecimento').value.trim() : (v.tag_abastecimento || '');
+        v.bateria_principal_modelo = document.getElementById('modalBatPrincipalModelo') ? document.getElementById('modalBatPrincipalModelo').value.trim() : (v.bateria_principal_modelo || '');
+        v.bateria_principal_data = document.getElementById('modalBatPrincipalData') ? document.getElementById('modalBatPrincipalData').value.trim() : (v.bateria_principal_data || '');
+        v.bateria_auxiliar_modelo = document.getElementById('modalBatAuxiliarModelo') ? document.getElementById('modalBatAuxiliarModelo').value.trim() : (v.bateria_auxiliar_modelo || '');
+        v.bateria_auxiliar_data = document.getElementById('modalBatAuxiliarData') ? document.getElementById('modalBatAuxiliarData').value.trim() : (v.bateria_auxiliar_data || '');
 
         saveRecords();
         updateStatusTimestamp();
@@ -12086,7 +12482,11 @@ function populateVehicleSelects() {
                 radio_patrimonio: (r.radio_patrimonio || '').toString().trim(),
                 radio_data: (r.radio_data || '').toString().trim(),
                 cartao_abastecimento: (r.cartao_abastecimento || '').toString().trim(),
-                tag_abastecimento: (r.tag_abastecimento || '').toString().trim()
+                tag_abastecimento: (r.tag_abastecimento || '').toString().trim(),
+                bateria_principal_modelo: (r.bateria_principal_modelo || '').toString().trim(),
+                bateria_principal_data: (r.bateria_principal_data || '').toString().trim(),
+                bateria_auxiliar_modelo: (r.bateria_auxiliar_modelo || '').toString().trim(),
+                bateria_auxiliar_data: (r.bateria_auxiliar_data || '').toString().trim()
             }))
         };
 
@@ -12857,7 +13257,13 @@ function populateVehicleSelects() {
                 patrimonio_vtr: (item.patrimonio_vtr || item.patrimonioVtr || item.patrimonio || item.Patrimonio || item.PATRIMONIO || item.patr || item.patrvtr || '').toString().trim(),
                 radio_modelo: (item.radio_modelo || item.radioModelo || item.modeloradio || item.modelo_radio || item.ModeloRadio || item.radio || item.Radio || '').toString().trim(),
                 radio_patrimonio: (item.radio_patrimonio || item.radioPatrimonio || item.patrimonioradio || item.patrimonio_radio || item.PatrimonioRadio || item.patrradio || '').toString().trim(),
-                radio_data: (item.radio_data || item.radioData || item.dataradio || item.data_radio || '').toString().trim()
+                radio_data: (item.radio_data || item.radioData || item.dataradio || item.data_radio || '').toString().trim(),
+                cartao_abastecimento: (item.cartao_abastecimento || item.cartaoAbastecimento || '').toString().trim(),
+                tag_abastecimento: (item.tag_abastecimento || item.tagAbastecimento || '').toString().trim(),
+                bateria_principal_modelo: (item.bateria_principal_modelo || item.bateriaPrincipalModelo || '').toString().trim(),
+                bateria_principal_data: (item.bateria_principal_data || item.bateriaPrincipalData || '').toString().trim(),
+                bateria_auxiliar_modelo: (item.bateria_auxiliar_modelo || item.bateriaAuxiliarModelo || '').toString().trim(),
+                bateria_auxiliar_data: (item.bateria_auxiliar_data || item.bateriaAuxiliarData || '').toString().trim()
             };
 
             if (existingIdx !== -1) {
@@ -13117,7 +13523,8 @@ function populateVehicleSelects() {
                     <td class="col-td-prefixo ${isHidPrefix}" onclick="openVehicleQuickDetailsModal('${r.vehicle}', event)" title="Clique para ver dados cadastrais da viatura">
                         <div class="prefix-cell-wrapper">
                             <span class="prefix-title">${r.vehicle}</span>
-                            <span class="prefix-plate-icon" onclick="openVehicleQuickDetailsModal('${r.vehicle}', event)" title="Clique para ver Placa, Patrimônio e Rádio">🚗</span>
+                            <span class="prefix-plate-icon" onclick="openVehicleQuickDetailsModal('${r.vehicle}', event)" title="Clique para ver Placa, Patrimônio, Rádio e Baterias">🚗</span>
+                            ${(computeBatterySixMonthStatus(r.bateria_principal_data).isExpired || computeBatterySixMonthStatus(r.bateria_auxiliar_data).isExpired) ? `<span onclick="openVehicleQuickDetailsModal('${r.vehicle}', event)" title="⚠️ Alerta: Bateria atingiu o prazo de 6 meses!" style="font-size: 0.72rem; background: #fee2e2; color: #b91c1c; border: 1px solid #ef4444; border-radius: 4px; padding: 1px 4px; font-weight: 800; cursor: pointer;">🪫 6m</span>` : ''}
                             ${(r.placa || radioDateFormatted) ? `<span class="prefix-badge-placa" id="badge-placa-${r.vehicle}">${badgeContent}</span>` : ''}
                         </div>
                     </td>
@@ -13178,6 +13585,9 @@ function populateVehicleSelects() {
                 fragment.appendChild(tr);
             });
             tbody.appendChild(fragment);
+        }
+        if (typeof checkAndRenderBatteryAlerts === 'function') {
+            checkAndRenderBatteryAlerts();
         }
 
         // Renderizar Cards de Viaturas para Celular
